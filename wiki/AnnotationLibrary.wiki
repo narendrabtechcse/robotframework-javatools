@@ -4,7 +4,7 @@ This is perhaps the simplest and the most flexible way of creating keywords, the
 A keyword implementation has to fill the following requirements: 
    * it's a method that is annotated with `@RobotKeyword` annotation.
    * the method is contained in java class that has been annotated with `@RobotKeywords` annotation. 
-   * the method is contained in java class which name matches the given ant style [http://ant.apache.org/manual/dirtasks.html#patterns pattern], e.g.: `com/acme/**/keyword/**/**.class` 
+   * the method is contained in java class which name matches the given ant style [http://ant.apache.org/manual/dirtasks.html#patterns pattern], e.g.: `com/acme/**/keyword/**/*.class` 
    * the class has a default constructor 
    * the class is public and non-abstract 
 
