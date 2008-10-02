@@ -1,7 +1,94 @@
-#labels Featured
-==Javalib-Core==
+﻿==javalib-core==
 
-Common core for all Java Robot libraries.
+Javalib-core is a common core for all Java Robot libraries.
 
-Easily extensible and dynamic - just add keywords to the class path.
-No need for a library - just implement keywords
+The main advantages are
+  * easily extensible and dynamic - just add keywords to the class path
+  * no need for a library - just implement keywords
+  * common functionality readily available (e.g. argument count checking for keywords)
+
+===Motivation===
+
+Robot supports two kinds of Java libraries. The simpler way is to have a single library class, which has keywords as methods. This is a very easy way to get started, but as the amount of keywords grows it will soon lead to bad design and hard-to-maintain code, even if you split the keywords in to several classes.
+
+The other, better way of doing this is to have a library that implements methods `String[] getKeywordNames()` and `Object runKeyword(String keywordName, Object[] arguments)`. This gives us more liberty to decide how we want to run and implement our keywords. 
+
+javalib-core provides an implementation of the latter library model. You can add keywords either by simply implementing a `Keyword` -interface and having your classes in the classpath when running Robot, or by tagging methods with `@RobotKeyword` annotations. You can also create keywords using Spring configuration files to wire them.
+
+===Provided=== libraries
+
+These libraries do not provide any keywords. They are merely common implementations of libraries so you don't need to your own. You only need to write keyword implementations. How the libraries find the keywords is explained below.
+
+There are three different ways of creating keywords with !Javalib-Core:
+
+  * ClassPathLibrary: Searches for keywords in the classpath. The class name is mapped to a keyword name. To create a keyword with the name `Do My Specific Task`, you simply implement a keyword class called `DoMySpecificTask` and add it to the class path.
+  * AnnotationLibrary: Since release 0.6 of Javalib-core, keywords can be created using annotations. Annotating methods with =org.robotframework.javalib.annotation.RobotKeyword= will make them registered as keywords. The class that contains the keyword-methods has to be tagged with =org.robotframework.javalib.annotation.RobotKeywords= annotation. 
+  * SpringLibrary: The libraries above limit the implementation because they require a default constructor and they have to know of their dependencies themselves. If this is a problem, you can use Spring configuration files to wire keywords any way you want.
+
+A fourth library combining all the abovementioned libraries is also provided:
+  * CompositeLibrary combines SpringLibrary, ClassPathLibrary and AnnotationLibrary. With CompositeLibrary you can use all the different methods to add new keywords.
+
+
+===Keyword and Config File Patterns===
+
+!Javalib-core libraries requires you to explicitly set the pattern that specifies under which packages the keywords should be searched for. If javalib-core just scanned through all the classes in the classpath a keyword naming conflict would occur in case of having two javalib-core libraries in the same test file. 
+
+====Instructions====
+
+Keyword pattern must begin with the the first part of a Java package. For example `**/**.class` is not allowed. It must be something like `com/**/**.class`. It is a good idea to make the pattern as restrictive as possible in order to prevent keyword name collisions. That is why pattern above is not recommended as it makes javalib-core to scour through all the classes which package starts with `com`. If your keywords are all in the same package it is preferable to use keyword pattern that doesn't make javalib-core to look elsewhere, e.g. if all your keywords reside under `com.acme.myproject.keyword` you should use `com/acme/myproject/keyword/**.class` pattern.
+
+The same rule applies to SpringLibrary and config file pattern which is used for locating spring configuration files: `com/acme/myproject/**/keyword.xml` is better than `com/**/keyword.xml`.
+
+====Wrapper Libraries===
+
+Keyword pattern makes my tests less readable, what can I do?
+
+It is true that this is easier to understand:
+
+<table style="font-family: Arial,Helvetica,sans-serif; border-collapse: collapse; empty-cells: show; margin: 1em 0em; border: 0.1em solid black;">
+  <tr>
+    <th style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; background-color: rgb(192, 192, 192); border-width: 0.1em; font-weight: bold; text-align: center; text-transform: capitalize; letter-spacing: 0.1em; width: 12em;">Setting</th>
+    <th style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; background-color: rgb(192, 192, 192); border-width: 0.1em; font-weight: bold; text-align: center; text-transform: capitalize; letter-spacing: 0.1em;">Value</th>
+    <th style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; background-color: rgb(192, 192, 192); border-width: 0.1em; font-weight: bold; text-align: center; text-transform: capitalize; letter-spacing: 0.1em;">Value</th>
+  </tr>
+  <tr>
+    <td style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; width: 12em; background-color: rgb(240, 240, 240); text-transform: capitalize; letter-spacing: 0.1em;">Library</td>
+    <td style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em;">MySpecialLibrary</td>
+    <td style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em;"></td>
+  </tr>
+</table>
+
+than this:
+
+<table style="font-family: Arial,Helvetica,sans-serif; border-collapse: collapse; empty-cells: show; margin: 1em 0em; border: 0.1em solid black;">
+  <tr>
+    <th style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; background-color: rgb(192, 192, 192); border-width: 0.1em; font-weight: bold; text-align: center; text-transform: capitalize; letter-spacing: 0.1em; width: 12em;">Setting</th>
+    <th style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; background-color: rgb(192, 192, 192); border-width: 0.1em; font-weight: bold; text-align: center; text-transform: capitalize; letter-spacing: 0.1em;">Value</th>
+    <th style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; background-color: rgb(192, 192, 192); border-width: 0.1em; font-weight: bold; text-align: center; text-transform: capitalize; letter-spacing: 0.1em;">Value</th>
+  </tr>
+  <tr>
+    <td style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; width: 12em; background-color: rgb(240, 240, 240); text-transform: capitalize; letter-spacing: 0.1em;">Library</td>
+    <td style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em;">org.robotframework.javalib.library.ClassPathLibrary</td>
+    <td style="border-style: solid; border-width: 0.05em 0.1em; border-color: black; padding: 0.1em 0.2em; height: 1.5em; width: 300px;">com/acme/mycomponent/keyword/**/*.class</td>
+  </tr>
+</table>
+
+To resolve this problem you can create an alias or a wrapper library that hides the ugly keyword pattern.
+For example you could create the following class in the _default_ package:
+
+{{{
+import org.robotframework.javalib.library.ClassPathLibrary;
+
+public class MySpecialLibrary extends ClassPathLibrary {
+    public MySpecialLibrary () {
+        super("com/acme/mycomponent/keyword/**/*.class");
+    }
+}
+}}}
+
+====Examples====
+
+The examples are Eclipse projects. To get started, just untar the package and import the projects to Eclipse. Take a look at the example keywords under  `org.robotframework.example.keyword`. Run the example tests in the `robot-tests/` with `./run.sh *.html` (Windows users, use `run.bat` org `run_cygwin.sh`). The run script simply adds the javalib-core jar, it's dependencies and the keyword jar to your classpath.
+
+   * [http://javalib-core-example.zip Javalib-core example]
+   * [http://javalib-core-example-jdk1.4.zip Javalib-core example for jdk 1.4]
