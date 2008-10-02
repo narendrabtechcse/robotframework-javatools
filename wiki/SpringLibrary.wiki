@@ -1,0 +1,24 @@
+﻿ClassPathLibrary maps one keyword to one class. Both AnnotationLibrary and !ClassPathLibrary require a default constructor which limits the implementation.  If these are a problem, you can use Spring configuration files to wire keywords any way you want. Here's an example of a Spring configuration file: 
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd"&gt;
+
+&lt;beans&gt;
+  &lt;bean id="componentShouldBeVisible" class="com.acme.mycomponent.keyword.ComponentVisibility"&gt;
+    &lt;constructor-arg type="boolean" value="true" /&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="componentShouldNotBeVisible" class="com.acme.oss.mycomponent.keyword.ComponentVisibility"&gt;
+    &lt;constructor-arg type="boolean" value="false" /&gt;
+  &lt;/bean&gt;
+&lt;/beans&gt;
+
+The pattern used to find configuration files must be given as an argument when importing the library, eg: `com/acme/**/keywords.xml`.
+Only beans of type `org.robotframework.javalib.keyword.Keyword` are interpreted to be keyword implementations.
+
+*Usage:*
+|| *Setting* || *Value* || *Value* ||
+|| Library || org.robotframework.javalib.library.!SpringLibrary || com/`**`/keyword.xml ||
+
+Read more about the Spring Framework at http://www.springframework.org/
