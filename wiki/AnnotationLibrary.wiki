@@ -8,7 +8,7 @@ A keyword implementation has to fill the following requirements:
    * the class has a default constructor 
    * the class is public and non-abstract 
 
----+++++ !Usage:
+=====Usage:=====
 || *Setting* || *Value* || *Value* ||
 || Library || org.robotframework.javalib.library.!AnnotationLibrary || com/acme/`**`/keyword/`**`/`*`.class ||
 
