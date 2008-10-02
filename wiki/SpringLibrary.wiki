@@ -17,7 +17,7 @@
 }}}
 
 The pattern used to find configuration files must be given as an argument when importing the library, eg: `com/acme/**/keywords.xml`.
-Only beans of type [http://robotframework-javalib-core.googlecode.com/svn/trunk/src/main/java/org/robotframework/javalib/keyword/Keyword.java `org.robotframework.javalib.keyword.Keyword`] are interpreted to be keyword implementations.
+Only beans of type [http://robotframework-javalib-core.googlecode.com/svn/trunk/src/main/java/org/robotframework/javalib/keyword/Keyword.java org.robotframework.javalib.keyword.Keyword] are interpreted to be keyword implementations.
 
 *Usage:*
 || *Setting* || *Value* || *Value* ||
