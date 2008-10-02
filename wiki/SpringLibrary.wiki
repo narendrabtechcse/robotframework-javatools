@@ -1,4 +1,4 @@
-﻿ClassPathLibrary maps one keyword to one class. Both AnnotationLibrary and !ClassPathLibrary require a default constructor which limits the implementation.  If these are a problem, you can use Spring configuration files to wire keywords any way you want. Here's an example of a Spring configuration file: 
+﻿ClassPathLibrary maps one keyword to one class. Both AnnotationLibrary and ClassPathLibrary require a default constructor which limits the implementation.  If these are a problem, you can use Spring configuration files to wire keywords any way you want. Here's an example of a Spring configuration file: 
 
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
