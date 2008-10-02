@@ -11,16 +11,16 @@ Robot supports two kinds of Java libraries. The simpler way is to have a single 
 
 The other, better way of doing this is to have a library that implements methods `String[] getKeywordNames()` and `Object runKeyword(String keywordName, Object[] arguments)`. This gives us more liberty to decide how we want to run and implement our keywords. 
 
-javalib-core provides an implementation of the latter library model. You can add keywords either by simply implementing a `Keyword` -interface and having your classes in the classpath when running Robot, or by tagging methods with `@RobotKeyword` annotations. You can also create keywords using Spring configuration files to wire them.
+Javalib-core provides an implementation of the latter library model. You can add keywords either by simply implementing a `Keyword` -interface and having your classes in the classpath when running Robot, or by tagging methods with `@RobotKeyword` annotations. You can also create keywords using Spring configuration files to wire them.
 
 ===Provided libraries===
 
 These libraries do not provide any keywords. They are merely common implementations of libraries so you don't need to your own. You only need to write keyword implementations. How the libraries find the keywords is explained below.
 
-There are three different ways of creating keywords with !Javalib-Core:
+There are three different ways of creating keywords with Javalib-Core:
 
   * ClassPathLibrary: Searches for keywords in the classpath. The class name is mapped to a keyword name. To create a keyword with the name `Do My Specific Task`, you simply implement a keyword class called `DoMySpecificTask` and add it to the class path.
-  * AnnotationLibrary: Since release 0.6 of Javalib-core, keywords can be created using annotations. Annotating methods with `org.robotframework.javalib.annotation.RobotKeyword` will make them registered as keywords. The class that contains the keyword-methods has to be tagged with `org.robotframework.javalib.annotation.RobotKeywords` annotation. 
+  * AnnotationLibrary: Keywords can be created using annotations. Annotating methods with `org.robotframework.javalib.annotation.RobotKeyword` will make them registered as keywords. The class that contains the keyword-methods has to be tagged with `org.robotframework.javalib.annotation.RobotKeywords` annotation. 
   * SpringLibrary: The libraries above limit the implementation because they require a default constructor and they have to know of their dependencies themselves. If this is a problem, you can use Spring configuration files to wire keywords any way you want.
 
 A fourth library combining all the abovementioned libraries is also provided:
