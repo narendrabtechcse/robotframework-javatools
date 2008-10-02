@@ -1,0 +1,7 @@
+#labels Featured
+==Javalib-Core==
+
+Common core for all Java Robot libraries.
+
+Easily extensible and dynamic - just add keywords to the class path.
+No need for a library - just implement keywords
