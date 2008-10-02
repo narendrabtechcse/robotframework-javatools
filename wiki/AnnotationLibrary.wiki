@@ -1,0 +1,36 @@
+﻿Annotating methods with `org.robotframework.javalib.annotation.RobotKeyword` will make them registered as keywords. The class that contains the keyword-methods has to be tagged with `org.robotframework.javalib.annotation.RobotKeywords` annotation. 
+This is perhaps the simplest and the most flexible way of creating keywords, the downside is that you need java 1.5 or higher to use it.
+
+A keyword implementation has to fill the following requirements: 
+   * it's a method that is annotated with `@RobotKeyword` annotation.
+   * the method is contained in java class that has been annotated with `@RobotKeywords` annotation. 
+   * the method is contained in java class which name matches the given ant style [http://ant.apache.org/manual/dirtasks.html#patterns pattern], e.g.: `com/acme/**/keyword/**/**.class` 
+   * the class has a default constructor 
+   * the class is public and non-abstract 
+
+---+++++ !Usage:
+|| *Setting* || *Value* || *Value* ||
+|| Library || org.robotframework.javalib.library.!AnnotationLibrary || com/acme/`**`/keyword/`**`/`*`.class ||
+
+===Documenting keywords===
+====Keyword documentation====
+
+!AnnotationLibrary lets the keyword implementer to include keyword usage information into the code. This information is used by tools such as [http://code.google.com/p/robotframework-ride Robot IDE] and when robot generates reports. It can also be used to generate library reference documentation. The first line of the documentation is used as a short description of what the keyword does.
+
+====Argument names====
+
+Keyword argument names used in documentation generation can be added by using a special annotation `@ArgumentNames`. Robot framework also uses keyword names are to check if the keyword is invoked with a correct number of arguments and makes the test fail if incorrect number of arguments is provided.
+If the argument of the keyword is of type `String[]` can the keyword accept from zero to infinity arguments. This should be indicated to Robot framework by inserting '`*`' in front of the argument name.
+
+====Example====
+{{{
+@RobotKeyword("Launches application with the given arguments.\n\n"
+    + "Example:\n"
+    + "| Launch Application | _com.acme.myapplication.MyApp_ | _--data-file_ | _C:\\data.txt_ |\n")
+@ArgumentNames({"className", "*args"})
+public void launchApplication(String className, String[] args) throws Exception {
+    Class<?> clss = Class.forName(className);
+    Method mainMethod = clss.getMethod("main", String[].class);
+    mainMethod.invoke(null, new Object[] { args });
+}
+}}}
