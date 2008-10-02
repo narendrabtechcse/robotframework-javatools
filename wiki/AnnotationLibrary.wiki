@@ -1,5 +1,5 @@
-﻿Annotating methods with `org.robotframework.javalib.annotation.RobotKeyword` will make them registered as keywords. The class that contains the keyword-methods has to be tagged with `org.robotframework.javalib.annotation.RobotKeywords` annotation. 
-This is perhaps the simplest and the most flexible way of creating keywords, the downside is that you need java 1.5 or higher to use it.
+﻿Annotating methods with `@RobotKeyword` will make them registered as keywords. The class that contains the keyword-methods has to be tagged with `@RobotKeywords` annotation. 
+This is perhaps the simplest and the most flexible way of creating keywords, the downside is that you need java 1.5 or higher to use it. For the moment this is also only library type that supports adding documentation to keywords that robot tools can read.
 
 A keyword implementation has to fill the following requirements: 
    * it's a method that is annotated with `@RobotKeyword` annotation.
