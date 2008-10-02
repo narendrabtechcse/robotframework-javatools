@@ -44,12 +44,12 @@ Keyword pattern makes my tests less readable, what can I do?
 It is true that this is easier to understand:
 
 || *Setting* || *Value* || *Value* ||
-|| Library || MySpecialLibrary || ||
+|| Library || !MySpecialLibrary || ||
 
 than this:
 
 || *Setting* || *Value* || *Value* ||
-|| Library || org.robotframework.javalib.library.ClassPathLibrary || com/acme/mycomponent/keyword/**/*.class ||
+|| Library || org.robotframework.javalib.library.!ClassPathLibrary || com/acme/mycomponent/keyword/\*\*/\*.class ||
 
 To resolve this problem you can create an alias or a wrapper library that hides the ugly keyword pattern.
 For example you could create the following class in the _default_ package:
