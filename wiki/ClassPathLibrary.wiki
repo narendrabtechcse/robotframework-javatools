@@ -1,0 +1,22 @@
+﻿Searches for keywords in the classpath. The class name is mapped to a keyword name. To create a keyword with the name `Do My Specific Task`, you simply implement a keyword class called `DoMySpecificTask` and add it to the class path.
+
+A keyword implementation has to fill the following requirements:
+   * it's a class that implements `org.robotframework.javalib.keyword.Keyword` -interface
+   * class name matches the given ant style [http://ant.apache.org/manual/dirtasks.html#patterns pattern], eg. `com/nokia/**/keyword/**/*.class`
+   * the class has a default constructor
+   * the class is public and non-abstract
+
+=====Usage:=====
+|| *Setting* || *Value* || *Value* ||
+|| Library || org.robotframework.javalib.library.ClassPathLibrary || com/acme/`**`/keyword/`**`/`*`.class ||
+
+
+===Additional functionality===
+
+====ArgumentCheckingKeyword====
+
+With a lot of keywords you want to check that you get the correct amount of arguments from the user. We've implemented an abstract class that you can extend to achieve this behavior. Please see the source code for `org.robotframework.javalib.keyword.ArgumentCheckingKeyword`.
+
+====PreparableKeyword====
+
+If your keyword needs to be prepared in some way for it to work you can use `org.robotframework.javalib.keyword.PreparableKeyword`. For example, in the prepare method you can check that the current context that you are working in is correct for the keyword.
