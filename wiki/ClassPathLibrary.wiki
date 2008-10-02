@@ -11,12 +11,12 @@ A keyword implementation has to fill the following requirements:
 || Library || org.robotframework.javalib.library.ClassPathLibrary || com/acme/`**`/keyword/`**`/`*`.class ||
 
 
-===Additional functionality===
 
-====ArgumentCheckingKeyword====
+===Additional functionality===
+====!ArgumentCheckingKeyword====
 
 With a lot of keywords you want to check that you get the correct amount of arguments from the user. We've implemented an abstract class that you can extend to achieve this behavior. Please see the source code for `org.robotframework.javalib.keyword.ArgumentCheckingKeyword`.
 
-====PreparableKeyword====
+====!PreparableKeyword====
 
 If your keyword needs to be prepared in some way for it to work you can use `org.robotframework.javalib.keyword.PreparableKeyword`. For example, in the prepare method you can check that the current context that you are working in is correct for the keyword.
