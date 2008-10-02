@@ -12,6 +12,7 @@ A keyword implementation has to fill the following requirements:
 || *Setting* || *Value* || *Value* ||
 || Library || org.robotframework.javalib.library.!AnnotationLibrary || com/acme/`**`/keyword/`**`/`*`.class ||
 
+
 ===Documenting keywords===
 ====Keyword documentation====
 
