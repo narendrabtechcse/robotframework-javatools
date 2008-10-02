@@ -14,7 +14,7 @@ A keyword implementation has to fill the following requirements:
 ===Additional functionality===
 ====!ArgumentCheckingKeyword====
 
-With a lot of keywords you want to check that you get the correct amount of arguments from the user. We've implemented an abstract class that you can extend to achieve this behavior. Please see the source code for `org.robotframework.javalib.keyword.ArgumentCheckingKeyword`.
+With a lot of keywords you want to check that you get the correct amount of arguments from the user. We've implemented an abstract class that you can extend to achieve this behavior. Please see the [http://robotframework-javalib-core.googlecode.com/svn/trunk/src/main/java/org/robotframework/javalib/keyword/ArgumentCheckingKeyword.java source code] for `org.robotframework.javalib.keyword.ArgumentCheckingKeyword`.
 
 ====!PreparableKeyword====
 
