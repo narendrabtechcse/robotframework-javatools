@@ -1,0 +1,6 @@
+﻿!CompositeLibrary combines SpringLibrary, ClassPathLibrary and AnnotationLibrary. With !CompositeLibrary you can use all the different methods to add new keywords.
+
+*Usage:*
+|| *Setting* || *Value* || *Value* || *Value* ||
+|| Library || org.robotframework.javalib.library.!CompositeLibrary || com/acme/`**`/keyword/`**`/`*`.class || com/`**`/keyword.xml ||
+
