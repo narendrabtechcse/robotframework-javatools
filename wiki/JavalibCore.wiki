@@ -74,7 +74,7 @@ The examples are Eclipse projects. To get started, just untar the package and im
 
 ===Maven2===
 
-To use javalib-core in your maven2 project use the following sections in your pom.xml
+To use javalib-core in your maven2 project add the following sections in your _pom.xml_:
 
 {{{
   <dependencies>
