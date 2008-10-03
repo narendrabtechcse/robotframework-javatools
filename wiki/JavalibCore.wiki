@@ -102,6 +102,7 @@ If you are stuck with jre 1.4 just add `<classifier>jre1.4</classifier>` to the 
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
       <version>0.7</version>
+      <classifier>jre1.4</classifier>
     </dependency>
   </dependencies>
 }}}
