@@ -69,8 +69,8 @@ public class MySpecialLibrary extends ClassPathLibrary {
 
 The examples are Eclipse projects. To get started, just untar the package and import the projects to Eclipse. Take a look at the example keywords under  `org.robotframework.example.keyword`. Run the example tests in the `robot-tests/` with `./run.sh *.html` (Windows users, use `run.bat` org `run_cygwin.sh`). The run script simply adds the javalib-core jar, it's dependencies and the keyword jar to your classpath.
 
-   * [http://javalib-core-example.zip Javalib-core example]
-   * [http://javalib-core-example-jdk1.4.zip Javalib-core example for jdk 1.4]
+   * [http://robotframework-javatools.googlecode.com/files/javalib-core-example.zip Javalib-core example]
+   * [http://robotframework-javatools.googlecode.com/files/javalib-core-example-jdk1.4.zip Javalib-core example for jdk 1.4]
 
 ===Maven2===
 
