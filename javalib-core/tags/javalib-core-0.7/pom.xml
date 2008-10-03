@@ -167,4 +167,11 @@
       <url>http://repository.codehaus.org</url>
     </repository>
   </repositories>
+
+  <distributionManagement>
+    <repository>
+      <id>laughingpanda</id>
+      <url>scp://www.laughingpanda.org/var/www/localhost/htdocs/maven2/</url>
+    </repository>
+  </distributionManagement>
 </project>
