@@ -48,6 +48,11 @@ public class ArgumentGrouperTest extends TestCase {
         assertEquals("arg1", groupedArguments[0]);
         ArrayUtil.assertArraysEquals(new String[0], (String[])groupedArguments[1]);
     }
+    
+    private void assertArrayLengthMatches(int actualArgumentCount) {
+        int groupedArgumentCount = new ArgumentGrouper(createTypes(actualArgumentCount)).groupArguments(providedArguments).length;
+        assertEquals(actualArgumentCount, groupedArgumentCount);
+    }
 
     private void assertGroupedCorrectlyWhenActualArgumentCountIs(int actualArgCount) {
         Object[] groupedArguments = new ArgumentGrouper(createTypes(actualArgCount)).groupArguments(providedArguments);
@@ -71,10 +76,5 @@ public class ArgumentGrouperTest extends TestCase {
         Object[] actualStackedArguments = (Object[]) groupedArguments[stackStartIndex];
 
         ArrayUtil.assertArraysEquals(expectedStackedArguments, actualStackedArguments);
-    }
-
-    private void assertArrayLengthMatches(int actualArgumentCount) {
-        int groupedArgumentCount = new ArgumentGrouper(createTypes(actualArgumentCount)).groupArguments(providedArguments).length;
-        assertEquals(actualArgumentCount, groupedArgumentCount);
     }
 }
