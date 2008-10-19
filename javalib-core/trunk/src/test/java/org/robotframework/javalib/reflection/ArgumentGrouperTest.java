@@ -51,7 +51,7 @@ public class ArgumentGrouperTest extends TestCase {
     
     private void assertArrayLengthMatches(int actualArgumentCount) {
         int groupedArgumentCount = new ArgumentGrouper(createTypes(actualArgumentCount)).groupArguments(providedArguments).length;
-        assertEquals(actualArgumentCount, groupedArgumentCount);
+        assertEquals(groupedArgumentCount, actualArgumentCount);
     }
     
     private Class[] createTypes(int actualArgCount) {
