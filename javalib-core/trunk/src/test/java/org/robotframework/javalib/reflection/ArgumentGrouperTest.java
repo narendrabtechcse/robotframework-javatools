@@ -6,11 +6,11 @@ import org.robotframework.javalib.util.ArrayUtil;
 
 public class ArgumentGrouperTest extends TestCase {
     private String[] providedArguments = new String[] { "arg1", "arg2", "arg3", "arg4", "arg5", "arg6" };
-    private Class[] argumentTypes = new Class[] { String.class, String.class, String.class, String.class, String.class, String.class };
+    private Class<?>[] argumentTypes = new Class[] { String.class, String.class, String.class, String.class, String.class, String.class };
 
     public void testReturnsOriginalArgumentsIfArgumentCountMatches() throws Exception {
         IArgumentGrouper grouper = new ArgumentGrouper(argumentTypes);
-        ArrayUtil.assertArraysEquals(providedArguments, grouper.groupArguments(providedArguments));
+        assertArraysEquals(providedArguments, grouper.groupArguments(providedArguments));
     }
 
     public void testReturnsOriginalArgumentsIfTheyAreNull() throws Exception {
@@ -26,7 +26,7 @@ public class ArgumentGrouperTest extends TestCase {
 
     public void testStacksAllProvidedArgumentsIfThereIsOnlyOneActualArgument() throws Exception {
         Object[] groupedArguments = new ArgumentGrouper(new Class[] { String.class }).groupArguments(providedArguments);
-        ArrayUtil.assertArraysEquals(providedArguments, (Object[]) groupedArguments[0]);
+        assertArraysEquals(providedArguments, (String[]) groupedArguments[0]);
     }
 
     public void testStacksExcessArguments() throws Exception {
@@ -36,27 +36,31 @@ public class ArgumentGrouperTest extends TestCase {
     }
 
     public void testStacksArgumentsIfLastArgumentIsOfArrayType() throws Exception {
-        Class[] types = new Class[] { String.class, String[].class };
-        Object[] groupedArguments = new ArgumentGrouper(types).groupArguments(new String[] { "arg1", "arg2" });
+        Class<?>[] parameterClasses = new Class[] { String.class, String[].class };
+        Object[] groupedArguments = new ArgumentGrouper(parameterClasses).groupArguments(new String[] { "arg1", "arg2" });
         assertEquals("arg1", groupedArguments[0]);
-        ArrayUtil.assertArraysEquals(new String[] { "arg2" }, (String[])groupedArguments[1]);
+        assertArraysEquals(new String[] { "arg2" }, (String[])groupedArguments[1]);
     }
 
     public void testCanBeCalledWithoutArgumentsIfLastArgumentIsOfArrayType() throws Exception {
-        Class[] types = new Class[] { String.class, String[].class };
+        Class<?>[] types = new Class[] { String.class, String[].class };
         Object[] groupedArguments = new ArgumentGrouper(types).groupArguments(new String[] { "arg1" });
         assertEquals("arg1", groupedArguments[0]);
-        ArrayUtil.assertArraysEquals(new String[0], (String[])groupedArguments[1]);
+        assertArraysEquals(new String[0], (String[])groupedArguments[1]);
+    }
+    
+    private <T> void assertArraysEquals(T[] expected, T[] actual) {
+        ArrayUtil.assertArraysEquals(expected, actual);
     }
     
     private void assertArrayLengthMatches(int argumentCount) {
-        Class[] parameterClasses = generateParameterClasses(argumentCount);
+        Class<?>[] parameterClasses = generateParameterClasses(argumentCount);
         int groupedArgumentCount = new ArgumentGrouper(parameterClasses).groupArguments(providedArguments).length;
         assertEquals(groupedArgumentCount, argumentCount);
     }
     
-    private Class[] generateParameterClasses(int argumentCount) {
-        Class[] types = new Class[argumentCount];
+    private Class<?>[] generateParameterClasses(int argumentCount) {
+        Class<?>[] types = new Class[argumentCount];
         for (int i = 0; i < types.length; i++) {
             types[i] = String.class;
         }
@@ -76,6 +80,6 @@ public class ArgumentGrouperTest extends TestCase {
         String[] expectedStackedArguments = ArrayUtil.copyOfRange(providedArguments, stackStartIndex, providedArguments.length);
         Object[] actualStackedArguments = (Object[]) groupedArguments[stackStartIndex];
 
-        ArrayUtil.assertArraysEquals(expectedStackedArguments, actualStackedArguments);
+        assertArraysEquals(expectedStackedArguments, actualStackedArguments);
     }
 }
