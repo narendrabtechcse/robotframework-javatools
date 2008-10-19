@@ -49,13 +49,14 @@ public class ArgumentGrouperTest extends TestCase {
         ArrayUtil.assertArraysEquals(new String[0], (String[])groupedArguments[1]);
     }
     
-    private void assertArrayLengthMatches(int actualArgumentCount) {
-        int groupedArgumentCount = new ArgumentGrouper(createTypes(actualArgumentCount)).groupArguments(providedArguments).length;
-        assertEquals(groupedArgumentCount, actualArgumentCount);
+    private void assertArrayLengthMatches(int argumentCount) {
+        Class[] parameterClasses = generateParameterClasses(argumentCount);
+        int groupedArgumentCount = new ArgumentGrouper(parameterClasses).groupArguments(providedArguments).length;
+        assertEquals(groupedArgumentCount, argumentCount);
     }
     
-    private Class[] createTypes(int actualArgCount) {
-        Class[] types = new Class[actualArgCount];
+    private Class[] generateParameterClasses(int argumentCount) {
+        Class[] types = new Class[argumentCount];
         for (int i = 0; i < types.length; i++) {
             types[i] = String.class;
         }
@@ -63,7 +64,7 @@ public class ArgumentGrouperTest extends TestCase {
     }
 
     private void assertGroupedCorrectlyWhenActualArgumentCountIs(int actualArgCount) {
-        Object[] groupedArguments = new ArgumentGrouper(createTypes(actualArgCount)).groupArguments(providedArguments);
+        Object[] groupedArguments = new ArgumentGrouper(generateParameterClasses(actualArgCount)).groupArguments(providedArguments);
         for (int i = 0; i < actualArgCount - 1; i++) {
             assertEquals(providedArguments[i], groupedArguments[i]);
         }
