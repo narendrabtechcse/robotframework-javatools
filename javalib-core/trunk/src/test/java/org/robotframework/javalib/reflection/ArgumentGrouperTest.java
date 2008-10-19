@@ -1,9 +1,10 @@
 package org.robotframework.javalib.reflection;
 
-import org.jmock.MockObjectTestCase;
+import junit.framework.TestCase;
+
 import org.robotframework.javalib.util.ArrayUtil;
 
-public class ArgumentGrouperTest extends MockObjectTestCase {
+public class ArgumentGrouperTest extends TestCase {
     private String[] providedArguments = new String[] { "arg1", "arg2", "arg3", "arg4", "arg5", "arg6" };
     private Class[] argumentTypes = new Class[] { String.class, String.class, String.class, String.class, String.class, String.class };
 
