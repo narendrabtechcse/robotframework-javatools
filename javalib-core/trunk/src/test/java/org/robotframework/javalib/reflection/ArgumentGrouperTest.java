@@ -43,14 +43,35 @@ public class ArgumentGrouperTest extends TestCase {
     }
 
     public void testCanBeCalledWithoutArgumentsIfLastArgumentIsOfArrayType() throws Exception {
-        Class<?>[] types = new Class[] { String.class, String[].class };
-        Object[] groupedArguments = new ArgumentGrouper(types).groupArguments(new String[] { "arg1" });
+        Class<?>[] parameterTypes = new Class[] { String.class, String[].class };
+        Object[] groupedArguments = new ArgumentGrouper(parameterTypes).groupArguments(new String[] { "arg1" });
         assertEquals("arg1", groupedArguments[0]);
         assertArraysEquals(new String[0], (String[])groupedArguments[1]);
     }
     
+    public void testCanBeCalledWithoutArgumentsIfOnlyArgumentIsOfArrayType() throws Exception {
+        Class<?>[] parameterTypes = new Class[] { String[].class };
+        Object[] groupedArguments = new ArgumentGrouper(parameterTypes).groupArguments(new Object[0]);
+        assertMatricesEquals(new Object[] { new String[0] }, groupedArguments);
+    }
+    
     private <T> void assertArraysEquals(T[] expected, T[] actual) {
         ArrayUtil.assertArraysEquals(expected, actual);
+    }
+    
+    private void assertMatricesEquals(Object[] expected, Object[] actual) {
+        assertIsMatrice(expected);
+        assertIsMatrice(actual);
+        assertEquals(expected.length, actual.length);
+        for (int i = 0; i < actual.length; i++) {
+            assertArraysEquals((Object[])expected[i], (Object[])actual[i]);
+        }
+    }
+    
+    private void assertIsMatrice(Object[] matrix) {
+        for (Object array : matrix) {
+            assertTrue(array instanceof Object[]);
+        }
     }
     
     private void assertArrayLengthMatches(int argumentCount) {

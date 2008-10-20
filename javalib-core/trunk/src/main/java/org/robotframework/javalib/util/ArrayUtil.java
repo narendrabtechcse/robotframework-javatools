@@ -40,7 +40,7 @@ public class ArrayUtil {
     }
 
     public static <T> void assertArraysEquals(T[] expected, T[] actual) {
-        Assert.assertTrue(Arrays.equals(expected, actual));
+        Assert.assertTrue("Expected " + Arrays.asList(expected) + " but was " + Arrays.asList(actual), Arrays.equals(expected, actual));
     }
 
     public static <T,U> T[] copyOfRange(U[] original, int from, int to, Class<? extends T[]> newType) {

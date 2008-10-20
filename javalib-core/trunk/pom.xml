@@ -3,7 +3,7 @@
   <groupId>org.robotframework</groupId>
   <artifactId>javalib-core</artifactId>
   <packaging>jar</packaging>
-  <version>0.8-SNAPSHOT</version>
+  <version>0.7.1-SNAPSHOT</version>
   <name>javalib-core</name>
   <dependencies>
     <dependency>

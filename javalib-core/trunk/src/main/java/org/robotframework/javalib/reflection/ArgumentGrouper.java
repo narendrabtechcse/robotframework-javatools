@@ -29,13 +29,22 @@ public class ArgumentGrouper implements IArgumentGrouper {
     }
 
     public Object[] groupArguments(Object[] ungroupedArguments) {
-        if (ungroupedArguments == null || ungroupedArguments.length == 0 ||
-            parameterTypes.length == ungroupedArguments.length && lastArgIsNotAnArray()) {
+        if (shouldGroupArguments(ungroupedArguments)) {
+            return extractArguments(asStrings(ungroupedArguments));
+        } else {
             return ungroupedArguments;
         }
-        return extractArguments(asStrings(ungroupedArguments));
     }
 
+    private boolean shouldGroupArguments(Object[] ungroupedArguments) {
+        return !shouldNotGroupArguments(ungroupedArguments);
+    }
+    
+    private boolean shouldNotGroupArguments(Object[] ungroupedArguments) {
+        return ungroupedArguments == null || parameterTypes.length == 0 ||
+            parameterTypes.length == ungroupedArguments.length && !lastArgIsAnArray();
+    }
+    
     private String[] asStrings(Object[] ungroupedArguments) {
         String[] argsAsString = new String[ungroupedArguments.length];
         for (int i = 0; i < ungroupedArguments.length; i++) {
@@ -43,8 +52,8 @@ public class ArgumentGrouper implements IArgumentGrouper {
         }
         return argsAsString;
     }
-
-    private Object[] extractArguments(String[] ungroupedArguments) {
+    
+    private Object[] extractArguments(Object[] ungroupedArguments) {
         Object[] beginningOfarguments = extractBeginningOfArguments(ungroupedArguments);
         Object[] extractedArguments = new Object[beginningOfarguments.length + 1];
         for (int i = 0; i < beginningOfarguments.length; i++) {
@@ -59,11 +68,11 @@ public class ArgumentGrouper implements IArgumentGrouper {
         return ArrayUtil.copyOfRange(ungroupedArguments, 0, parameterTypes.length - 1);
     }
 
-    private String[] extractRestOfArguments(String[] ungroupedArguments) {
+    private Object[] extractRestOfArguments(Object[] ungroupedArguments) {
         return ArrayUtil.copyOfRange(ungroupedArguments, parameterTypes.length - 1, ungroupedArguments.length);
     }
 
-    private boolean lastArgIsNotAnArray() {
-        return !parameterTypes[parameterTypes.length - 1].isArray();
+    private boolean lastArgIsAnArray() {
+        return parameterTypes[parameterTypes.length - 1].isArray();
     }
 }
