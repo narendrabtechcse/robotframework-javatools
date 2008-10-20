@@ -63,7 +63,7 @@ public class AnnotationKeywordExtractor implements IKeywordExtractor<DocumentedK
             }
 
             public String getDocumentation() {
-                return keywordInvoker.getAnnotationValue(RobotKeyword.class);
+                return keywordInvoker.getDocumentation();
             }
         };
     }

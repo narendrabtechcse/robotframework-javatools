@@ -22,5 +22,5 @@ package org.robotframework.javalib.reflection;
 public interface IKeywordInvoker {
     String[] getParameterNames();
     Object invoke(Object[] args);
-    String getAnnotationValue(Class annotationClass);
+    String getDocumentation();
 }

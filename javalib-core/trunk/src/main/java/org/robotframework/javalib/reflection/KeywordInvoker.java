@@ -55,7 +55,7 @@ public class KeywordInvoker implements IKeywordInvoker {
         }
     }
 
-    public String getAnnotationValue(Class annotationClass) {
+    public String getDocumentation() {
         return method.getAnnotation(RobotKeyword.class).value();
     }
 
