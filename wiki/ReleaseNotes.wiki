@@ -1,7 +1,3 @@
-Releases:
-
-  * [http://code.google.com/p/robotframework-javatools/wiki/ReleaseNotes#Javalib-Core Javalib-Core]
-
 == Javalib-Core 0.7.1 ==
 
 This is a bugfix release.
