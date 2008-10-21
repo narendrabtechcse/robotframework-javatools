@@ -1,5 +1,3 @@
-= Release Notes =
-
 Releases:
 
   * [http://code.google.com/p/robotframework-javatools/wiki/ReleaseNotes#Javalib-Core Javalib-Core]
