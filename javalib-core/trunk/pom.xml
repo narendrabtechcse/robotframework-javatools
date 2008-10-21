@@ -168,6 +168,11 @@
     </repository>
   </repositories>
 
+  <scm>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/trunk</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/trunk</developerConnection>
+  </scm>
+
   <distributionManagement>
     <repository>
       <id>laughingpanda</id>
