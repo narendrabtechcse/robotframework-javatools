@@ -1,5 +1,3 @@
-#summary Release notes
-
 = Javatools Release Notes =
 
 Releases:
