@@ -1,4 +1,4 @@
-= Javatools Release Notes =
+= Release Notes =
 
 Releases:
 
