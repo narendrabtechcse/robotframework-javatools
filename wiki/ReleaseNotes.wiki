@@ -1,0 +1,14 @@
+#summary Release notes
+
+= Javatools Release Notes =
+
+Releases:
+
+  * [http://code.google.com/p/robotframework-javatools/wiki/ReleaseNotes#Javalib-Core Javalib-Core]
+
+== Javalib-Core 0.7.1 ==
+
+This is a bugfix release.
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 2 || Defect || Medium || Fixed argument handling in !AnnotationLibrary ||
