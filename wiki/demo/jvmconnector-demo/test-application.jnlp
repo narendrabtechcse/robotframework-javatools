@@ -10,7 +10,7 @@
       <offline-allowed/>
    </information>
     <resources>
-        <jar href="jvmconnector-0.5-jar-with-dependencies.jar"/>
+        <jar href="jvmconnector-0.5.jar"/>
         <jar href="swinglibrary-0.4.jar"/>
         <jar href="test-application.jar"/>
         <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
