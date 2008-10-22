@@ -1,0 +1,39 @@
+* Setting *	* Value *
+library	org.robotframework.jvmconnector.server.RmiServiceLibrary
+suiteSetup	startRmiServiceAndImportRemoteRobot
+suiteTeardown	closeRmiService
+
+* Variable *	* Value *
+
+* Test Case *	* Action *	* Argument *
+Remote Exception Should Be Wrapped Into TestFailedException
+	runKeywordAndExpectError	TestFailedException:*	exceptionThrowingKeyword
+
+Should Not Find Keyword If The Property Is Not Set
+	# Unfortunately the properties can be passed only when importing the library,
+	#	therefore this part of the test must be in a separate test suite.
+	# Check propertysetting.tsv for details.
+	runKeywordAndExpectError	*No keyword*found*	propertyShouldBeSetToRmiService
+
+Should Fail If Client Is Not Resetted After The Service Is Restarted
+	someRemoteKeyword
+	restartRmiService
+	runKeywordAndExpectError	RemoteConnectFailureException:*	someRemoteKeyword
+
+Keywords Should Be Runnable After Service Restart
+	someRemoteKeyword
+	restartRmiService
+	resetRobotLibraryClient
+	someRemoteKeyword
+
+* Keyword *	* Action *	* Argument *
+startRmiServiceAndImportRemoteRobot
+	startRmiService	
+	importLibrary	org.robotframework.jvmconnector.client.RobotRemoteLibrary
+
+someRemoteKeyword
+	loggingKeyword
+
+restartRmiService
+	closeRmiService
+	startRmiService
