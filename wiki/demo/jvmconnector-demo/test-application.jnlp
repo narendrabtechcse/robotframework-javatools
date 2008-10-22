@@ -15,5 +15,5 @@
         <jar href="test-application.jar"/>
         <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
     </resources>
-    <application-desc main-class="TestApplication"/>
+    <application-desc main-class="org.robotframework.swing.testapp.TestApplication"/>
 </jnlp>
