@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+"
+      codebase="http://java.sun.com/docs/books/tutorialJWS/deployment/webstart/examples/" 
+      href="Notepad.jnlp">
+    <resources>
+        <jar href="Notepad.jar"/>
+        <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    </resources>
+    <application-desc main-class="Notepad"/>
+</jnlp>
