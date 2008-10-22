@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+"
-      codebase="http://java.sun.com/docs/books/tutorialJWS/deployment/webstart/examples/" 
-      href="Notepad.jnlp">
+      codebase="https://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/" 
+      href="test-application.jnlp">
     <resources>
-        <jar href="Notepad.jar"/>
+        <jar href="jvmconnector-0.5-jar-with-dependencies.jar"/>
+        <jar href="swinglibrary-0.4.jar"/>
+        <jar href="test-application.jar"/>
         <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
     </resources>
     <application-desc main-class="Notepad"/>
