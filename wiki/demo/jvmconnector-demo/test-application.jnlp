@@ -8,5 +8,5 @@
         <jar href="test-application.jar"/>
         <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
     </resources>
-    <application-desc main-class="Notepad"/>
+    <application-desc main-class="TestApplication"/>
 </jnlp>
