@@ -2,6 +2,12 @@
 <jnlp spec="1.0+"
       codebase="https://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/" 
       href="test-application.jnlp">
+   <information>
+      <title>JvmConnector Demo</title>
+      <description>JvmConnector Demo</description>
+      <homepage href="http://code.google.com/p/robotframework-javatools/wiki/JvmConnector"/>
+      <offline-allowed/>
+   </information>
     <resources>
         <jar href="jvmconnector-0.5-jar-with-dependencies.jar"/>
         <jar href="swinglibrary-0.4.jar"/>
