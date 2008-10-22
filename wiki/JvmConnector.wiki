@@ -1,0 +1,28 @@
+﻿#labels Featured
+
+!JvmConnector is a module that enables remote keyword invocation. This
+is useful in situations where your keywords reside in another JVM than
+robot.
+
+===What is !JvmConnector?===
+
+Some java applications cannot be run from within the same process as
+robot (eg. Java Webstart apps). Accessing directly this kind of system's
+components from outside is impossible and we need to
+establish some kind of inter-process communication between robot and
+the [http://en.wikipedia.org/wiki/System_Under_Test SUT].
+This is what !JvmConnector does.
+
+!JvmConnector is a proxy library that connects robot to the remote [http://en.wikipedia.org/wiki/System_Under_Test SUT]
+with [http://en.wikipedia.org/wiki/Java_remote_method_invocation RMI],
+hiding the fact that the keywords reside in another [http://en.wikipedia.org/wiki/Jvm JVM] than
+robot. !JvmConnector delegates the keyword calls it receives to the actual
+keyword implementations on the target [[http://en.wikipedia.org/wiki/Jvm][JVM]]. It also takes care of
+redirecting all the logging that keywords do on the target system back
+to robot and handles exceptions thrown on the remote system so that
+robot error messages are presented in a meaningful way.
+
+====!JvmConnector in action===
+
+http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
+
