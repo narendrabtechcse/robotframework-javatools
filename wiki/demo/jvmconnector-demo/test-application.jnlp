@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+"
-      codebase="https://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/" 
+      codebase="http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/" 
       href="test-application.jnlp">
    <information>
       <title>JvmConnector Demo</title>
