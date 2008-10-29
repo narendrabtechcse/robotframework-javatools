@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,15 +23,18 @@ import org.mortbay.jetty.handler.ResourceHandler;
 
 public class NetworkFileFactoryIntegrationTest {
     private static Server server;
+    private static String resourceBase = "./src/test/resources";
+    
     private String localDirectoryPath = System.getProperty("java.io.tmpdir");
+    private String fileSeparator = System.getProperty("file.separator");
     private String localFilePath = localDirectoryPath + "/network_file.txt";
     private String url = "http://localhost:8080/network_file.txt";
-
+    
     @BeforeClass
     public static void startFileServer() throws Exception {
         server = new Server(8080);
         ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase("./src/test/resources");
+        resourceHandler.setResourceBase(resourceBase);
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { resourceHandler, new DefaultHandler() });
         server.setHandler(handlers);
@@ -58,12 +62,22 @@ public class NetworkFileFactoryIntegrationTest {
     }
 
     @Test
-    public void doesntRetrieveFileWhenLocalCopyExists() throws Exception {
+    public void doesntRetrieveFileWhenLocalCopyExistsAndURLHasntChanged() throws Exception {
         File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
-        localFile.setLastModified(0);
+        long lastModified = localFile.lastModified();
         localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
         
-        assertEquals(0, localFile.lastModified());
+        assertEquals(lastModified, localFile.lastModified());
+    }
+    
+    @Test
+    public void doesRetrieveFileWhenURLHasChanged() throws Exception {
+        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        long lastModified = localFile.lastModified();
+        updateURLContent();
+        localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        
+        assertTrue(lastModified < localFile.lastModified());
     }
     
     private void assertFileEqualsToUrl(File file) throws Exception {
@@ -77,5 +91,9 @@ public class NetworkFileFactoryIntegrationTest {
             actualStream.close();
             expectedStream.close();
         }
+    }
+    
+    private void updateURLContent() throws IOException {
+        FileUtils.touch(new File(resourceBase + fileSeparator + "network_file.txt"));
     }
 }

@@ -34,7 +34,7 @@ public class NetworkFileFactory {
 
     public File createFileFromUrl(String url) {
         File localFile = createLocalFile(url);
-        if (shouldCopyFromURL(localFile))
+        if (shouldCopyFromURL(url, localFile))
             copyUrlToFile(url, localFile);
         return localFile;
     }
@@ -43,8 +43,8 @@ public class NetworkFileFactory {
         return new File(createFileNameFromUrl(url));
     }
 
-    private boolean shouldCopyFromURL(File localFile) {
-        return !localFile.isFile();
+    private boolean shouldCopyFromURL(String url, File localFile) {
+        return !localFile.exists() || urlLastModified(url) > localFile.lastModified();
     }
     
     private String createFileNameFromUrl(String url) {
@@ -60,10 +60,18 @@ public class NetworkFileFactory {
         }
     }
     
-    URL createURL(String url) {
+    private URL createURL(String url) {
         try {
             return new URL(url);
         } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private long urlLastModified(String url) {
+        try {
+            return createURL(url).openConnection().getLastModified();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
