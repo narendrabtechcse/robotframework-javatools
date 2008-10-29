@@ -16,10 +16,16 @@
 
 package org.robotframework.javalib.beans.common;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarFile;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -63,11 +69,8 @@ public class DefaultClassFinder extends PathMatchingResourcePatternResolver impl
     }
 
     /**
-     * The default {@link ClassNameResolver} is
-     * {@link DefaultClassNameResolver}. Must be set prior to calling
-     * {@link #getClasses(String, String)}.
-     *
-     * @param classNameResolver new ClassNameResolver
+     * The default ClassNameResolver is DefaultClassNameResolver.
+     * Must be set prior to calling getClasses.
      */
     public void setClassNameResolver(ClassNameResolver classNameResolver) {
         this.classNameResolver = classNameResolver;
@@ -92,5 +95,29 @@ public class DefaultClassFinder extends PathMatchingResourcePatternResolver impl
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected JarFile getJarFile(String jarFileUrl) throws IOException {
+        if (isNetworkUrl(jarFileUrl)) {
+            return createJarFileOverNetwork(jarFileUrl);
+        } else {
+            return super.getJarFile(jarFileUrl);
+        }
+    }
+
+    private boolean isNetworkUrl(String jarFileUrl) {
+        return jarFileUrl.toLowerCase().startsWith("http");
+    }
+
+    private JarFile createJarFileOverNetwork(String jarFileUrl) throws IOException, MalformedURLException {
+        File jarFile = createFileFromUrl(jarFileUrl);
+        return new JarFile(jarFile);
+    }
+
+    private File createFileFromUrl(String jarFileUrl) throws IOException, MalformedURLException {
+        String baseName = FilenameUtils.getBaseName(jarFileUrl);
+        File file = new File("/tmp/" + baseName);
+        FileUtils.copyURLToFile(new URL(jarFileUrl), file);
+        return file;
     }
 }

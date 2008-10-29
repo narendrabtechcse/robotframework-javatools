@@ -24,6 +24,11 @@ public class KeywordBeanLoaderTest extends MockObjectTestCase {
 
         beanLoaderWithKeywordPattern.loadBeanDefinitions(classFilter);
     }
+    
+    public void usesGivenClassLoader() {
+        ClassLoader classLoader = (ClassLoader) mock(ClassLoader.class).proxy();
+        new KeywordBeanLoader("");
+    }
 
     private IBeanLoader createBeanLoaderWithMockBeanDefinitionReader(String keywordPattern) {
         IBeanLoader beanLoader = createBeanLoaderWithMockApplicationContext(keywordPattern);
@@ -54,6 +59,4 @@ public class KeywordBeanLoaderTest extends MockObjectTestCase {
             .will(returnValue(keywordBeans));
         Inject.field("context").of(beanLoader).with(appContext.proxy());
     }
-
-
 }
