@@ -1,42 +1,32 @@
 package org.robotframework.javalib.beans.common;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
 
-public class NetworkFileFactoryIntegrationTest extends TestCase {
-    private Server server;
+public class NetworkFileFactoryIntegrationTest {
+    private static Server server;
     private String localDirectoryPath = System.getProperty("java.io.tmpdir");
     private String localFilePath = localDirectoryPath + "/network_file.txt";
     private String url = "http://localhost:8080/network_file.txt";
 
-    protected void setUp() throws Exception {
-        startFileServer();
-        deleteTemporaryResources();
-    }
-
-    protected void tearDown() throws Exception {
-        server.stop();
-    }
-    
-    public void testRetrievesFileFromURL() throws Exception {
-        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
-        
-        assertFileEqualsToUrl(localFile);
-    }
-    
-    private void startFileServer() throws Exception {
+    @BeforeClass
+    public static void startFileServer() throws Exception {
         server = new Server(8080);
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase("./src/test/resources");
@@ -46,9 +36,29 @@ public class NetworkFileFactoryIntegrationTest extends TestCase {
         server.start();
     }
 
-    private void deleteTemporaryResources() {
+    @Before
+    public void deleteTemporaryResources() {
         new File(localFilePath).delete();
     }
+    
+    @AfterClass
+    public static void stopServer() throws Exception {
+        try {
+            server.destroy(); // calling stop() makes maven hang
+        } catch (Exception e) {
+            // Ignored intentionally
+        }
+    }
+
+    @Test
+    public void retrievesFileFromURL() throws Exception {
+        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        assertFileEqualsToUrl(localFile);
+    }
+    
+    public void testDoesntRetrieveFileWhenLocalCopyExists() throws Exception {
+    }
+    
     
     private void assertFileEqualsToUrl(File file) throws Exception {
         assertStreamsEqual(new FileInputStream(file), new URL(url).openStream());
