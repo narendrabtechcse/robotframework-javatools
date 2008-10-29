@@ -1,5 +1,6 @@
 package org.robotframework.javalib.beans.common;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class NetworkFileFactoryIntegrationTest {
     @AfterClass
     public static void stopServer() throws Exception {
         try {
-            server.destroy(); // calling stop() makes maven hang
+            server.destroy(); // calling stop() would make maven hang
         } catch (Exception e) {
             // Ignored intentionally
         }
@@ -55,10 +56,15 @@ public class NetworkFileFactoryIntegrationTest {
         File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
         assertFileEqualsToUrl(localFile);
     }
-    
-    public void testDoesntRetrieveFileWhenLocalCopyExists() throws Exception {
+
+    @Test
+    public void doesntRetrieveFileWhenLocalCopyExists() throws Exception {
+        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        localFile.setLastModified(0);
+        localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        
+        assertEquals(0, localFile.lastModified());
     }
-    
     
     private void assertFileEqualsToUrl(File file) throws Exception {
         assertStreamsEqual(new FileInputStream(file), new URL(url).openStream());

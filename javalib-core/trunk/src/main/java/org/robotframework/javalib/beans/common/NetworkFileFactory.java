@@ -34,12 +34,17 @@ public class NetworkFileFactory {
 
     public File createFileFromUrl(String url) {
         File localFile = createLocalFile(url);
-        copyUrlToFile(url, localFile);
+        if (shouldCopyFromURL(localFile))
+            copyUrlToFile(url, localFile);
         return localFile;
     }
     
     private File createLocalFile(String url) {
         return new File(createFileNameFromUrl(url));
+    }
+
+    private boolean shouldCopyFromURL(File localFile) {
+        return !localFile.isFile();
     }
     
     private String createFileNameFromUrl(String url) {
