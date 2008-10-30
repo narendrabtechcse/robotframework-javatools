@@ -21,7 +21,7 @@ import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
 
-public class NetworkFileFactoryIntegrationTest {
+public class URLFileFactoryIntegrationTest {
     private static Server server;
     private static String resourceBase = "./src/test/resources";
     
@@ -57,25 +57,25 @@ public class NetworkFileFactoryIntegrationTest {
 
     @Test
     public void retrievesFileFromURL() throws Exception {
-        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        File localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
         assertFileEqualsToUrl(localFile);
     }
 
     @Test
     public void doesntRetrieveFileWhenLocalCopyExistsAndURLHasntChanged() throws Exception {
-        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        File localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
         long lastModified = localFile.lastModified();
-        localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
         
         assertEquals(lastModified, localFile.lastModified());
     }
     
     @Test
     public void doesRetrieveFileWhenURLHasChanged() throws Exception {
-        File localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        File localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
         long lastModified = localFile.lastModified();
         updateURLContent();
-        localFile = new NetworkFileFactory(localDirectoryPath).createFileFromUrl(url);
+        localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
         
         assertTrue(lastModified < localFile.lastModified());
     }

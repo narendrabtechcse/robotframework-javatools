@@ -25,10 +25,10 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-public class NetworkFileFactory {
+public class URLFileFactory {
     private final String localDirectoryPath;
 
-    public NetworkFileFactory(String localDirectoryPath) {
+    public URLFileFactory(String localDirectoryPath) {
         this.localDirectoryPath = localDirectoryPath;
     }
 
