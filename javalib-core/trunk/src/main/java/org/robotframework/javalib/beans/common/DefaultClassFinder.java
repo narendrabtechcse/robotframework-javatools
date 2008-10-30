@@ -18,14 +18,10 @@ package org.robotframework.javalib.beans.common;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -37,6 +33,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  */
 public class DefaultClassFinder extends PathMatchingResourcePatternResolver implements ClassFinder {
     private ClassNameResolver classNameResolver;
+    private URLFileFactory urlFileFactory = new URLFileFactory(System.getProperty("java.io.tmpdir"));
 
     /**
      * @param classLoader resolver to use for resolving the given pattern
@@ -79,6 +76,7 @@ public class DefaultClassFinder extends PathMatchingResourcePatternResolver impl
     private String determinePackageRoot(String location) {
         String rootDir = determineRootDir(location);
         return rootDir.substring(rootDir.indexOf(":") + 1);
+
     }
 
     private Class loadClass(String className) {
@@ -97,27 +95,21 @@ public class DefaultClassFinder extends PathMatchingResourcePatternResolver impl
         }
     }
 
+    @Override
     protected JarFile getJarFile(String jarFileUrl) throws IOException {
-        if (isNetworkUrl(jarFileUrl)) {
-            return createJarFileOverNetwork(jarFileUrl);
-        } else {
-            return super.getJarFile(jarFileUrl);
+        if (isURLResource(jarFileUrl)) {
+            File fileFromUrl = urlFileFactory.createFileFromUrl(jarFileUrl);
+            return createJarFile(fileFromUrl);
         }
+            
+        return super.getJarFile(jarFileUrl);
     }
 
-    private boolean isNetworkUrl(String jarFileUrl) {
+    JarFile createJarFile(File fileFromUrl) throws IOException {
+        return new JarFile(fileFromUrl);
+    }
+
+    private boolean isURLResource(String jarFileUrl) {
         return jarFileUrl.toLowerCase().startsWith("http");
-    }
-
-    private JarFile createJarFileOverNetwork(String jarFileUrl) throws IOException, MalformedURLException {
-        File jarFile = createFileFromUrl(jarFileUrl);
-        return new JarFile(jarFile);
-    }
-
-    private File createFileFromUrl(String jarFileUrl) throws IOException, MalformedURLException {
-        String baseName = FilenameUtils.getBaseName(jarFileUrl);
-        File file = new File("/tmp/" + baseName);
-        FileUtils.copyURLToFile(new URL(jarFileUrl), file);
-        return file;
     }
 }

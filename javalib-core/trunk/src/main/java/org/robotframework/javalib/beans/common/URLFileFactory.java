@@ -49,7 +49,7 @@ public class URLFileFactory {
     
     private String createFileNameFromUrl(String url) {
         String fileSeparator = System.getProperty("file.separator");
-        return localDirectoryPath + fileSeparator + FilenameUtils.getBaseName(url) + FilenameUtils.getExtension(url);
+        return localDirectoryPath + fileSeparator + FilenameUtils.getBaseName(url) + "." + FilenameUtils.getExtension(url);
     }
 
     private void copyUrlToFile(String url, File localFile) {

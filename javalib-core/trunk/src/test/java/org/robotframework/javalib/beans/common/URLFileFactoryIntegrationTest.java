@@ -1,8 +1,5 @@
 package org.robotframework.javalib.beans.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,16 +12,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.DefaultHandler;
-import org.mortbay.jetty.handler.HandlerList;
-import org.mortbay.jetty.handler.ResourceHandler;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class URLFileFactoryIntegrationTest {
-    private static Server server;
-    private static String resourceBase = "./src/test/resources";
-    
     private String localDirectoryPath = System.getProperty("java.io.tmpdir");
     private String fileSeparator = System.getProperty("file.separator");
     private String localFilePath = localDirectoryPath + "/network_file.txt";
@@ -32,13 +24,7 @@ public class URLFileFactoryIntegrationTest {
     
     @BeforeClass
     public static void startFileServer() throws Exception {
-        server = new Server(8080);
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase(resourceBase);
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { resourceHandler, new DefaultHandler() });
-        server.setHandler(handlers);
-        server.start();
+        FileServer.start();
     }
 
     @Before
@@ -48,16 +34,13 @@ public class URLFileFactoryIntegrationTest {
     
     @AfterClass
     public static void stopServer() throws Exception {
-        try {
-            server.destroy(); // calling stop() would make maven hang
-        } catch (Exception e) {
-            // Ignored intentionally
-        }
+        FileServer.stop();
     }
 
     @Test
     public void retrievesFileFromURL() throws Exception {
         File localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
+        assertEquals(localFilePath, localFile.getAbsolutePath());
         assertFileEqualsToUrl(localFile);
     }
 
@@ -71,13 +54,17 @@ public class URLFileFactoryIntegrationTest {
     }
     
     @Test
-    public void doesRetrieveFileWhenURLHasChanged() throws Exception {
+    public void retrievesFileWhenURLHasChanged() throws Exception {
         File localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
-        long lastModified = localFile.lastModified();
-        updateURLContent();
-        localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
+        localFile.setLastModified(1000);
+        long oldLastModified = localFile.lastModified();
         
-        assertTrue(lastModified < localFile.lastModified());
+        updateURLContent();
+        
+        localFile = new URLFileFactory(localDirectoryPath).createFileFromUrl(url);
+        long newLastModified = localFile.lastModified();
+        
+        assertTrue("Expected " + oldLastModified + " to be less than " + newLastModified, oldLastModified < newLastModified);
     }
     
     private void assertFileEqualsToUrl(File file) throws Exception {
@@ -94,6 +81,6 @@ public class URLFileFactoryIntegrationTest {
     }
     
     private void updateURLContent() throws IOException {
-        FileUtils.touch(new File(resourceBase + fileSeparator + "network_file.txt"));
+        FileUtils.touch(new File(FileServer.resourceBase + fileSeparator + "network_file.txt"));
     }
 }
