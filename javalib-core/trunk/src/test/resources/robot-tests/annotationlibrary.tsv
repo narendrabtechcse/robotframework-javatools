@@ -20,6 +20,3 @@ Creates Keywords That Can Handle Variable Number Of Arguments
 	${stackedArguments}=	keywordWithVariableArgumentCount	arg1
 	${expected}=	createList
 	listsShouldBeEqual	${expected}	${stackedArguments}
-
-*Keyword*	*Action*	*Argument*
-

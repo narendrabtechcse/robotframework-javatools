@@ -34,16 +34,16 @@ public class AnnotationKeywordExtractorTest extends MockObjectTestCase {
         assertEquals(expectedKeywordCount(), extractedKeywords.size());
     }
 
-    public void testExtractsKeywordsThatReturnCorrectValue() throws Exception {
+    public void testExtractsKeywordsWithReturnValue() throws Exception {
         assertEquals(keywordWithoutArgumentsExecutionResult, keywordWithoutArguments.execute(null));
     }
 
-    public void testExtractsKeywordsThatHandleArgumentsCorrectly() throws Exception {
+    public void testExtractsKeywordsWithArguments() throws Exception {
         String keywordArgument = "someArgument";
         assertEquals(keywordWithArgumentsExecutionResult + keywordArgument, keywordWithArguments.execute(new String[] { keywordArgument }));
     }
 
-    public void testExtractsKeywordsWithoutReturnValueCorrectly() throws Exception {
+    public void testExtractsKeywordsWithoutReturnValue() throws Exception {
         assertNull(keywordWithoutReturnValue.execute(null));
         assertTrue(keywordWasCalled);
     }

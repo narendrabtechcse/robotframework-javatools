@@ -13,7 +13,6 @@ import org.robotframework.javalib.util.ArrayUtil;
 
 public class AnnotationKeywordExtractorIntegrationTest extends TestCase {
     private IKeywordExtractor<DocumentedKeyword> extractor = new AnnotationKeywordExtractor();
-
     private Map<String, DocumentedKeyword> extractedKeywords;
 
     @Override
@@ -32,10 +31,6 @@ public class AnnotationKeywordExtractorIntegrationTest extends TestCase {
         assertArraysEquals(new String[] { "overridenArgumentName" }, someKeyword.getArgumentNames());
     }
 
-    private void assertArraysEquals(String[] expected, String[] actual) {
-        assertTrue(Arrays.equals(expected, actual));
-    }
-
     public void testExtractsKeywordsThatHandleVariableArgumentCount() throws Exception {
         Keyword keyword = (Keyword) extractedKeywords.get("keywordWithVariableArgumentCount");
 
@@ -44,6 +39,10 @@ public class AnnotationKeywordExtractorIntegrationTest extends TestCase {
         assertLeftoverArgumentsAreCorrectlyGrouped(keyword, new String[] { "arg1" });
     }
 
+    private void assertArraysEquals(String[] expected, String[] actual) {
+        assertTrue(Arrays.equals(expected, actual));
+    }
+    
     private void assertLeftoverArgumentsAreCorrectlyGrouped(Keyword keyword, String[] arguments) {
         Object[] expected = ArrayUtil.copyOfRange(arguments, 1, arguments.length);
         ArrayUtil.assertArraysEquals(expected, (Object[]) keyword.execute(arguments));
