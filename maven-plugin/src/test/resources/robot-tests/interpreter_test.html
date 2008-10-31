@@ -1,0 +1,124 @@
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Simple test suite</title>
+</head>
+<body>
+
+<h1>Python or Jython</h1>
+
+<table border="1">
+  <colgroup span="99"><col class="name"><col class="value" span="4"></colgroup> <thead><tr>
+    <th>Setting</th>
+    <th>Value</th>
+    <th>Value</th>
+    <th>value</th>
+    <th>Value</th>
+  </tr>
+  </thead> <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table border="1">
+  <colgroup span="99"><col class="name"><col class="value" span="4"></colgroup> <thead><tr>
+    <th>Variable</th>
+    <th>Value</th>
+    <th>Value</th>
+    <th>Value</th>
+    <th>Value</th>
+  </tr>
+  </thead> <tbody>
+    <tr>
+      <td>${INTERPRETER}</td>
+      <td>python</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table border="1">
+
+  <colgroup span="99"><col class="name"><col class="action"><col class="arg" span="3"></colgroup>
+  <thead><tr>
+    <th>Test Case</th>
+    <th>Action</th>
+    <th>Argument</th>
+    <th>Argument</th>
+    <th>Argument</th>
+  </tr>
+
+  </thead> <tbody>
+    <tr>
+      <td>Verify Interpreter</td>
+      <td align="undefined" valign="undefined">${os_name} =</td>
+      <td align="undefined" valign="undefined">Evaluate</td>
+      <td align="undefined" valign="undefined">__import__('os').name</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td align="undefined" valign="undefined"></td>
+      <td align="undefined" valign="undefined">${on_jython} =</td>
+      <td align="undefined" valign="undefined">Evaluate</td>
+      <td align="undefined" valign="undefined">'${os_name}' == 'java'</td>
+      <td align="undefined" valign="undefined"></td>
+    </tr>
+    <tr>
+      <td align="undefined" valign="undefined"></td>
+      <td align="undefined" valign="undefined">${py_interp} = </td>
+      <td align="undefined" valign="undefined">Evaluate </td>
+      <td align="undefined" valign="undefined">'${INTERPRETER}' == 'python'</td>
+      <td align="undefined" valign="undefined"></td>
+    </tr>
+    <tr>
+      <td align="undefined" valign="undefined"></td>
+      <td align="undefined" valign="undefined">${jy_interp} = </td>
+      <td align="undefined" valign="undefined">Evaluate </td>
+      <td align="undefined" valign="undefined">'${INTERPRETER}' == 'jython'</td>
+      <td align="undefined" valign="undefined"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td align="undefined" valign="undefined">Fail Unless</td>
+      <td align="undefined" valign="undefined">(${on_jython} and&nbsp;${jy_interp}) or <br>
+(not ${on_jython} and ${py_interp}) </td>
+      <td>Running on '${os_name}' but given interpreter was '${INTERPRETER}'</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

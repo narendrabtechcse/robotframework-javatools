@@ -1,0 +1,561 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+  <style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+p {
+  max-width: 60em;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 0.1em solid black;
+}
+th, td {
+  border-style: solid;
+  border-width: 0.05em 0.1em;
+  border-color: black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  border-width: 0.1em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: capitalize;
+  letter-spacing: 0.1em;
+}
+/* Widths of named columns */
+col.name {
+  width: 10em;
+}
+.action, .value, .arg {
+  width: 15em;
+}
+/* Properties for the name column 
+- td:first-child should work in CSS 2.1 avare browsers (tested in Firefox)
+- col.name is against specs but works in IE
+*/
+td:first-child, col.name {
+  background-color: rgb(240, 240, 240);
+  text-transform: capitalize;
+  letter-spacing: 0.1em;
+}
+/* required for IE */
+th {
+  font-style: normal;
+}
+  </style>
+  <title>Robot Test Cases</title></head>
+
+<body>
+
+<h1>Robot Test Cases</h1><table border="1">
+
+  <colgroup span="99"><col class="name"><col class="value" span="4"></colgroup>
+  <thead>
+  <tr>
+
+    <th>Setting</th>
+
+    <th>Value</th>
+
+    <th>Value</th>
+
+    <th>value</th>
+
+    <th>Value</th>
+
+  </tr>
+
+  </thead>
+  <tbody>
+
+
+    <tr>
+
+      <td>Document</td>
+
+      <td>This is template which contains some very simple examples.</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Default Tags</td>
+
+      <td>tag1</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Test Setup</td>
+
+      <td>Log</td>
+
+      <td>This is test case setup.</td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Test Teardown</td>
+
+      <td>Log</td>
+
+      <td>This is test case teardown.</td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Suite Setup</td>
+
+      <td>Log</td>
+
+      <td>This is suite setup.</td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Suite Teardown</td>
+
+      <td>Log</td>
+
+      <td>This is suite teardown.</td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+    <tr>
+      <td>Library</td>
+      <td>OperatingSystem</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+
+
+<table border="1">
+
+  <colgroup span="99"><col class="name"><col class="value" span="4"></colgroup>
+  <thead>
+  <tr>
+
+    <th>Variable</th>
+
+    <th>Value</th>
+
+    <th>Value</th>
+
+    <th>Value</th>
+
+    <th>Value</th>
+
+  </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>${MESSAGE}</td>
+
+      <td>Hello world!</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+
+ 
+<table border="1">
+
+  <colgroup span="99"><col class="name"><col class="action"><col class="arg" span="3"></colgroup>
+  <thead>
+  <tr>
+
+    <th>Test Case</th>
+
+    <th>Action</th>
+
+    <th>Argument</th>
+
+    <th>Argument</th>
+
+    <th>Argument</th>
+
+    <th>Argument</th>
+
+    <th>Argument</th>
+
+  </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>First Test</td>
+
+      <td>[Document]</td>
+
+      <td>This test logs message.&nbsp;</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td>Log</td>
+
+      <td>${MESSAGE}</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Test using keyword</td>
+
+      <td>[Document]</td>
+
+      <td>This test uses keyword to log message three times.</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td>Log message three times</td>
+
+      <td>${MESSAGE}</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Using Imported Keyword</td>
+      <td>[Documnet]</td>
+      <td>This test reads the contents of current working directory and assigns it to a variable.</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>@{content} = </td>
+      <td>List Dir</td>
+      <td>${CURDIR}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Log Many</td>
+      <td>@{content}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td>Failing Test</td>
+
+      <td>[Document]</td>
+
+      <td>This test fails.</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td>[Tags]</td>
+
+      <td>fail</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td>Fail</td>
+
+      <td>This test should fail.</td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+
+ 
+<table border="1">
+
+  <colgroup span="99"><col class="name"><col class="action"><col class="arg" span="3"></colgroup>
+  <thead>
+  <tr>
+
+    <th>Keyword</th>
+
+    <th>Action</th>
+
+    <th>Argument</th>
+
+    <th>Argument</th>
+
+    <th>Argument</th>
+
+  </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>Log message three times</td>
+
+      <td>[Arguments]</td>
+
+      <td>${msg}</td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td>[Document]</td>
+
+      <td>This keyword logs given message three times.</td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td>3x</td>
+
+      <td> Log</td>
+
+      <td>${msg}&nbsp;</td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+
+</body></html>
