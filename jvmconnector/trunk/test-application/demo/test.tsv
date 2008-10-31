@@ -4,23 +4,19 @@ suiteSetup	startApplication
 suiteTeardown	closeApplication
 
 *Variable*	*Value*	*Value*
-#${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp
-${jnlpUrl}	http://localhost/demo/test-application.jnlp
+${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp
 
 *TestCase*	*Action*	*Argument*
 Demonstration
-	selectFromMainMenu	Test Menu|Show Test Dialog
+	selectFromMainMenu	Test Menu|Show Dialog
 	selectDialog	Message
 	pushButton	OK
 
 *Keyword*	*Action*	*Argument*
 startApplication
-	${javaws}=	startProcess	javaws -wait ${jnlpUrl}
-	setSuiteVariable	\${javaws}
-	importLibrary	RemoteSwingLibrary	localhost	1099	60
+	startProcess	javaws -wait ${jnlpUrl}
+	importLibrary	${CURDIR}${/}RemoteSwingLibrary.py
 
 closeApplication
-	closeWindow	0
-	switchProcess	${javaws}
-	stopProcess
-	stopAllProcesses
+	selectMainWindow
+	runKeywordAndIgnoreError	pushButton	systemExitButton

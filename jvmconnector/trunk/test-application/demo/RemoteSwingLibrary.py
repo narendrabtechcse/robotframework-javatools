@@ -6,7 +6,7 @@ from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 class RemoteSwingLibrary(RobotRemoteLibrary):
 
     def __init__(self, host='localhost', port='1099',
-                 timeout=30, retry_interval=5):
+                 timeout=120, retry_interval=5):
         self.host = host
         self.port = port
         start_time = time.time()
