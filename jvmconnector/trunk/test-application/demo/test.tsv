@@ -14,7 +14,7 @@ Demonstration
 
 *Keyword*	*Action*	*Argument*
 startApplication
-	startProcess	javaws -wait ${jnlpUrl}
+	startProcess	javaws ${jnlpUrl}
 	importLibrary	${CURDIR}${/}RemoteSwingLibrary.py
 
 closeApplication
