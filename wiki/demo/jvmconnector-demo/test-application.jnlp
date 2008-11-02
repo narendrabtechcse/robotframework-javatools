@@ -13,7 +13,7 @@
     <resources>
         <jar href="test-application.jar"/>
         <jar href="jvmconnector-0.5.jar"/>
-        <jar href="swinglibrary-0.5.jar"/>
+        <jar href="swinglibrary-0.5-jre1.4.jar"/>
         <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
     </resources>
     <application-desc main-class="org.robotframework.swing.testapp.TestApplication"/>
