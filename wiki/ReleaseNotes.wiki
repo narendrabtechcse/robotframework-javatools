@@ -1,3 +1,13 @@
+﻿== Javalib-Core 0.7.2 ==
+
+This release fixes an issue affecting testing of java webstart applications.
+Jar files exposed through the jnlp descriptor file were not scanned for
+keywords. This is now fixed.
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 3 || Defect || Medium || Fix keyword detection for java webstart applications. ||
+|| Issue 4 || Defect || Medium || Fix argument name retrieval. ||
+
 == Javalib-Core 0.7.1 ==
 
 This is a bugfix release.
