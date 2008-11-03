@@ -1,0 +1,22 @@
+*Setting*	*Value*
+library	OperatingSystem
+suiteSetup	startApplication
+suiteTeardown	closeApplication
+
+*Variable*	*Value*	*Value*
+${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp
+
+*TestCase*	*Action*	*Argument*
+Demonstration
+	selectFromMainMenu	Test Menu|Show Dialog
+	selectDialog	Message
+	pushButton	OK
+
+*Keyword*	*Action*	*Argument*
+startApplication
+	startProcess	javaws ${jnlpUrl}
+	importLibrary	${CURDIR}${/}RemoteSwingLibrary.py
+
+closeApplication
+	selectMainWindow
+	runKeywordAndIgnoreError	pushButton	systemExitButton
