@@ -27,7 +27,7 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
 ===Demo===
 
-In this example we use !JvmConnector and [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary] to test a simple [http://en.wikipedia.org/wiki/Java_Web_Start Java Web Start] application. [http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp Try it out].
+In this example we use !JvmConnector and [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary] to test a simple [http://en.wikipedia.org/wiki/Java_Web_Start Java Web Start] application. [http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp Try the application].
 
  # Download the [http://robotframework-javatools.googlecode.com/files/jvmconnector-with-javaws-demo.zip jvmconnector-with-javaws-demo.zip]
  # Unzip it and chdir to demo directory
