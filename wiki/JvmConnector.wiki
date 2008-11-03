@@ -36,3 +36,37 @@ In this example we use !JvmConnector and [http://code.google.com/p/robotframewor
 You'll need javaws and jython in the path.
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/test-application/ here].
+
+===Maven2===
+
+To use jvmconnector in your maven2 project add the following sections in your _pom.xml_:
+
+{{{
+  <dependencies>
+    <dependency>
+      <groupId>org.robotframework</groupId>
+      <artifactId>jvmconnector</artifactId>
+      <version>0.5</version>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>laughingpanda</id>
+      <url>http://www.laughingpanda.org/maven2</url>
+    </repository>
+  </repositories>
+}}}
+
+For those using jre 1.4 just add `<classifier>jre1.4</classifier>` to the dependency:
+
+{{{
+  <dependencies>
+    <dependency>
+      <groupId>org.robotframework</groupId>
+      <artifactId>jvmconnector</artifactId>
+      <version>0.5</version>
+      <classifier>jre1.4</classifier>
+    </dependency>
+  </dependencies>
+}}}
