@@ -1,0 +1,8 @@
+﻿== Jvmconnector 0.5 ==
+
+This is the first open source release.
+
+*Features:*
+ * Connects robot to an application running in different JVM.
+ * Redirects logging from the keywords back to robot
+ * Handles exceptions thrown on the remote system so that they are presented in a meaningful way in the robot logs.
