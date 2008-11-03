@@ -81,7 +81,7 @@ To use javalib-core in your maven2 project add the following sections in your _p
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
-      <version>0.7</version>
+      <version>0.7.2</version>
     </dependency>
   </dependencies>
 
@@ -101,7 +101,7 @@ If you are stuck with jre 1.4 just add `<classifier>jre1.4</classifier>` to the 
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
-      <version>0.7</version>
+      <version>0.7.2</version>
       <classifier>jre1.4</classifier>
     </dependency>
   </dependencies>
