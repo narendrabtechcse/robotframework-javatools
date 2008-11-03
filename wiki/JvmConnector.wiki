@@ -27,9 +27,9 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
 ===Demo===
 
-# Download the [http://robotframework-javatools.googlecode.com/files/jvmconnector-with-javaws-demo.zip jvmconnector-with-javaws-demo.zip]
-# Unzip it and chdir to demo directory
-# Run `./run.py test.tsv`
+ # Download the [http://robotframework-javatools.googlecode.com/files/jvmconnector-with-javaws-demo.zip jvmconnector-with-javaws-demo.zip]
+ # Unzip it and chdir to demo directory
+ # Run `./run.py test.tsv`
 
 You'll need javaws and jython in the path.
 
