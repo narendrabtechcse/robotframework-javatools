@@ -27,6 +27,8 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
 ===Demo===
 
+In this example we use jvmconnector and [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary] to test a simple [http://en.wikipedia.org/wiki/Java_Web_Start Java Web Start] application.
+
  # Download the [http://robotframework-javatools.googlecode.com/files/jvmconnector-with-javaws-demo.zip jvmconnector-with-javaws-demo.zip]
  # Unzip it and chdir to demo directory
  # Run `./run.py test.tsv`
@@ -34,5 +36,3 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 You'll need javaws and jython in the path.
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/test-application/ here].
-
-
