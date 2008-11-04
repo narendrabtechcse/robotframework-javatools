@@ -35,8 +35,8 @@
 
       <!-- $$$PLUGIN_TEMPLATE_BEGIN$$$
       <plugin>
-        <groupId>robot</groupId>
-        <artifactId>robot-maven-plugin</artifactId>
+        <groupId>org.robotframework</groupId>
+        <artifactId>maven-plugin</artifactId>
         <configuration>
           <robotTestDirectory>src/test/resources/robot-tests</robotTestDirectory>
           <robotScript>pybot</robotScript>
