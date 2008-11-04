@@ -96,7 +96,7 @@ public class TestMavenExecution extends TestCase {
 
     private void executeRobotTestGoal() throws IOException {
         String[] goals = new String[] { "-X", "-o", "-B",
-                "robot:test" };
+                "org.robotframework:robot-maven-plugin:test" };
         executeMavenGoals(goals);
     }
 

@@ -45,7 +45,7 @@ public class MavenProjectTemplate {
                 "plugins").item(0);
         Element plugin = pom.createElement("plugin");
 
-        plugin.appendChild(createSimpleElement("groupId", "robot"));
+        plugin.appendChild(createSimpleElement("groupId", "org.robotframework"));
         plugin.appendChild(createSimpleElement("artifactId",
                 "robot-maven-plugin"));
 
