@@ -13,7 +13,7 @@ public class FileServer {
     public static void start() throws Exception {
         if (server != null && server.isStarted())
             return;
-        server = new Server(8080);
+        server = new Server(9080);
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(resourceBase);
         HandlerList handlers = new HandlerList();
