@@ -30,21 +30,16 @@ import org.springframework.beans.PropertyValue;
 
 
 public class SimpleRobotRmiServerTest extends MockObjectTestCase {
+    private String keywordName = "some keyword";
+    private Object[] keywordArguments = new Object[0];
+    private Object keywordReturnValue = new Object();
+    
 	private Mock mockJavaLibrary;
 	private Mock mockStreamRedirecter;
 	private SimpleRobotRmiService robotRmiService;
-	private String keywordName;
-	private Object[] keywordArguments;
-	private Object keywordReturnValue;
 	
 	public void setUp() throws Exception {
-		setMockJavaLibrary();
-		setMockStreamRedirecter();
-		setRobotRmiService();
-		
-		keywordName = "some keyword";
-		keywordArguments = new Object[0];
-		keywordReturnValue = new Object();
+	    robotRmiService = createRmiServiceWithMockInternals();
 	}
 	
 	public void testGetsKeywords() {
@@ -195,18 +190,27 @@ public class SimpleRobotRmiServerTest extends MockObjectTestCase {
 		return tmpRmiService.runKeyword(mockKeywordName, null);
 	}
 	
-	private void setRobotRmiService() {
-		robotRmiService = new SimpleRobotRmiService((StdStreamRedirecter)mockStreamRedirecter.proxy());
-		robotRmiService.setLibrary((RobotJavaLibrary) mockJavaLibrary.proxy());
+    private SimpleRobotRmiService createRmiServiceWithMockInternals() {
+        StdStreamRedirecter redirecterStub = createStreamRedirecterStub();
+        RobotJavaLibrary libraryStub = createRobotJavaLibraryStub();
+        return createRobotRmiService(libraryStub, redirecterStub);
+    }
+    
+	private SimpleRobotRmiService createRobotRmiService(RobotJavaLibrary library, StdStreamRedirecter streamRedirecter) {
+		robotRmiService = new SimpleRobotRmiService(streamRedirecter);
+		robotRmiService.setLibrary(library);
+		return robotRmiService;
 	}
 	
-	private void setMockStreamRedirecter() {
+	private StdStreamRedirecter createStreamRedirecterStub() {
 		mockStreamRedirecter = mock(StdStreamRedirecter.class);
 		mockStreamRedirecter.stubs();
+		return (StdStreamRedirecter) mockStreamRedirecter.proxy();
 	}
 	
-	private void setMockJavaLibrary() {
+	private RobotJavaLibrary createRobotJavaLibraryStub() {
 		mockJavaLibrary = mock(RobotJavaLibrary.class);
 		mockJavaLibrary.stubs();
+		return (RobotJavaLibrary) mockJavaLibrary.proxy();
 	}
 }
