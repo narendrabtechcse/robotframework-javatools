@@ -49,7 +49,7 @@ public class SimpleRobotRmiServerTest extends MockObjectTestCase {
 		keywordReturnValue = new Object();
 	}
 	
-	public void testUsesRobotJavaLibraryForGettingKeywords() {
+	public void testGetsKeywords() {
 		String[] keywordNames = new String[0];
 		mockJavaLibrary.expects(once()).method("getKeywordNames")
 			.will(returnValue(keywordNames));
@@ -57,14 +57,14 @@ public class SimpleRobotRmiServerTest extends MockObjectTestCase {
 		assertEquals(keywordNames, robotRmiService.getKeywordNames());
 	}
 	
-	public void testUsesRobotJavaLibraryForRunningKeyword() {
+	public void testRunsKeywords() {
 		mockJavaLibrary.expects(once()).method("runKeyword")
 			.with(same(keywordName), same(keywordArguments));
 
 		robotRmiService.runKeyword(keywordName, keywordArguments);
 	}
 	
-	public void testKeywordExecutionResultsWrapKeywordReturnValue() {
+	public void testWrapsResults() {
 		mockJavaLibrary.stubs().method("runKeyword")
 			.will(returnValue(keywordReturnValue));
 			
@@ -74,35 +74,35 @@ public class SimpleRobotRmiServerTest extends MockObjectTestCase {
 		assertEquals(keywordReturnValue, keywordExecutionResult.getResult());
 	}
 	
-	public void testStdOutLogIsPreservedIfKeywordThrowsException() {
+	public void testRetainsSystemOutLogWhenFails() {
 		KeywordExecutionResult keywordExecutionResults = 
 			executeMockKeyword(ExceptionThrowingKeyword.KEYWORD_NAME);
 		
 		assertEquals(ExceptionThrowingKeyword.LOG_STRING_STDOUT, keywordExecutionResults.getStdOutAsString());
 	}
 	
-	public void testStdErrLogIsPreservedIfKeywordThrowsException() {
+	public void testRetainsSystemErrLogWhenFails() {
 		KeywordExecutionResult keywordExecutionResults = 
 			executeMockKeyword(ExceptionThrowingKeyword.KEYWORD_NAME);
 		
 		assertEquals(ExceptionThrowingKeyword.LOG_STRING_STDERR, keywordExecutionResults.getStdErrAsString());
 	}
 	
-	public void testKeywordExecutionStatusIsPassedIfKeywordPasses() {
+	public void testPassesWhenKeywordPasses() {
 		mockJavaLibrary.stubs().method("runKeyword")
 			.will(returnValue(new Object()));
 		
 		assertTrue(robotRmiService.runKeyword(keywordName, keywordArguments).isKeywordPassed());
 	}
 	
-	public void testKeywordExecutionStatusIsFailedIfTestFails() {
+	public void testFailsWhenKeywordFails() {
 		mockJavaLibrary.stubs().method("runKeyword")
 			.will(throwException(new Throwable()));
 		
 		assertFalse(robotRmiService.runKeyword(keywordName, keywordArguments).isKeywordPassed());
 	}
 	
-	public void testGetTestFailedExceptionReturnsNullIfKeywordPassed() {
+	public void testContainsNoWrappedExceptionWhenPasses() {
 		KeywordExecutionResult executionResult = robotRmiService.runKeyword(keywordName, keywordArguments);
 		assertTrue(executionResult.getTestFailedException() == null);
 	}
