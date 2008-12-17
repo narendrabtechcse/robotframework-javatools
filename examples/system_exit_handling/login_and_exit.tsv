@@ -11,6 +11,9 @@ Logging Into System Multiple Times Should Work
 	login
 	hello	world
 	exit
+	launchApplication
+	login
+	exit
 
 *Keyword*	*Action*	*Argument*	*Argument*
 launchAndImportLibraries
@@ -19,7 +22,7 @@ launchAndImportLibraries
 	importFooLibrary
 
 launchApplication
-	startProcess	java org.robotframework.example.Application
+	startProcess	java org.robotframework.example.Application 1>out.txt 2>err.txt
 
 importRemoteSwing
 	importLibrary	RemoteLibrary	rmi://localhost:1099/swingLibrary	WITH NAME	swinglibrary

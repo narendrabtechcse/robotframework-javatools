@@ -1,38 +1,38 @@
 import time
-from robot.utils import normalize
-from java.net import ConnectException
+
+from org.springframework.remoting import RemoteAccessException
+from org.springframework.remoting import RemoteConnectFailureException
+from org.springframework.beans.factory import BeanCreationException
+from robot.utils import normalize, timestr_to_secs
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 
 class RemoteLibrary:
-    def __init__(self, uri='rmi://localhost:1099/jvmConnector', timeout=120, retry_interval=5):
+
+    def __init__(self, uri='rmi://localhost:1099/jvmConnector', 
+                 timeout="30 seconds"):
         self.uri = uri
         self.timeout = timeout
-        self.retry_interval = retry_interval
         self.open_connection()
 
     def open_connection(self):
         start_time = time.time()
-        timeout = int(self.timeout)
-        retry_interval = int(self.retry_interval)
-        while True:
+        timeout = timestr_to_secs(self.timeout)
+        while time.time() - start_time < timeout:
             try:
                 self.remote_lib = RobotRemoteLibrary(self.uri)
-                break
-            except:
-                time.sleep(retry_interval)
-                if time.time() - start_time >= timeout:
-                    raise
-            else:
-                break
-
+                return
+            except (BeanCreationException, RemoteConnectFailureException):
+                time.sleep(2)
+        message = "Could not get connection to '%s' in '%s'!" 
+        raise RuntimeError(message %(self.uri, self.timeout))
+        
     def get_keyword_names(self):
-        keyword_names = list(self.remote_lib.getKeywordNames())
-        keyword_names.append('openconnection')
-        return keyword_names
+        return list(self.remote_lib.getKeywordNames())
 
     def run_keyword(self, name, args):
-        if normalize(name) == 'openconnection':
+        try:
+            return self.remote_lib.runKeyword(name, args)
+        except RemoteAccessException:
             self.open_connection()
-        else:
             return self.remote_lib.runKeyword(name, args)
