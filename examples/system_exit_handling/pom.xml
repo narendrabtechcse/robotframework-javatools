@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.robotframework</groupId>
+  <artifactId>application-with-modal-dialog</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1</version>
+  <name>application-with-modal-dialog</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.robotframework</groupId>
+      <artifactId>jvmconnector</artifactId>
+      <version>0.6-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.robotframework</groupId>
+      <artifactId>swinglibrary</artifactId>
+      <version>0.9-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans</groupId>
+      <artifactId>jemmy</artifactId>
+      <version>2.2.7.5</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <repositories>
+    <repository>
+      <id>laughingpanda</id>
+      <url>http://www.laughingpanda.org/maven2</url>
+    </repository>
+  </repositories>
+</project>

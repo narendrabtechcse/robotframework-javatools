@@ -1,0 +1,38 @@
+*Setting*	*Value*
+library	OperatingSystem
+
+*Variable*	*Value*
+${mainClass}	org.robotframework.example.Application
+${password}	robot
+
+*Test Case*	*Action*	*Argument*
+Logging Into System Multiple Times Should Work
+	launchAndImportLibraries
+	login
+	hello	world
+	exit
+
+*Keyword*	*Action*	*Argument*	*Argument*
+launchAndImportLibraries
+	launchApplication
+	importRemoteSwing
+	importFooLibrary
+
+launchApplication
+	startProcess	java org.robotframework.example.Application
+
+importRemoteSwing
+	importLibrary	RemoteLibrary	rmi://localhost:1099/swingLibrary	WITH NAME	swinglibrary
+	setJemmyTimeouts	60
+
+importFooLibrary
+	importLibrary	RemoteLibrary	rmi://localhost:1099/fooLibrary	WITH NAME	foo
+
+login
+	selectDialog	0
+	insertIntoTextField	0	${password}
+	pushButton	0
+
+exit
+	selectMainWindow
+	runKeywordAndIgnoreError	pushButton	exit
