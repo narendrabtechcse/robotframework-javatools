@@ -64,7 +64,7 @@ public class RobotRemoteLibraryTest extends MockObjectTestCase {
 		assertEquals(expectedReturnValue, remoteLibraryWithMockRmiClient.runKeyword(keywordName, keywordArgs));
 	}
 
-	public void testReturnsDefaultKeywordNamesAndThoseProvidedByRmiClient() throws Exception {
+	public void testReturnsKeywordNames() throws Exception {
 	    String clientKeyword = "someKeyword";
 
 	    mockRmiClient.expects(once()).method("getKeywordNames")
