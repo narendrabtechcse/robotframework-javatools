@@ -24,6 +24,18 @@
       <version>2.2.7.5</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>abbot</groupId>
+      <artifactId>abbot</artifactId>
+      <version>1.0.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>abbot</groupId>
+      <artifactId>costello</artifactId>
+      <version>1.0.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   
   <build>
