@@ -16,23 +16,14 @@
 
 package org.robotframework.jvmconnector.client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.robotframework.javalib.library.RobotJavaLibrary;
-import org.robotframework.javalib.util.KeywordNameNormalizer;
 import org.robotframework.jvmconnector.common.PropertyOverrider;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
-
 /**
- * <p>
  * Robot java library for remote keyword invocation.
- * </p>
- * <p>
  * Additional properties for the
  * org.robotframework.javalib.library.RobotJavaLibrary implementation
  * contained by RobotRmiService can be provided as a constructor argument in a
@@ -40,57 +31,44 @@ import org.springframework.core.io.ClassPathResource;
  * <code>someProperty=someValue|anotherProperty=anotherValue</code>. The robot
  * java library implementation must have the corresponding
  * <code>setSomeProperty</code> and <code>setAnotherProperty</code> methods.
- * </p>
- * 
- * @author Heikki Hulkko
  */
 public class RobotRemoteLibrary implements RobotJavaLibrary {
-    static final String RESET = "resetrobotlibraryclient";
-    
     private RobotJavaLibrary robotLibraryClient;
-    private final String host;
-    private final String port;
-    private final String properties;
+    private String properties;
     boolean reset = false;
+
+    private String uri;
+
     
     public RobotRemoteLibrary() {
-        this("localhost", "1099", null);
+        this("rmi://localhost:1099/jvmConnector", null);
     }
 
-    public RobotRemoteLibrary(String host, String port) {
-        this(host, port, null);
+    public RobotRemoteLibrary(String uri) {
+        this(uri, null);
     }
-
+    
     /**
      * @param properties
      *            property values in a string. Use the following format:
      *            <code>someProperty=someValue|anotherProperty=anotherValue</code>.
      */
-    public RobotRemoteLibrary(String host, String port, String properties) {
-        this.host = host;
-        this.port = port;
-        this.properties = properties;
+    public RobotRemoteLibrary(String uri, String properties) {
+        this.uri = uri;
         robotLibraryClient = createRobotLibraryClient();
     }
-
+    
     public String[] getKeywordNames() {
-        List keywordsAsList = getKeywordNamesAsList();
-        keywordsAsList.add(RESET);
-        return (String[]) keywordsAsList.toArray(new String[0]);
+        return robotLibraryClient.getKeywordNames();
     }
 
     public Object runKeyword(String keywordName, Object[] args) {
-        resetLibraryIfNecessary();
-        if (new KeywordNameNormalizer().normalize(keywordName).equals(RESET)) {
-            reset = true;
-            return Boolean.TRUE;
-        }
         return robotLibraryClient.runKeyword(keywordName, args);
     }
 
     RobotJavaLibrary createRobotLibraryClient() {
         ConfigurableListableBeanFactory beanFactory = createBeanFactory();
-        overrideRmiURL(beanFactory, "rmi://" + host + ":" + port + "/jvmConnector");
+        overrideRmiURL(beanFactory, uri);
         return new RobotRmiClient(beanFactory, properties);
     }
 
@@ -102,20 +80,9 @@ public class RobotRemoteLibrary implements RobotJavaLibrary {
         return new XmlBeanFactory(new ClassPathResource("org/robotframework/jvmconnector/client/clientContext.xml"));
     }
 
-    private void resetLibraryIfNecessary() {
-        if (reset) {
-            robotLibraryClient = createRobotLibraryClient();
-            reset = false;
-        }
-    }
-
     private void overrideRmiURL(ConfigurableListableBeanFactory beanFactory, String rmiURL) {
         PropertyOverrider propertyOverrider = createPropertyOverrider();
         propertyOverrider.addOverridableProperty("robotRmiService.serviceUrl", rmiURL);
         propertyOverrider.postProcessBeanFactory(beanFactory);
-    }
-
-    private ArrayList getKeywordNamesAsList() {
-        return new ArrayList(Arrays.asList(robotLibraryClient.getKeywordNames()));
     }
 }

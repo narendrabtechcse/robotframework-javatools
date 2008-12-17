@@ -21,7 +21,6 @@ import java.util.Arrays;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.robotframework.javalib.library.RobotJavaLibrary;
-import org.robotframework.jvmconnector.client.RobotRemoteLibrary;
 import org.robotframework.jvmconnector.common.PropertyOverrider;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
@@ -33,30 +32,25 @@ public class RobotRemoteLibraryTest extends MockObjectTestCase {
 
 	private ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory) mockBeanFactory.proxy();
 	private PropertyOverrider propertyOverrider = (PropertyOverrider) mockPropertyOverrider.proxy();
-	private boolean createRobotLibraryClientWasCalled;
 	
 	private MockRemoteLibrary remoteLibraryWithMockRmiClient = new MockRemoteLibrary() {
         protected RobotJavaLibrary createRobotLibraryClient() {
-		    createRobotLibraryClientWasCalled = true;
 			return (RobotJavaLibrary) mockRmiClient.proxy();
 		}
 	};
 
 	protected void setUp() throws Exception {
-	    createRobotLibraryClientWasCalled = false;
 		mockBeanFactory.stubs();
 	}
 
-	public void testOverridesBeanPropertiesIfInitializedWithHostAndPort() throws Exception {
-		String host = "testhost";
-		String port = "1234";
-		String expectedPropertyValue = "rmi://" + host + ":" + port + "/jvmConnector";
+	public void testOverridesDefaultValues() throws Exception {
+		String uri = "rmi://somehost:9999/someLibrary";
 		mockPropertyOverrider.expects(once()).method("addOverridableProperty")
-		    .with(eq("robotRmiService.serviceUrl"),	eq(expectedPropertyValue));
+		    .with(eq("robotRmiService.serviceUrl"),	eq(uri));
 		mockPropertyOverrider.expects(once()).method("postProcessBeanFactory")
 		    .with(same(beanFactory));
 
-		new MockRemoteLibrary(host, port);
+		new MockRemoteLibrary(uri);
 	}
 
 	public void testDelegatesRunKeywordCallToRmiClient() throws Exception {
@@ -76,54 +70,20 @@ public class RobotRemoteLibraryTest extends MockObjectTestCase {
 	    mockRmiClient.expects(once()).method("getKeywordNames")
 		    .will(returnValue(new String[] { clientKeyword }));
 		
-        String[] expectedKeywordNames = new String[] { clientKeyword, RobotRemoteLibrary.RESET };
+        String[] expectedKeywordNames = new String[] { clientKeyword };
 		
 		assertKeywordNamesEquals(expectedKeywordNames, remoteLibraryWithMockRmiClient.getKeywordNames());
 	}
 	
-	public void testRunningResetKeywordResetsTheLibrary() throws Exception {
-	    assertLibraryIsReset("resetRobotLibraryClient");
-	    assertLibraryIsReset("Re s e t R_OBOtLibr ar yCLIE NT");
-    }
-
-    private void assertLibraryIsReset(String keyword) {
-        remoteLibraryWithMockRmiClient.runKeyword(keyword, null);
-	    assertTrue(remoteLibraryWithMockRmiClient.reset);
-	    remoteLibraryWithMockRmiClient.reset = false;
-    }
-	
-	public void testReinitializesBeanFactoryAfterReset() throws Exception {
-	    mockRmiClient = mock(RobotJavaLibrary.class);
-        mockRmiClient.expects(atLeastOnce()).method("runKeyword").with(eq("someKeyword"), null);
-        
-        remoteLibraryWithMockRmiClient.runKeyword(RobotRemoteLibrary.RESET, null);
-	    remoteLibraryWithMockRmiClient.runKeyword("someKeyword", null);
-	    
-	    assertThatReinitIsDoneOnceAndOnlyOnce();
-    }
-	
-	public void testDoesntInvokeClientKeywordsAfterRunningDefaultKeywords() throws Exception {
-	    mockRmiClient.expects(never()).method("runKeyword");
-        Boolean retVal = (Boolean) remoteLibraryWithMockRmiClient.runKeyword(RobotRemoteLibrary.RESET, null);
-        assertTrue(retVal.booleanValue());
-    }
-	
-	private void assertThatReinitIsDoneOnceAndOnlyOnce() {
-	    assertTrue(createRobotLibraryClientWasCalled);
-	    createRobotLibraryClientWasCalled = false;
-	    remoteLibraryWithMockRmiClient.runKeyword("someKeyword", null);
-	    assertFalse(createRobotLibraryClientWasCalled);
-	}
-
 	private void assertKeywordNamesEquals(String[] expectedKeywordNames, String[] keywordNames) {
 	    assertEquals(Arrays.asList(expectedKeywordNames), Arrays.asList(keywordNames));
 	}
 
     private class MockRemoteLibrary extends RobotRemoteLibrary {
-        public MockRemoteLibrary(String host, String port) {
-			super(host, port);
-		}
-
+        public MockRemoteLibrary(String uri) {
+            super(uri);
+        }
+        
 		public MockRemoteLibrary() {}
 
 		ConfigurableListableBeanFactory createBeanFactory() {
