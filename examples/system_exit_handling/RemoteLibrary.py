@@ -1,9 +1,8 @@
 import time
 
-from org.springframework.remoting import RemoteAccessException
 from org.springframework.remoting import RemoteConnectFailureException
 from org.springframework.beans.factory import BeanCreationException
-from robot.utils import normalize, timestr_to_secs
+from robot.utils import timestr_to_secs
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 
@@ -33,6 +32,7 @@ class RemoteLibrary:
     def run_keyword(self, name, args):
         try:
             return self.remote_lib.runKeyword(name, args)
-        except RemoteAccessException:
+        except RemoteConnectFailureException:
+            print '*DEBUG* Reconnecting to remote library.' 
             self.open_connection()
             return self.remote_lib.runKeyword(name, args)
