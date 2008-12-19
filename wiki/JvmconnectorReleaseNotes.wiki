@@ -1,4 +1,12 @@
-﻿== Jvmconnector 0.5 ==
+﻿== Jvmconnector 0.6 ==
+
+Extended Jvmconnector with !RemoteLibrary which simplifies use of remotelibraries. Added support for multiple libraries in Jvmconnector.
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 6 || Enhancement || Medium || Implement waiting for the server side connection to open 	 
+|| Issue 9 || Enhancement || High || !JvmConnector should support multiple libraries 
+
+== Jvmconnector 0.5 ==
 
 This is the first open source release.
 
@@ -6,3 +14,6 @@ This is the first open source release.
  * Connects robot to an application running in different JVM.
  * Redirects logging from the keywords back to robot.
  * Handles exceptions thrown on the remote system so that they are presented in a meaningful way in the robot logs.
+
+
+
