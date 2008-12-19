@@ -125,6 +125,11 @@
     </repository>
   </repositories>
 
+  <scm>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk</developerConnection>
+  </scm>
+
   <distributionManagement>
     <repository>
       <id>laughingpanda</id>
