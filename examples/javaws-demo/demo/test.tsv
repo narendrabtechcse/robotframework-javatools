@@ -15,7 +15,7 @@ Demonstration
 *Keyword*	*Action*	*Argument*
 startApplication
 	startProcess	javaws ${jnlpUrl}
-	importLibrary	${CURDIR}${/}RemoteSwingLibrary.py
+	importLibrary	${CURDIR}${/}tools${/}RemoteLibrary.py
 
 closeApplication
 	selectMainWindow
