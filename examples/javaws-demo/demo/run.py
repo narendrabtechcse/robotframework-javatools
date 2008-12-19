@@ -2,14 +2,14 @@
 
 import os
 import sys
-from tempfile import gettempdir
 from glob import glob
 
 def main(args):
-  jars = glob(os.path.join(os.path.dirname(__file__), 'lib', '*.jar'))
-  classpath = os.pathsep.join(jars)
-  os.environ['CLASSPATH'] = classpath
-  os.system("jybot --outputdir %s %s" % (gettempdir(), ' '.join(args)))
+    dir = os.path.dirname(__file__)
+    jars = glob(os.path.join(dir, 'lib', '*.jar'))
+    os.environ['CLASSPATH'] = os.pathsep.join(jars)
+    outputdir = os.path.join(dir, 'results')
+    os.system("jybot --outputdir %s %s" % (outputdir, ' '.join(args)))
 
 if __name__ == '__main__':
-  main(sys.argv[1:])
+    main(sys.argv[1:])
