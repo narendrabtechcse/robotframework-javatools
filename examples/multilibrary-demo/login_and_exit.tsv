@@ -1,19 +1,17 @@
 *Setting*	*Value*
 library	OperatingSystem
+Suite Setup	launchAndImportLibraries
 
 *Variable*	*Value*
 ${mainClass}	org.robotframework.example.Application
 ${password}	robot
 
 *Test Case*	*Action*	*Argument*
-Logging Into System Multiple Times Should Work
-	launchAndImportLibraries
-	login
+Using Multiple Libraries
 	hello	world
-	exit
+	loginAndExit
 	launchApplication
-	login
-	exit
+	loginAndExit
 
 *Keyword*	*Action*	*Argument*	*Argument*
 launchAndImportLibraries
@@ -21,8 +19,12 @@ launchAndImportLibraries
 	importRemoteSwing
 	importFooLibrary
 
+loginAndExit
+	login
+	exit
+
 launchApplication
-	startProcess	java org.robotframework.example.Application 1>out.txt 2>err.txt
+	startProcess	java org.robotframework.example.Application 1>${OUTPUTDIR}${/}out.txt 2>${OUTPUTDIR}${/}err.txt
 
 importRemoteSwing
 	importLibrary	RemoteLibrary	rmi://localhost:1099/swingLibrary	WITH NAME	swinglibrary
