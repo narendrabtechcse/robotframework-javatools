@@ -35,7 +35,7 @@ In this example we use !JvmConnector and [http://code.google.com/p/robotframewor
 
 You'll need javaws and jython in the path.
 
-The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/test-application/ here].
+The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
 ===Maven2===
 
