@@ -2,14 +2,14 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  <bean id="swingLibrary" class="SwingLibrary" />
+	<bean id="swingLibrary" class="SwingLibrary" />
 	<bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="swingLibrary" />
 		<property name="service">
-      <bean class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
-          <property name="library" ref="swingLibrary" />
-      </bean>
-    </property>
+			<bean class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
+      			<property name="library" ref="swingLibrary" />
+  			</bean>
+		</property>
 		<property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
 	</bean>
 
@@ -17,10 +17,10 @@
 	<bean id="serviceExporter2" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="fooLibrary" />
 		<property name="service">
-      <bean class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
-          <property name="library" ref="fooLibrary" />
-      </bean>
-    </property>
+			<bean class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
+				<property name="library" ref="fooLibrary" />
+			</bean>
+		</property>
 		<property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
 	</bean>
 </beans>
