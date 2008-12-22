@@ -1,6 +1,8 @@
 ﻿== Jvmconnector 0.6 ==
 
-Extended Jvmconnector with [http://code.google.com/p/robotframework-javatools/source/browse/jvmconnector/trunk/tools/RemoteLibrary.py RemoteLibrary] which simplifies use of remotelibraries. Added support for multiple libraries in Jvmconnector.
+Extended Jvmconnector with [http://code.google.com/p/robotframework-javatools/source/browse/jvmconnector/trunk/tools/RemoteLibrary.py RemoteLibrary] which simplifies use of remotelibraries.
+Support for using multiple libraries with Jvmconnector added.
+See [http://code.google.com/p/robotframework-javatools/downloads/list multilibrary and java webstart demos] for details.
 
 || *ID* || *Type* || *Priority* || *Summary* ||
 || Issue 6 || Enhancement || Medium || Implement waiting for the server side connection to open ||
@@ -14,4 +16,3 @@ This is the first open source release.
  * Connects robot to an application running in different JVM.
  * Redirects logging from the keywords back to robot.
  * Handles exceptions thrown on the remote system so that they are presented in a meaningful way in the robot logs.
-
