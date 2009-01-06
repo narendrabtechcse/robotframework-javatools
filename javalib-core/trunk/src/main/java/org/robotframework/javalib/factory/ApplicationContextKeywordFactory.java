@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContext;
  * not be normalized.
  *
  * @see KeywordApplicationContext
- * @author Sami Honkonen
  */
 public class ApplicationContextKeywordFactory implements KeywordFactory<Keyword> {
     private ApplicationContext ctx;

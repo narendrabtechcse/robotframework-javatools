@@ -19,9 +19,6 @@ package org.robotframework.javalib.beans.annotation;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.robotframework.javalib.beans.common.BasicKeywordFilter;
 
-/**
- * @author Heikki Hulkko
- */
 public class AnnotationBasedKeywordFilter extends BasicKeywordFilter {
     public AnnotationBasedKeywordFilter() {
         addCondition(new HasKeywordAnnotationCondition());

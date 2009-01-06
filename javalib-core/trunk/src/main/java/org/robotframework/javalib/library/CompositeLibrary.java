@@ -23,8 +23,6 @@ import org.robotframework.javalib.keyword.Keyword;
 
 /**
  * Library that combines {@link SpringLibrary} and {@link ClassPathLibrary}.
- *
- * @author Sami Honkonen
  */
 public class CompositeLibrary extends KeywordFactoryBasedLibrary<Keyword> {
     private String keywordPattern;

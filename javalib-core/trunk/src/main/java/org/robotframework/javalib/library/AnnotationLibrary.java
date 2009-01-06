@@ -26,9 +26,6 @@ import org.robotframework.javalib.factory.AnnotationKeywordFactory;
 import org.robotframework.javalib.factory.KeywordFactory;
 import org.robotframework.javalib.keyword.DocumentedKeyword;
 
-/**
- * @author Heikki Hulkko
- */
 public class AnnotationLibrary extends KeywordFactoryBasedLibrary<DocumentedKeyword> implements KeywordDocumentationRepository {
     private IBeanLoader beanLoader;
     private IClassFilter classFilter = new AnnotationBasedKeywordFilter();

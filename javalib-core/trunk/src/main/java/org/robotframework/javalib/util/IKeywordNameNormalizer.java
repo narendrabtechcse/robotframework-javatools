@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.util;
 
-/**
- * @author Heikki Hulkko
- */
 public interface IKeywordNameNormalizer {
     String normalize(String keywordName);
 }

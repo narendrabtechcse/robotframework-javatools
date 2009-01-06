@@ -26,8 +26,6 @@ import org.robotframework.javalib.keyword.Keyword;
  *  - are public<br/>
  *  - are not abstract<br/>
  *  - have a default constructor<br/>
- *
- * @author Sami Honkonen
  */
 public class InterfaceBasedKeywordFilter extends BasicKeywordFilter {
     public InterfaceBasedKeywordFilter() {

@@ -21,8 +21,6 @@ package org.robotframework.javalib.keyword;
  * be associated with the colliding name. Execution of this keyword will
  * notify the user of the collision and the two classes that have the same
  * keyword name.
- * 
- * @author Sami Honkonen
  */
 public class CollisionKeyword implements Keyword {
     private String implementingClassName1;

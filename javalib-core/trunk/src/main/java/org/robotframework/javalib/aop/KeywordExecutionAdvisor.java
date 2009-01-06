@@ -19,9 +19,6 @@ package org.robotframework.javalib.aop;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
-/**
- * @author Sami Honkonen
- */
 public abstract class KeywordExecutionAdvisor extends NameMatchMethodPointcutAdvisor implements MethodBeforeAdvice {
     public KeywordExecutionAdvisor() {
         setAdvice(this);

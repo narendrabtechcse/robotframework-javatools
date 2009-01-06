@@ -28,8 +28,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 /**
  * Finds resources according to given pattern, resolves them into names
  * and then loads them.
- *
- * @author Sami Honkonen
  */
 public class DefaultClassFinder extends PathMatchingResourcePatternResolver implements ClassFinder {
     private ClassNameResolver classNameResolver;

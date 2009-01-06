@@ -27,8 +27,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
  * @see BeanDefinitionReader
- * 
- * @author Sami Honkonen
  */
 public class KeywordsXmlBeanDefinitionReader {
     private ResourcePatternResolver resourcePatternResolver;

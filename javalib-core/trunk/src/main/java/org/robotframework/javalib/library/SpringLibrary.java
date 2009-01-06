@@ -40,8 +40,6 @@ import org.robotframework.javalib.keyword.Keyword;
  * All the defined beans that implement the {@link Keyword} interface are
  * available as keywords.
  * </p>
- *
- * @author Sami Honkonen
  */
 public class SpringLibrary extends KeywordFactoryBasedLibrary<Keyword> {
     private String configFilePattern = null;

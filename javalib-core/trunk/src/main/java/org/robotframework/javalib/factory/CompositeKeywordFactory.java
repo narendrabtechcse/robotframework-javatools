@@ -34,7 +34,6 @@ import org.robotframework.javalib.keyword.KeywordMap;
  * When executed, the collision keyword will notify the user of the
  * keyword name conflict.
  *
- * @author Sami Honkonen
  * @see CollisionKeyword
  */
 public class CompositeKeywordFactory implements KeywordFactory<Keyword> {

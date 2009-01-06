@@ -25,9 +25,6 @@ import org.robotframework.javalib.keyword.DocumentedKeyword;
 import org.robotframework.javalib.reflection.IKeywordInvoker;
 import org.robotframework.javalib.reflection.KeywordInvoker;
 
-/**
- * @author Heikki Hulkko
- */
 public class AnnotationKeywordExtractor implements IKeywordExtractor<DocumentedKeyword> {
     public Map<String, DocumentedKeyword> extractKeywords(final Object keywordBean) {
         Map<String, DocumentedKeyword> extractedKeywords = new HashMap<String, DocumentedKeyword>();

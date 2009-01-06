@@ -19,7 +19,6 @@ package org.robotframework.javalib.keyword;
 /**
  * A keyword that performs a single, isolated task for a test case.
  * 
- * @author Sami Honkonen
  * @see ArgumentCheckingKeyword
  */
 public interface Keyword {

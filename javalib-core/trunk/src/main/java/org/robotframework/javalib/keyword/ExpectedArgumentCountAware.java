@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.keyword;
 
-/**
- * @author Heikki Hulkko
- */
 public interface ExpectedArgumentCountAware {
 
     /**

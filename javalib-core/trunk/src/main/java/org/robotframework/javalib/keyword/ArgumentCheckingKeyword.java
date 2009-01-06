@@ -19,8 +19,6 @@ package org.robotframework.javalib.keyword;
 /**
  * A keyword that checks the amount of arguments provided by Robot before
  * operating.
- *
- * @author Sami Honkonen
  */
 public abstract class ArgumentCheckingKeyword extends PreparableKeyword implements ExpectedArgumentCountAware {
     protected void prepare(Object[] arguments) {

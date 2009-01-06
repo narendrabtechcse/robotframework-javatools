@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.keyword;
 
-/**
- * @author Sami Honkonen
- */
 public abstract class PreparableKeyword implements Keyword {
     public Object execute(Object[] arguments) {
         prepare(arguments);

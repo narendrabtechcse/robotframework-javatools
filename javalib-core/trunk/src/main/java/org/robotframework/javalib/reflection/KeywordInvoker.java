@@ -25,9 +25,6 @@ import com.thoughtworks.paranamer.CachingParanamer;
 import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
 import com.thoughtworks.paranamer.Paranamer;
 
-/**
- * @author Heikki Hulkko
- */
 public class KeywordInvoker implements IKeywordInvoker {
     private Paranamer parameterNames = new CachingParanamer();
 

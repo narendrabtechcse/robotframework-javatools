@@ -18,8 +18,6 @@ package org.robotframework.javalib.beans.common;
 
 /**
  * A filter to check whether a class matches some conditions.
- * 
- * @author Sami Honkonen
  */
 public interface IClassFilter {
     /**

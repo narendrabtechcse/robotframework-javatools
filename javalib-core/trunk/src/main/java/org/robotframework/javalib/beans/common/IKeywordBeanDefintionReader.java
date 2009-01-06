@@ -18,9 +18,6 @@ package org.robotframework.javalib.beans.common;
 
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-/**
- * @author Heikki Hulkko
- */
 public interface IKeywordBeanDefintionReader {
     /**
      * Loads bean definitions from keyword classes in class path. By

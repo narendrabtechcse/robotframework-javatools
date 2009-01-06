@@ -63,8 +63,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  * path and this library will automatically find them. Contents of JAR
  * files are also searched.
  * </p>
- *
- * @author Sami Honkonen
  */
 public class ClassPathLibrary extends KeywordFactoryBasedLibrary<Keyword> {
     private String keywordPattern = null;

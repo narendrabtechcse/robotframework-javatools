@@ -22,9 +22,6 @@ import java.util.HashSet;
 
 import junit.framework.Assert;
 
-/**
- * @author Heikki Hulkko
- */
 public class ArrayUtil {
     public static boolean arrayContains(String needle, String[] haystack) {
         for (int i = 0; i < haystack.length; i++) {

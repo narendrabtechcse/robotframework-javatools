@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.util;
 
-/**
- * @author Sami Honkonen
- */
 public class KeywordNameNormalizer implements IKeywordNameNormalizer {
     /**
      * Normalizes a keyword name. Removes spaces and special characters.

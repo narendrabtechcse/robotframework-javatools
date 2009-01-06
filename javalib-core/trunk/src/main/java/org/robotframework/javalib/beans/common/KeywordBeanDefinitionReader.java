@@ -23,8 +23,6 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 
 /**
  * @see BeanDefinitionReader
- *
- * @author Sami Honkonen
  */
 public class KeywordBeanDefinitionReader implements IKeywordBeanDefintionReader {
     private ClassFinder classFinder;

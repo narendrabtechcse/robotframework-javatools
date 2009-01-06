@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.reflection;
 
-/**
- * @author Heikki Hulkko
- */
 public interface IKeywordInvoker {
     String[] getParameterNames();
     Object invoke(Object[] args);

@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.reflection;
 
-/**
- * @author Heikki Hulkko
- */
 public interface IArgumentGrouper {
     Object[] groupArguments(Object[] args);
 }

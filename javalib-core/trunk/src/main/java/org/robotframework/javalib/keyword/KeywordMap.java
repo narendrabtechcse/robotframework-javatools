@@ -28,8 +28,6 @@ import org.apache.commons.collections.map.PredicatedMap;
  * A data structure for keywords and related values, such as instances or
  * class names. Keyword names must be unique after normalization. Names
  * and values have to be non null.
- * 
- * @author Sami Honkonen
  */
 public class KeywordMap {
     private Map map;

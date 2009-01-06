@@ -24,8 +24,6 @@ import org.robotframework.javalib.keyword.Keyword;
  * to create the keyword instance and this library simply executes the
  * keyword. Subclasses must implement factory method
  * {@link #createKeywordFactory()}.
- *
- * @author Sami Honkonen
  */
 public abstract class KeywordFactoryBasedLibrary<T extends Keyword> implements RobotJavaLibrary {
     private KeywordFactory<T> keywordFactory;

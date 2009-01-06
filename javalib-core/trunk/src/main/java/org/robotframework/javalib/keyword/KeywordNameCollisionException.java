@@ -18,8 +18,6 @@ package org.robotframework.javalib.keyword;
 
 /**
  * Indicates that a keyword name collision occurred.
- * 
- * @author Sami Honkonen
  */
 public class KeywordNameCollisionException extends RuntimeException {
     private static final long serialVersionUID = -4872761399948479289L;

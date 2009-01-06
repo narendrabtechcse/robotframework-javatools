@@ -20,9 +20,6 @@ import java.util.Map;
 
 import org.robotframework.javalib.beans.common.IClassFilter;
 
-/**
- * @author Heikki Hulkko
- */
 public interface IBeanLoader {
     Map loadBeanDefinitions(IClassFilter classFilter);
 }

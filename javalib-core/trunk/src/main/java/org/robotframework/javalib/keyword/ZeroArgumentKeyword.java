@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.keyword;
 
-/**
- * @author Sami Honkonen
- */
 public abstract class ZeroArgumentKeyword extends ArgumentCheckingKeyword {
     public int getExpectedArgumentCount() {
         return 0;

@@ -20,9 +20,6 @@ import org.robotframework.javalib.keyword.Keyword;
 
 /**
  * Creates instances of keywords.
- *
- * @author Sami Honkonen
- * @author Heikki Hulkko
  */
 public interface KeywordFactory<T extends Keyword> {
     /**

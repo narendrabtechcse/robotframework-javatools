@@ -20,8 +20,6 @@ import org.springframework.core.io.Resource;
 
 /**
  * Resolves {@link Resource} objects to class names.
- *
- * @author Sami Honkonen
  */
 public interface ClassNameResolver {
     /**

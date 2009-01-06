@@ -24,9 +24,6 @@ import org.robotframework.javalib.beans.common.KeywordBeanDefinitionReader;
 import org.robotframework.javalib.context.KeywordApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
-/**
- * @author Heikki Hulkko
- */
 public class KeywordBeanLoader implements IBeanLoader {
     private GenericApplicationContext context = new KeywordApplicationContext();
     private IKeywordBeanDefintionReader beanDefinitionReader = new KeywordBeanDefinitionReader(context, Thread.currentThread().getContextClassLoader());

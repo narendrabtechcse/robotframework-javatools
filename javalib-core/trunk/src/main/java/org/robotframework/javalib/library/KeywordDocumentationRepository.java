@@ -16,9 +16,6 @@
 
 package org.robotframework.javalib.library;
 
-/**
- * @author Heikki Hulkko
- */
 public interface KeywordDocumentationRepository {
     String getKeywordDocumentation(String keywordName);
     String[] getKeywordArguments(String keywordName);

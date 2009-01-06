@@ -22,8 +22,6 @@ import org.springframework.core.io.Resource;
 
 /**
  * @see ClassNameResolver
- *
- * @author Sami Honkonen
  */
 public class DefaultClassNameResolver implements ClassNameResolver {
     /**

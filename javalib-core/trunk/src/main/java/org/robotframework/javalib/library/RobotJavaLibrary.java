@@ -18,8 +18,6 @@ package org.robotframework.javalib.library;
 
 /**
  * A Java library for Robot Framework.
- * 
- * @author Sami Honkonen
  */
 public interface RobotJavaLibrary {
     /**

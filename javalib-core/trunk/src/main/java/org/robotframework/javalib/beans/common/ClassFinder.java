@@ -18,7 +18,6 @@ package org.robotframework.javalib.beans.common;
 
 /**
  * @see DefaultClassFinder
- * @author Sami Honkonen
  */
 public interface ClassFinder {
     public abstract Class[] getClasses(String pattern);

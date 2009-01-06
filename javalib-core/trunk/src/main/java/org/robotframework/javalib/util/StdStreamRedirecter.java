@@ -22,8 +22,6 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Handles the STDOUT and STDERR redirection. Used for remote logging.
- * 
- * @author Heikki Hulkko
  */
 public class StdStreamRedirecter {
     private static final String LOG_ENCODING = "utf-8";

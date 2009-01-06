@@ -28,9 +28,6 @@ import org.springframework.context.support.GenericApplicationContext;
 /**
  * An application context for keyword beans. Decorates methods
  * by normalizing bean names while registering and getting beans.
- *
- * @author Sami Honkonen
- * @author Heikki Hulkko
  */
 public class KeywordApplicationContext extends GenericApplicationContext {
     private IKeywordNameNormalizer keywordNameNormalizer = new KeywordNameNormalizer();

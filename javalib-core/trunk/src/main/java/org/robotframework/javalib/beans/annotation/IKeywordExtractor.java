@@ -20,9 +20,6 @@ import java.util.Map;
 
 import org.robotframework.javalib.keyword.Keyword;
 
-/**
- * @author Heikki Hulkko
- */
 public interface IKeywordExtractor<T extends Keyword> {
     Map<String, T> extractKeywords(Object keywordBean);
 }

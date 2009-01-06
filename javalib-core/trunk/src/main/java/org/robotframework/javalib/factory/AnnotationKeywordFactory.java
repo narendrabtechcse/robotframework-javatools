@@ -28,9 +28,6 @@ import org.robotframework.javalib.keyword.DocumentedKeyword;
 import org.robotframework.javalib.util.IKeywordNameNormalizer;
 import org.robotframework.javalib.util.KeywordNameNormalizer;
 
-/**
- * @author Heikki Hulkko
- */
 public class AnnotationKeywordFactory implements KeywordFactory<DocumentedKeyword> {
     private Map<String, DocumentedKeyword> keywords = new HashMap<String, DocumentedKeyword>();
     private IKeywordNameNormalizer keywordNameNormalizer = new KeywordNameNormalizer();

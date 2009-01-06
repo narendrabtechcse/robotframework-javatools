@@ -18,9 +18,6 @@ package org.robotframework.javalib.reflection;
 
 import org.robotframework.javalib.util.ArrayUtil;
 
-/**
- * @author Heikki Hulkko
- */
 public class ArgumentGrouper implements IArgumentGrouper {
     private final Class<?>[] parameterTypes;
 
