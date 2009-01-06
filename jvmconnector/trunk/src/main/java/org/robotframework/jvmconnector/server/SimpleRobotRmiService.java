@@ -28,8 +28,6 @@ import org.springframework.beans.PropertyValue;
 /**
  * Robot RMI service that handles the communication between the RMI client and
  * the org.robotframework.javalib.library.RobotJavaLibrary.
- * 
- * @author Heikki Hulkko
  */
 public class SimpleRobotRmiService implements RobotRmiService {
     private RobotJavaLibrary library;

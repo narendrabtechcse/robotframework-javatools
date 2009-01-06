@@ -24,8 +24,6 @@ import org.robotframework.jvmconnector.common.KeywordExecutionResult;
  * The service interface of the jvmconnector module. Acts as a connecting point
  * between the org.robotframework.javalib.library.RobotJavaLibrary and
  * RobotJavaLibrary.
- * 
- * @author Heikki Hulkko
  */
 public interface RobotRmiService {
 	/**

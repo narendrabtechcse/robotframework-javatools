@@ -23,8 +23,6 @@ import java.io.PrintWriter;
 /**
  * Wraps exception thrown by keyword in order to provide meaningful stacktrace
  * and error message for robot logging.
- * 
- * @author Heikki Hulkko
  */
 public class TestFailedException extends RuntimeException {
 	private static final long serialVersionUID = 711203696134553094L;

@@ -23,8 +23,6 @@ import org.robotframework.jvmconnector.common.TestFailedException;
 /**
  * Bean that wraps keyword execution results, logging output and exceptions it
  * throws.
- * 
- * @author Heikki Hulkko
  */
 public class KeywordExecutionResultImpl implements KeywordExecutionResult {
     private static final long serialVersionUID = 2789824561150394856L;

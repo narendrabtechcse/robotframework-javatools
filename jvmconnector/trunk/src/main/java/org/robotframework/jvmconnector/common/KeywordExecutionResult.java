@@ -20,8 +20,6 @@ import java.io.Serializable;
 
 /**
  * Wraps keyword execution results, logging output and exceptions it throws.
- * 
- * @author Heikki Hulkko
  */
 public interface KeywordExecutionResult extends Serializable {
     /**

@@ -23,15 +23,12 @@ import org.springframework.beans.factory.BeanFactory;
 
 
 /**
- * <p>
  * RMI client handling remote keyword invocation, the actual execution of the
  * keywords is delegated to RobotRmiService. The RMI service is exposed
  * through org.springframework.remoting.rmi.RmiProxyFactoryBean which this class
  * expects to be contained in org.springframework.beans.factory.BeanFactory that
  * it receives as a constructor parameter.
- * </p>
  * 
- * @author Heikki Hulkko
  * @see RobotRmiService
  * @see RobotRemoteLibrary
  */

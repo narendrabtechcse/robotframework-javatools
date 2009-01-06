@@ -22,9 +22,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.springframework.remoting.rmi.RmiServiceExporter;
 
-/**
- * @author Heikki Hulkko
- */
 public class MyRmiServiceExporter extends RmiServiceExporter {
 	private Registry myReg;
 

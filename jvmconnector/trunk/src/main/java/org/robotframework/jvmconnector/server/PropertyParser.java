@@ -24,8 +24,6 @@ import org.springframework.beans.PropertyValue;
  * Parses patterns of form
  * <code>someProperty=someValue|anotherProperty=anotherValue</code> into
  * an array of org.springframework.beans.PropertyValue.
- * 
- * @author Heikki Hulkko
  */
 public class PropertyParser {
 	private static final String PROPERTIES_SEPARATOR_CHAR = "\\|";
