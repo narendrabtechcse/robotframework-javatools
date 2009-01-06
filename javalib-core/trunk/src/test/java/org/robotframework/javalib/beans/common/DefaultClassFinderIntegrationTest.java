@@ -24,7 +24,7 @@ public class DefaultClassFinderIntegrationTest {
     
     @Test
     public void getsJarsFromURL() throws Exception {
-        new DefaultClassFinder().getJarFile("http://localhost:9080/test.jar");
+        new DefaultClassFinder().getJarFile(FileServer.URL_BASE + "/test.jar");
         assertTrue(new File(tmpDir + fileSeparator + "test.jar").exists());
     }
 }
