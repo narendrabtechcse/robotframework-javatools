@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.robotframework.jvmconnector.client.RobotRmiClient;
 import org.robotframework.jvmconnector.common.KeywordExecutionResult;
 import org.robotframework.jvmconnector.common.TestFailedException;
 import org.robotframework.jvmconnector.server.RobotRmiService;
@@ -128,20 +127,6 @@ public class RobotRmiClientTest extends MockObjectTestCase {
 		
 		rmiClient.runKeyword(null, null);
 		assertEquals(expectedLogValue, stdStream.toString());
-	}
-	
-	public void testGivenClasspathPatternIsSetToRmiService() {
-		String pattern = "some classpath pattern";
-		mockRobotRmiService.expects(once()).method(propertiesSetterMethodName)
-			.with(eq(pattern));
-		
-		new RobotRmiClient((BeanFactory) mockBeanFactory.proxy(), pattern);
-	}
-	
-	public void testNullClasspathPatternsAreNotSetToRmiService() {
-		mockRobotRmiService.expects(never()).method("setLibraryProperties");
-		
-		new RobotRmiClient((BeanFactory) mockBeanFactory.proxy(), null);		
 	}
 	
 	private void setBeanFactoryContainingRmiService() {

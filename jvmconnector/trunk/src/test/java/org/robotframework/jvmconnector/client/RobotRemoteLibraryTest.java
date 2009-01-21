@@ -34,7 +34,7 @@ public class RobotRemoteLibraryTest extends MockObjectTestCase {
 	private PropertyOverrider propertyOverrider = (PropertyOverrider) mockPropertyOverrider.proxy();
 	
 	private MockRemoteLibrary remoteLibraryWithMockRmiClient = new MockRemoteLibrary() {
-        protected RobotJavaLibrary createRobotLibraryClient() {
+        RobotJavaLibrary createRobotLibraryClient(String uri) {
 			return (RobotJavaLibrary) mockRmiClient.proxy();
 		}
 	};

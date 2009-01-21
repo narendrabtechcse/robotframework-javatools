@@ -22,13 +22,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.robotframework.jvmconnector.common.PropertyParsingFailedException;
-import org.robotframework.jvmconnector.common.TestFailedException;
 import org.robotframework.jvmconnector.mocks.ExceptionThrowingKeyword;
 import org.robotframework.jvmconnector.mocks.LoggingKeyword;
-import org.robotframework.jvmconnector.mocks.MockException;
 import org.robotframework.jvmconnector.mocks.MockJavaLibrary;
-import org.robotframework.jvmconnector.mocks.PropertyShouldBeSetToRmiService;
 import org.robotframework.jvmconnector.util.RmiHelperUtil;
 import org.robotframework.jvmconnector.util.RmiHelperUtil.FakeRmiClient;
 import org.springframework.context.support.GenericApplicationContext;
@@ -80,37 +76,6 @@ public class RobotRmiIntegrationTest extends TestCase {
             rmiClient.runKeyword(ExceptionThrowingKeyword.KEYWORD_NAME, null);
             fail("Excpected testFailedException to be thrown");
         } catch (TestFailedException e) {}
-    }
-
-    public void testSettingPropertyToLibraryEnablesKeyword() {
-        assertKeywordNotFoundBeforePropertySet();
-        assertKeywordFoundAfterPropertySet();
-    }
-
-    public void testSettingBadPropertyPatternToLibraryThrowsException() {
-        try {
-            new RmiHelperUtil.FakeRmiClient(clientBeanFactory, "bad property pattern");
-            fail("Expected PropertyParsingFailedException to be thrown");
-        } catch (PropertyParsingFailedException e) {}
-    }
-
-    private void assertKeywordFoundAfterPropertySet() {
-        FakeRmiClient mockRmiClientWithPattern = new RmiHelperUtil.FakeRmiClient(clientBeanFactory,
-            MockJavaLibrary.PATTERN_KEYWORD_PROPERTY_NAME + "=" + MockJavaLibrary.PATTERN_KEYWORD_PROPERTY_VALUE);
-
-        assertEquals(Boolean.TRUE, mockRmiClientWithPattern.runKeyword(PropertyShouldBeSetToRmiService.KEYWORD_NAME, null));
-    }
-
-    private void assertKeywordNotFoundBeforePropertySet() {
-        boolean keywordFound = true;
-        try {
-            rmiClient.runKeyword(PropertyShouldBeSetToRmiService.KEYWORD_NAME, null);
-        } catch (TestFailedException e) {
-            if (e.getSourceExceptionClassName().equals(MockException.class.getName()))
-                keywordFound = false;
-        }
-
-        assertFalse("Excpected the keyword '" + PropertyShouldBeSetToRmiService.KEYWORD_NAME + "' not to be found", keywordFound);
     }
 
     private void assertArraysContainSame(Object[] expectedAr, Object[] ar) {

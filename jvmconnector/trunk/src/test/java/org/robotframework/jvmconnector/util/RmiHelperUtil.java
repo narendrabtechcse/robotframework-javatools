@@ -73,11 +73,7 @@ public class RmiHelperUtil {
 		private StringBuffer stdErrBuffer = new StringBuffer();
 		
 		public FakeRmiClient(BeanFactory beanFactory) {
-			this(beanFactory, null);
-		}
-		
-		public FakeRmiClient(BeanFactory beanFactory, String classpathPattern) {
-			super(beanFactory, classpathPattern);
+			super(beanFactory);
 		}
 		
 		public String getStdOutAsString() {

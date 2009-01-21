@@ -36,12 +36,7 @@ public class RobotRmiClient implements RobotJavaLibrary {
     private RobotRmiService service;
 
     public RobotRmiClient(BeanFactory beanFactory) {
-        this(beanFactory, null);
-    }
-
-    public RobotRmiClient(BeanFactory beanFactory, String properties) {
         setService(beanFactory);
-        setPropertiesToService(properties);
     }
 
     public String[] getKeywordNames() {
@@ -69,10 +64,5 @@ public class RobotRmiClient implements RobotJavaLibrary {
 
     private void setService(BeanFactory beanFactory) {
         service = (RobotRmiService) beanFactory.getBean("robotRmiService");
-    }
-
-    private void setPropertiesToService(String properties) {
-        if (properties != null)
-            service.setLibraryProperties(properties);
     }
 }

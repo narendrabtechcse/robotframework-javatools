@@ -34,28 +34,13 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class RobotRemoteLibrary implements RobotJavaLibrary {
     private RobotJavaLibrary robotLibraryClient;
-    private String properties;
-    boolean reset = false;
-
-    private String uri;
-
     
     public RobotRemoteLibrary() {
-        this("rmi://localhost:1099/jvmConnector", null);
+        this("rmi://localhost:1099/jvmConnector");
     }
 
     public RobotRemoteLibrary(String uri) {
-        this(uri, null);
-    }
-    
-    /**
-     * @param properties
-     *            property values in a string. Use the following format:
-     *            <code>someProperty=someValue|anotherProperty=anotherValue</code>.
-     */
-    public RobotRemoteLibrary(String uri, String properties) {
-        this.uri = uri;
-        robotLibraryClient = createRobotLibraryClient();
+        robotLibraryClient = createRobotLibraryClient(uri);
     }
     
     public String[] getKeywordNames() {
@@ -66,10 +51,10 @@ public class RobotRemoteLibrary implements RobotJavaLibrary {
         return robotLibraryClient.runKeyword(keywordName, args);
     }
 
-    RobotJavaLibrary createRobotLibraryClient() {
+    RobotJavaLibrary createRobotLibraryClient(String uri) {
         ConfigurableListableBeanFactory beanFactory = createBeanFactory();
         overrideRmiURL(beanFactory, uri);
-        return new RobotRmiClient(beanFactory, properties);
+        return new RobotRmiClient(beanFactory);
     }
 
     PropertyOverrider createPropertyOverrider() {
