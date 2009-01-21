@@ -20,12 +20,6 @@ Should Fail If Client Is Not Resetted After The Service Is Restarted
 	restartRmiService
 	runKeywordAndExpectError	RemoteConnectFailureException:*	someRemoteKeyword
 
-Keywords Should Be Runnable After Service Restart
-	someRemoteKeyword
-	restartRmiService
-	resetRobotLibraryClient
-	someRemoteKeyword
-
 * Keyword *	* Action *	* Argument *
 startRmiServiceAndImportRemoteRobot
 	startRmiService	

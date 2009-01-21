@@ -1,12 +1,17 @@
 #!/bin/bash
 
-cd ..
-mvn -o test-compile
-mvn -o dependency:copy-dependencies
+dir=`dirname $0`
+cd "$dir/.."
+if [ ! -d 'target/test-classes' ]; then
+  mvn -o test-compile
+fi
+if [ ! -d 'target/dependency' ]; then
+  mvn -o dependency:copy-dependencies
+fi
 cd -
 
 CLASSPATH=""
-for i in ../target/dependency/*.jar; do
+for i in $dir/../target/dependency/*.jar; do
 	if [ -z "$CLASSPATH" ]; then
 		CLASSPATH="$i"
 	else
@@ -14,6 +19,6 @@ for i in ../target/dependency/*.jar; do
 	fi
 done
 
-#CLASSPATH="$HOME/workspace/jvmconnector-release-0.2/target/jvmconnector-0.2.jar:$CLASSPATH:../target/classes:../target/test-classes"
-CLASSPATH="$CLASSPATH:../target/classes:../target/test-classes"
+CLASSPATH="$CLASSPATH:$dir/../target/classes:$dir/../target/test-classes"
+echo $CLASSPATH
 CLASSPATH=$CLASSPATH jybot -d /tmp/ $*
