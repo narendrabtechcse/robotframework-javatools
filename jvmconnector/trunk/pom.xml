@@ -25,6 +25,24 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.jdave</groupId>
+      <artifactId>jdave-junit4</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>beaninject</groupId>
+      <artifactId>beaninject</artifactId>
+      <version>0.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
       <version>0.7.2</version>
@@ -82,9 +100,21 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <source>1.4</source>
-            <target>1.4</target>
+            <source>1.5</source>
+            <target>1.5</target>
          </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

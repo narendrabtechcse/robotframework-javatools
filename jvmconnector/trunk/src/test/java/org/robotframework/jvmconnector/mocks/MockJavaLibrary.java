@@ -30,6 +30,8 @@ public class MockJavaLibrary implements RobotJavaLibrary {
         {
             put(LoggingKeyword.KEYWORD_NAME, new LoggingKeyword());
             put(ExceptionThrowingKeyword.KEYWORD_NAME, new ExceptionThrowingKeyword());
+            put(new ApplicationIsRunning().getClass().getSimpleName(), new ApplicationIsRunning());
+            put(new StopApplication().getClass().getSimpleName(), new StopApplication());
         }
     };
 
@@ -48,5 +50,9 @@ public class MockJavaLibrary implements RobotJavaLibrary {
     public void setSomeProperty(String somePropertyValue) {
         if (PATTERN_KEYWORD_PROPERTY_VALUE.equalsIgnoreCase(somePropertyValue))
             keywordMap.put(PropertyShouldBeSetToRmiService.KEYWORD_NAME, new PropertyShouldBeSetToRmiService());
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(new MockJavaLibrary().getClass().getSimpleName());
     }
 }
