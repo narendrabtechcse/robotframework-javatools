@@ -19,6 +19,6 @@ for i in $dir/../target/dependency/*.jar; do
 	fi
 done
 
-CLASSPATH="$CLASSPATH:$dir/../target/classes:$dir/../target/test-classes"
+CLASSPATH="$dir/../target/classes:$dir/../target/test-classes:$CLASSPATH"
 echo $CLASSPATH
-CLASSPATH=$CLASSPATH jybot -d /tmp/ $*
+CLASSPATH=$CLASSPATH jybot -L TRACE -d /tmp/ $*

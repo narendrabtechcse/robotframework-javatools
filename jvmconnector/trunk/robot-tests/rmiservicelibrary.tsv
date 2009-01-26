@@ -1,0 +1,15 @@
+* Setting *	* Value *
+library	RmiServiceLibrary
+
+* Variable *	* Value *
+
+* Test Case *	* Action *	* Argument *
+Foo
+	startApplicationAndRMIService	/${CURDIR}${/}rmiservice.xml	org.robotframework.jvmconnector.mocks.MyApplication
+
+* Keyword *	* Action *	* Argument *
+applicationShouldBeRunning
+	shouldBeTrue	myApp.applicationIsRunning
+
+applicationShouldNotBeRunning
+	shouldNotBeTrue	myApp.applicationIsRunning
