@@ -17,6 +17,11 @@
 
 package org.robotframework.jvmconnector.server;
 
-public interface ApplicationExecutor {
-    void start(String rmiConfigFilePath, String applicationClassName, String[] args);
+import java.lang.reflect.Method;
+
+public class ApplicationLauncher {
+    public void launchApplication(String applicationClassName, String[] args) throws Exception {
+        Method method = Class.forName(applicationClassName).getMethod("main", new Class[] { String[].class });
+        method.invoke(null, new Object[] { args });
+    }
 }

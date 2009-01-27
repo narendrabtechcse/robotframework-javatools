@@ -1,4 +1,3 @@
-package org.robotframework.jvmconnector.server;
 /*
  * Copyright 2008 Nokia Siemens Networks Oyj
  *
@@ -14,67 +13,61 @@ package org.robotframework.jvmconnector.server;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.robotframework.jvmconnector.server;
 
+import java.io.IOException;
+
+import org.robotframework.javalib.util.ArrayUtil;
 
 public class RmiApplicationLibrary {
-    private final ApplicationExecutor executor;
+    private static RmiService rmiService = new RmiService();
+    private static ApplicationLauncher applicationLauncher = new ApplicationLauncher();
+    
+    private final String javaExecutable;
+    private final String jvmArgs;
 
     public static void main(String[] args) throws Exception {
         if (args.length < 2)
             throw new IllegalArgumentException("Usage: java RmiServiceLibrary [jvmArgs] rmiConfigFilePath applicationClassName [applicationArgs]");
         
-        RmiApplicationLibrary rmiServiceLibrary = new RmiApplicationLibrary();
-        rmiServiceLibrary.startRmiService(args[0]);
-        rmiServiceLibrary.startSUT(args[1], rmiServiceLibrary.extractRestOfTheArgs(args));
+        rmiService.start(args[0]);
+        applicationLauncher.launchApplication(args[1], extractRestOfTheArgs(args));
     }
 
     public RmiApplicationLibrary() {
         this("java");
     }
     
-    public RmiApplicationLibrary(String java) {
-        this(java, "");
+    public RmiApplicationLibrary(String javaExecutable) {
+        this(javaExecutable, "");
     }
 
-    public RmiApplicationLibrary(String java, String jvmArgs) {
-        this(new DefaultExecutor(java, jvmArgs, RmiApplicationLibrary.class));
+    public RmiApplicationLibrary(String javaExecutable, String jvmArgs) {
+        this.javaExecutable = javaExecutable;
+        this.jvmArgs = jvmArgs;
     }
     
-    RmiApplicationLibrary(ApplicationExecutor executor) {
-        this.executor = executor;
-    }
-
     public void startApplicationAndRMIService(String rmiConfigFilePath, String applicationClassName, String[] args) {
-        executor.start(rmiConfigFilePath, applicationClassName, args);
-    }
-    
-    private void startRmiService(final String configFilePath) {
-//        logger.info("starting rmi service from " + configFilePath);
-//        assertFileExist(configFilePath);
-//        new FileSystemXmlApplicationContext(configFilePath);
+        try {
+            Runtime.getRuntime().exec(createSelfExecutableCommand(rmiConfigFilePath, applicationClassName, args));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void assertFileExist(String configFilePath) {
-//        Assert.assertTrue("File " + configFilePath + " doesn't exist.", new File(configFilePath).exists()); 
+    private String createSelfExecutableCommand(String rmiConfigFilePath, String applicationClassName, String[] args) {
+        return javaExecutable + " " + jvmArgs + " " + this.getClass().getName() + " " + rmiConfigFilePath + " " + applicationClassName + " " + toString(args);
     }
-    
-    private void startSUT(String applicationClassName, String[] args) throws Exception {
-//        logger.info("starting SUT " + applicationClassName + " with args " + Arrays.asList(args));
-//        Method method = Class.forName(applicationClassName).getMethod("main", new Class[] { String[].class });
-//        method.invoke(null, new Object[] { args });
-    }
-    
-    private String[] extractRestOfTheArgs(String[] args) {
-        throw new UnsupportedOperationException("not implemented.");
-//        return ArrayUtil.<String>copyOfRange(args, 2, args.length);
-    }
-    
+
     private String toString(String[] args) {
-        throw new UnsupportedOperationException("not implemented.");
-//        StringBuffer argBuf = new StringBuffer();
-//        for (int i = 0; i < args.length; i++) {
-//            argBuf.append(args[i] + " ");
-//        }
-//        return argBuf.toString();
+        StringBuilder argBuf = new StringBuilder();
+        for (String arg : args) {
+            argBuf.append(arg + " ");
+        }
+        return argBuf.toString().trim();
+    }
+    
+    private static String[] extractRestOfTheArgs(String[] args) {
+        return ArrayUtil.<String>copyOfRange(args, 2, args.length);
     }
 }
