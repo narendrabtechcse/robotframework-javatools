@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robotframework.jvmconnector.server;
 
 import java.io.IOException;
 
 import org.robotframework.javalib.util.ArrayUtil;
+import org.robotframework.jvmconnector.server.ApplicationLauncher;
+import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiApplicationLibrary {
     private static RmiService rmiService = new RmiService();

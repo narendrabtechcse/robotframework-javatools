@@ -1,10 +1,10 @@
 * Setting *	* Value *
-library	RmiServiceLibrary
+library	RmiApplicationLibrary
 
 * Variable *	* Value *
 
 * Test Case *	* Action *	* Argument *
-Starts Application And RMI Tunnel
+Starts Application And RMI Service
 	startApplicationAndRMIService	${CURDIR}${/}rmiservice.xml	org.robotframework.jvmconnector.mocks.MyApplication
 	#importLibrary	${CURDIR}${/}..${/}tools/RemoteLibrary.py	rmi://localhost:11099/myApp	5	WITH NAME	myApp
 	#applicationShouldBeRunning

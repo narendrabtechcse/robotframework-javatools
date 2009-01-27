@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robotframework.jvmconnector.server;
-
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import org.jmock.Expectations;
 import org.junit.runner.RunWith;
 import org.laughingpanda.beaninject.Inject;
+import org.robotframework.jvmconnector.server.ApplicationLauncher;
+import org.robotframework.jvmconnector.server.RmiService;
 
 @RunWith(JDaveRunner.class)
 public class RmiApplicationLibrarySpec extends Specification<RmiApplicationLibrary> {
