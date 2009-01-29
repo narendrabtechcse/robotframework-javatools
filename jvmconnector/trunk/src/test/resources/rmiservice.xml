@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  <bean id="library" class="org.robotframework.jvmconnector.mocks.MockJavaLibrary" />
+  <bean id="library" class="org.robotframework.jvmconnector.keyword.JvmconnectorKeywords" />
 
   <bean id="rmiService" class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
     <property name="library" ref="library" />

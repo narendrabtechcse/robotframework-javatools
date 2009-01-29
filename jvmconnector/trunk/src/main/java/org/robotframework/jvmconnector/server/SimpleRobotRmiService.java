@@ -16,6 +16,8 @@
 
 package org.robotframework.jvmconnector.server;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 import org.robotframework.javalib.util.StdStreamRedirecter;
 import org.robotframework.jvmconnector.common.KeywordExecutionResult;
@@ -30,6 +32,8 @@ import org.springframework.beans.PropertyValue;
  * the org.robotframework.javalib.library.RobotJavaLibrary.
  */
 public class SimpleRobotRmiService implements RobotRmiService {
+    private static Log logger = LogFactory.getLog(SimpleRobotRmiService.class);
+    
     private RobotJavaLibrary library;
 
     private StdStreamRedirecter streamRedirecter;
@@ -45,6 +49,7 @@ public class SimpleRobotRmiService implements RobotRmiService {
      */
     public SimpleRobotRmiService(StdStreamRedirecter streamRedirecter) {
         this.streamRedirecter = streamRedirecter;
+        logger.info("!!! Instantiating SimpleRobotRmiService.");
     }
 
     public String[] getKeywordNames() {

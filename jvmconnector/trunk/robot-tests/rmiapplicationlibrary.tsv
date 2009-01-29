@@ -1,19 +1,13 @@
 * Setting *	* Value *
 library	RmiApplicationLibrary
 
-* Variable *	* Value *
-
 * Test Case *	* Action *	* Argument *
 Starts Application And RMI Service
-	startApplicationAndRMIService	${CURDIR}${/}rmiservice.xml	org.robotframework.jvmconnector.mocks.MyApplication
-	#importLibrary	${CURDIR}${/}..${/}tools/RemoteLibrary.py	rmi://localhost:11099/myApp	5	WITH NAME	myApp
-	#applicationShouldBeRunning
-	#myApp.stopApplication
-	#applicationShouldNotBeRunning
-
-* Keyword *	* Action *	* Argument *
-applicationShouldBeRunning
-	shouldBeTrue	myApp.applicationIsRunning
-
-applicationShouldNotBeRunning
-	shouldNotBeTrue	myApp.applicationIsRunning
+	startApplicationAndRMIService	${CURDIR}${/}..${/}src${/}test${/}resources${/}rmiservice.xml	org.robotframework.jvmconnector.mocks.MyApplication
+	importLibrary	${CURDIR}${/}..${/}tools/RemoteLibrary.py	rmi://localhost:11099/myApp	WITH NAME	myApp
+	${applicationIsRunning}=	myApp.applicationIsRunning
+	shouldBeTrue	${applicationIsRunning}
+	myApp.stopApplication
+	${applicationIsRunning}=	myApp.applicationIsRunning
+	shouldNotBeTrue	${applicationIsRunning}
+	sleep	3

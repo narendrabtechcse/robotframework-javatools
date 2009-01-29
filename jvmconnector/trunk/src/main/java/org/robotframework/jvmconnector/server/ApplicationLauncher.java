@@ -19,9 +19,35 @@ package org.robotframework.jvmconnector.server;
 
 import java.lang.reflect.Method;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 public class ApplicationLauncher {
-    public void launchApplication(String applicationClassName, String[] args) throws Exception {
-        Method method = Class.forName(applicationClassName).getMethod("main", new Class[] { String[].class });
-        method.invoke(null, new Object[] { args });
+    private static Log logger = LogFactory.getLog(ApplicationLauncher.class);
+    
+    public void launchApplication(String applicationClassName, String[] args) {
+        logger.info("launching application '" + applicationClassName + "' with args '" + Arrays.asList(args) + "'");
+        Method method = getMainMethod(applicationClassName);
+        invoke(method, args);
+    }
+
+    private void invoke(Method method, String[] args) {
+        try {
+            method.invoke(null, new Object[] { args });
+        } catch (Exception e) {
+            logger.error(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Method getMainMethod(String applicationClassName) {
+        try {
+            return Class.forName(applicationClassName).getMethod("main", new Class[] { String[].class });
+        } catch (Exception e) {
+            logger.error(e);
+            throw new RuntimeException(e);
+        }
     }
 }

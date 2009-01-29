@@ -14,30 +14,17 @@
  * limitations under the License.
  */
 
-
 package org.robotframework.jvmconnector.mocks;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.grlea.log.SimpleLogger;
 
 public class MyApplication {
-    private static Log logger = LogFactory.getLog(MyApplication.class);
-    static boolean isRunning = false;
+    private static SimpleLogger logger = new SimpleLogger(MyApplication.class);
+    public static boolean isRunning = false;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         logger.info("MyApplication START");
         isRunning = true;
-        new Thread() {
-            public void run() {
-                while (isRunning) {
-                    try {
-                        logger.info("running...");
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }.start();
+        Thread.sleep(500);
     }
 }

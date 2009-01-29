@@ -16,11 +16,16 @@
 
 import java.io.IOException;
 
+import org.grlea.log.SimpleLogger;
 import org.robotframework.javalib.util.ArrayUtil;
 import org.robotframework.jvmconnector.server.ApplicationLauncher;
 import org.robotframework.jvmconnector.server.RmiService;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 public class RmiApplicationLibrary {
+    private static SimpleLogger logger = new SimpleLogger(RmiApplicationLibrary.class);
+    
     private static RmiService rmiService = new RmiService();
     private static ApplicationLauncher applicationLauncher = new ApplicationLauncher();
     
@@ -28,11 +33,18 @@ public class RmiApplicationLibrary {
     private final String jvmArgs;
 
     public static void main(String[] args) throws Exception {
+        logger.info("Starting SUT's jvm with args '" +  Arrays.asList(args) + "'...");
+        
         if (args.length < 2)
             throw new IllegalArgumentException("Usage: java RmiServiceLibrary [jvmArgs] rmiConfigFilePath applicationClassName [applicationArgs]");
         
+        logger.info("starting rmi service with " + args[0]);
         rmiService.start(args[0]);
-        applicationLauncher.launchApplication(args[1], extractRestOfTheArgs(args));
+        String[] restOfTheArgs = extractRestOfTheArgs(args);
+        logger.info("starting the application '" + args[1] + " with args '" + Arrays.asList(restOfTheArgs) + "'");
+        applicationLauncher.launchApplication(args[1], restOfTheArgs);
+        
+        logger.info("Jvm started");
     }
 
     public RmiApplicationLibrary() {
@@ -50,7 +62,9 @@ public class RmiApplicationLibrary {
     
     public void startApplicationAndRMIService(String rmiConfigFilePath, String applicationClassName, String[] args) {
         try {
-            Runtime.getRuntime().exec(createSelfExecutableCommand(rmiConfigFilePath, applicationClassName, args));
+            String selfExecutableCommand = createSelfExecutableCommand(rmiConfigFilePath, applicationClassName, args);
+            logger.info("self executing: (" + selfExecutableCommand + ")");            
+            Runtime.getRuntime().exec(selfExecutableCommand);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
