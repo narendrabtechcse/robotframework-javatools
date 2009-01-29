@@ -39,11 +39,11 @@ public class KeywordExecutionResultImplTest extends MockObjectTestCase {
 	}
 	
 	public void testStatusIsPassed() {
-		assertTrue(executionResultImpl.isKeywordPassed());
+		assertTrue(executionResultImpl.keywordPassed());
 	}
 	
 	public void testSettingKeywordFaileExceptionSetsTheStatusToFailed() {
 		executionResultImpl.setTestFailedException(new TestFailedException(new Exception()));
-		assertFalse(executionResultImpl.isKeywordPassed());
+		assertFalse(executionResultImpl.keywordPassed());
 	}
 }

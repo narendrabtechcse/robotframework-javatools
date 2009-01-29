@@ -34,11 +34,6 @@ public interface RobotRmiService {
 	void setLibrary(RobotJavaLibrary library);
 
 	/**
-	 * @see PropertyParser
-	 */
-	void setLibraryProperties(String propertiesPattern);
-
-	/**
 	 * @return the keyword names from the contained
 	 *         org.robotframework.javalib.library.RobotJavaLibrary
 	 */

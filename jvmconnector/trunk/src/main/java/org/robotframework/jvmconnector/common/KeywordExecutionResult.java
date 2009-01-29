@@ -22,28 +22,9 @@ import java.io.Serializable;
  * Wraps keyword execution results, logging output and exceptions it throws.
  */
 public interface KeywordExecutionResult extends Serializable {
-    /**
-     * Returns the result of keyword execution.
-     */
     Object getResult();
-
-    /**
-     * Returns all that keyword printed to STDOUT with java.lang.System.out.
-     */
     String getStdOutAsString();
-
-    /**
-     * Returns all that keyword printed to STDERR with java.lang.System.err.
-     */
     String getStdErrAsString();
-
-    /**
-     * Returns a boolean indicating keyword success or failure.
-     */
-    boolean isKeywordPassed();
-
-    /**
-     * @return TestFailedException wrapping the cause of the failure
-     */
+    boolean keywordPassed();
     TestFailedException getTestFailedException();
 }

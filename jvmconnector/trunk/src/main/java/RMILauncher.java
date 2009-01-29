@@ -23,8 +23,8 @@ import org.robotframework.jvmconnector.server.RmiService;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-public class RmiApplicationLibrary {
-    private static SimpleLogger logger = new SimpleLogger(RmiApplicationLibrary.class);
+public class RMILauncher {
+    private static SimpleLogger logger = new SimpleLogger(RMILauncher.class);
     
     private static RmiService rmiService = new RmiService();
     private static ApplicationLauncher applicationLauncher = new ApplicationLauncher();
@@ -33,29 +33,25 @@ public class RmiApplicationLibrary {
     private final String jvmArgs;
 
     public static void main(String[] args) throws Exception {
-        logger.info("Starting SUT's jvm with args '" +  Arrays.asList(args) + "'...");
-        
         if (args.length < 2)
             throw new IllegalArgumentException("Usage: java RmiServiceLibrary [jvmArgs] rmiConfigFilePath applicationClassName [applicationArgs]");
-        
+
         logger.info("starting rmi service with " + args[0]);
         rmiService.start(args[0]);
         String[] restOfTheArgs = extractRestOfTheArgs(args);
         logger.info("starting the application '" + args[1] + " with args '" + Arrays.asList(restOfTheArgs) + "'");
         applicationLauncher.launchApplication(args[1], restOfTheArgs);
-        
-        logger.info("Jvm started");
     }
 
-    public RmiApplicationLibrary() {
+    public RMILauncher() {
         this("java");
     }
     
-    public RmiApplicationLibrary(String javaExecutable) {
+    public RMILauncher(String javaExecutable) {
         this(javaExecutable, "");
     }
 
-    public RmiApplicationLibrary(String javaExecutable, String jvmArgs) {
+    public RMILauncher(String javaExecutable, String jvmArgs) {
         this.javaExecutable = javaExecutable;
         this.jvmArgs = jvmArgs;
     }
@@ -66,6 +62,7 @@ public class RmiApplicationLibrary {
             logger.info("self executing: (" + selfExecutableCommand + ")");            
             Runtime.getRuntime().exec(selfExecutableCommand);
         } catch (IOException e) {
+            logger.errorException(e);
             throw new RuntimeException(e);
         }
     }

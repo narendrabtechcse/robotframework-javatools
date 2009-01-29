@@ -23,16 +23,12 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 
 public class RmiService {
-    private static SimpleLogger logger = new SimpleLogger(RmiService.class);
-    
-    {
-        logger.info("initializing");
+    public void start(final String rmiConfigFilePath) {
+        log("starting the rmi service from '" + rmiConfigFilePath + "'");
+        new GenericApplicationContext(new XmlBeanFactory(new FileSystemResource(rmiConfigFilePath))).refresh();
     }
 
-    public void start(final String rmiConfigFilePath) {
-        logger.info("starting the service");
-        XmlBeanFactory beanFactory = new XmlBeanFactory(new FileSystemResource(rmiConfigFilePath));
-        new GenericApplicationContext(beanFactory).refresh();
-        logger.info("service is started");
+    private void log(String message) {
+        new SimpleLogger(getClass()).info(message);
     }
 }

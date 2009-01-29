@@ -1,5 +1,5 @@
 * Setting *	* Value *
-library	RmiApplicationLibrary
+library	RMILauncher
 
 * Test Case *	* Action *	* Argument *
 Starts Application And RMI Service

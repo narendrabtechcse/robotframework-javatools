@@ -48,7 +48,7 @@ public class RobotRmiClient implements RobotJavaLibrary {
         printStdOut(keywordExecutionResults.getStdOutAsString());
         printStdErr(keywordExecutionResults.getStdErrAsString());
 
-        if (!keywordExecutionResults.isKeywordPassed())
+        if (!keywordExecutionResults.keywordPassed())
             throw keywordExecutionResults.getTestFailedException();
 
         return keywordExecutionResults.getResult();

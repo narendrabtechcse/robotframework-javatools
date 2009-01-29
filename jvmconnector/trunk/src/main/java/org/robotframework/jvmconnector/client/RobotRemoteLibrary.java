@@ -16,7 +16,6 @@
 
 package org.robotframework.jvmconnector.client;
 
-import org.grlea.log.SimpleLogger;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 import org.robotframework.jvmconnector.common.PropertyOverrider;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -35,11 +34,6 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class RobotRemoteLibrary implements RobotJavaLibrary {
     private RobotJavaLibrary robotLibraryClient;
-    private static SimpleLogger logger = new SimpleLogger(RobotRemoteLibrary.class);
-    
-    {
-        logger.info("Creating RobotRemoteLibrary");
-    }
     
     public RobotRemoteLibrary() {
         this("rmi://localhost:1099/jvmConnector");

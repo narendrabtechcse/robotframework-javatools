@@ -37,7 +37,7 @@ public class KeywordExecutionResultImpl implements KeywordExecutionResult {
         return keywordExecutionResult;
     }
 
-    public boolean isKeywordPassed() {
+    public boolean keywordPassed() {
         return keywordPassed;
     }
 

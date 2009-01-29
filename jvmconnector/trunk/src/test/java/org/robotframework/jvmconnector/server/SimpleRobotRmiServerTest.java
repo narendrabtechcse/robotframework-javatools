@@ -9,8 +9,6 @@ import org.robotframework.jvmconnector.mocks.ExceptionThrowingKeyword;
 import org.robotframework.jvmconnector.mocks.LoggingKeyword;
 import org.robotframework.jvmconnector.mocks.MockException;
 import org.robotframework.jvmconnector.mocks.MockJavaLibrary;
-import org.springframework.beans.PropertyAccessor;
-import org.springframework.beans.PropertyValue;
 
 public class SimpleRobotRmiServerTest extends MockObjectTestCase {
     private String keywordName = "some keyword";
@@ -68,14 +66,14 @@ public class SimpleRobotRmiServerTest extends MockObjectTestCase {
 		mockJavaLibrary.stubs().method("runKeyword")
 			.will(returnValue(new Object()));
 		
-		assertTrue(robotRmiService.runKeyword(keywordName, keywordArguments).isKeywordPassed());
+		assertTrue(robotRmiService.runKeyword(keywordName, keywordArguments).keywordPassed());
 	}
 	
 	public void testFailsWhenKeywordFails() {
 		mockJavaLibrary.stubs().method("runKeyword")
 			.will(throwException(new Throwable()));
 		
-		assertFalse(robotRmiService.runKeyword(keywordName, keywordArguments).isKeywordPassed());
+		assertFalse(robotRmiService.runKeyword(keywordName, keywordArguments).keywordPassed());
 	}
 	
 	public void testWrapsExceptionWhenFails() {
@@ -129,42 +127,6 @@ public class SimpleRobotRmiServerTest extends MockObjectTestCase {
 		
 		KeywordExecutionResult executionResult = robotRmiService.runKeyword(keywordName, keywordArguments);
 		assertEquals(MockException.class.getName(), executionResult.getTestFailedException().getSourceExceptionClassName());
-	}
-	
-	public void testSetsProperties() {
-		String somePropertyName = "someProperty";
-		String somePropertyValue = "someValue";
-		String anotherPropertyName = "anotherProperty";
-		String anotherPropertyValue = "anotherValue";
-		
-		RobotRmiService rmiService = 
-			getRmiServiceWithPropertyAccessorExpectingThesePropertyValues(
-					new PropertyValue(somePropertyName, somePropertyValue),
-					new PropertyValue(anotherPropertyName, anotherPropertyValue));
-		
-		String propertyPattern = somePropertyName + "=" + somePropertyValue + "|" +
-							     anotherPropertyName + "=" + anotherPropertyValue;
-		
-		rmiService.setLibraryProperties(propertyPattern);
-	}
-
-	private RobotRmiService getRmiServiceWithPropertyAccessorExpectingThesePropertyValues(PropertyValue someProperty, PropertyValue anotherProperty) {
-		Mock mockPropertyAccessor = mock(PropertyAccessor.class);
-		
-		mockPropertyAccessor.expects(once()).method("setPropertyValue")
-			.with(eq(someProperty));
-		mockPropertyAccessor.expects(once()).method("setPropertyValue")
-			.with(eq(anotherProperty));
-		
-		final PropertyAccessor propertyAccessor = (PropertyAccessor) mockPropertyAccessor.proxy();
-		
-		RobotRmiService rmiService = new SimpleRobotRmiService() {
-			protected PropertyAccessor getLibraryPropertyAccessor() {
-				return propertyAccessor;
-			}
-		};
-		
-		return rmiService;
 	}
 	
 	private KeywordExecutionResult executeMockKeyword(String mockKeywordName) {

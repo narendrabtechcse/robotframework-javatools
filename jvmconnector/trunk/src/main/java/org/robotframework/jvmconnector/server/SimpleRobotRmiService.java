@@ -16,26 +16,17 @@
 
 package org.robotframework.jvmconnector.server;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 import org.robotframework.javalib.util.StdStreamRedirecter;
 import org.robotframework.jvmconnector.common.KeywordExecutionResult;
 import org.robotframework.jvmconnector.common.TestFailedException;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.PropertyAccessor;
-import org.springframework.beans.PropertyValue;
-
 
 /**
  * Robot RMI service that handles the communication between the RMI client and
  * the org.robotframework.javalib.library.RobotJavaLibrary.
  */
 public class SimpleRobotRmiService implements RobotRmiService {
-    private static Log logger = LogFactory.getLog(SimpleRobotRmiService.class);
-    
     private RobotJavaLibrary library;
-
     private StdStreamRedirecter streamRedirecter;
 
     public SimpleRobotRmiService() {
@@ -49,7 +40,6 @@ public class SimpleRobotRmiService implements RobotRmiService {
      */
     public SimpleRobotRmiService(StdStreamRedirecter streamRedirecter) {
         this.streamRedirecter = streamRedirecter;
-        logger.info("!!! Instantiating SimpleRobotRmiService.");
     }
 
     public String[] getKeywordNames() {
@@ -58,14 +48,6 @@ public class SimpleRobotRmiService implements RobotRmiService {
 
     public void setLibrary(RobotJavaLibrary library) {
         this.library = library;
-    }
-
-    public void setLibraryProperties(String properties) {
-        PropertyValue[] propertyValues = getPropertyValues(properties);
-        PropertyAccessor robotLibraryPropertyAccessor = getLibraryPropertyAccessor();
-
-        for (int i = 0; i < propertyValues.length; ++i)
-            robotLibraryPropertyAccessor.setPropertyValue(propertyValues[i]);
     }
 
     public KeywordExecutionResult runKeyword(String keywordName, Object[] keywordArguments) {
@@ -85,13 +67,5 @@ public class SimpleRobotRmiService implements RobotRmiService {
         }
         keywordExecutionResult.setStdStreams(streamRedirecter);
         return keywordExecutionResult;
-    }
-
-    protected PropertyAccessor getLibraryPropertyAccessor() {
-        return new BeanWrapperImpl(library);
-    }
-
-    protected PropertyValue[] getPropertyValues(String propertyPattern) {
-        return new PropertyParser(propertyPattern).getPropertyValues();
     }
 }

@@ -34,7 +34,6 @@ public class RobotRmiClientTest extends MockObjectTestCase {
 	private KeywordExecutionResult keywordExecutionResults;
 	private RobotRmiClient rmiClient;
 	private BeanFactory beanFactoryContainingRmiService;
-	private String propertiesSetterMethodName = "setLibraryProperties";
 
 	public void setUp() {
 		setMockBeanFactory();
@@ -95,14 +94,14 @@ public class RobotRmiClientTest extends MockObjectTestCase {
 	}
 	
 	public void testChecksIfKeywordHasPassed() {
-	    mockKeywordExecutionResults.expects(once()).method("isKeywordPassed")
+	    mockKeywordExecutionResults.expects(once()).method("keywordPassed")
 	    	.will(returnValue(true));
 		rmiClient.runKeyword(null, null);
 	}
 	
 	public void testThrowsTestFailedExceptionIfTestFailed() {
 	    String isKeywordPassedInvocation = "passedTest";
-		mockKeywordExecutionResults.expects(once()).method("isKeywordPassed")
+		mockKeywordExecutionResults.expects(once()).method("keywordPassed")
 	    	.will(returnValue(false))
 	    	.id(isKeywordPassedInvocation);
 		
@@ -139,7 +138,7 @@ public class RobotRmiClientTest extends MockObjectTestCase {
 	private void setMockKeywordExecutionResults() {
 		mockKeywordExecutionResults = mock(KeywordExecutionResult.class);
 		mockKeywordExecutionResults.stubs();
-		mockKeywordExecutionResults.stubs().method("isKeywordPassed").will(returnValue(true));
+		mockKeywordExecutionResults.stubs().method("keywordPassed").will(returnValue(true));
 		mockKeywordExecutionResults.stubs().method("getStdOutAsString").will(returnValue(""));
 		mockKeywordExecutionResults.stubs().method("getStdErrAsString").will(returnValue(""));
 		keywordExecutionResults = (KeywordExecutionResult)mockKeywordExecutionResults.proxy();
@@ -147,7 +146,6 @@ public class RobotRmiClientTest extends MockObjectTestCase {
 	
 	private void setMockRobotRmiService() {
 		mockRobotRmiService = mock(RobotRmiService.class);
-		mockRobotRmiService.stubs().method(propertiesSetterMethodName);
 		mockRobotRmiService.stubs().method("runKeyword")
 			.will(returnValue(keywordExecutionResults));
 	}

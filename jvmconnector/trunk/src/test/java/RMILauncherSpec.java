@@ -23,15 +23,15 @@ import org.robotframework.jvmconnector.server.ApplicationLauncher;
 import org.robotframework.jvmconnector.server.RmiService;
 
 @RunWith(JDaveRunner.class)
-public class RmiApplicationLibrarySpec extends Specification<RmiApplicationLibrary> {
+public class RMILauncherSpec extends Specification<RMILauncher> {
     private String javaExecutable = "java";
     private String jvmArgs = "-Dfoo=bar";
     private String applicationClassName = "com.acme.SomeApp";
     private String rmiConfigFilePath = "rmiConfig.xml";
     
     public class ActingAsLibrary {
-        public RmiApplicationLibrary create() {
-            return new RmiApplicationLibrary(javaExecutable, jvmArgs);
+        public RMILauncher create() {
+            return new RMILauncher(javaExecutable, jvmArgs);
         }
         
         public void executesItselfWithGivenArgs() throws Exception {
@@ -40,7 +40,7 @@ public class RmiApplicationLibrarySpec extends Specification<RmiApplicationLibra
             
             String applicationArgs = "foo bar baz";
             
-            final String expectedCommand = javaExecutable + " " + jvmArgs + " " + RmiApplicationLibrary.class.getName()
+            final String expectedCommand = javaExecutable + " " + jvmArgs + " " + RMILauncher.class.getName()
                 + " " + rmiConfigFilePath + " " + applicationClassName + " " + applicationArgs;
             
             checking(new Expectations() {{
@@ -56,8 +56,8 @@ public class RmiApplicationLibrarySpec extends Specification<RmiApplicationLibra
         private ApplicationLauncher applicationLauncher;
 
         public void create() {
-            rmiService = injectMock(RmiService.class, "rmiService", RmiApplicationLibrary.class);
-            applicationLauncher = injectMock(ApplicationLauncher.class, "applicationLauncher", RmiApplicationLibrary.class);
+            rmiService = injectMock(RmiService.class, "rmiService", RMILauncher.class);
+            applicationLauncher = injectMock(ApplicationLauncher.class, "applicationLauncher", RMILauncher.class);
         }
         
         public void startsRmiService() throws Exception {
@@ -66,7 +66,7 @@ public class RmiApplicationLibrarySpec extends Specification<RmiApplicationLibra
                 ignoring(applicationLauncher);
             }});
             
-            RmiApplicationLibrary.main(new String[] {rmiConfigFilePath, applicationClassName });
+            RMILauncher.main(new String[] {rmiConfigFilePath, applicationClassName });
         }
         
         public void startsApplication() throws Exception {
@@ -75,7 +75,7 @@ public class RmiApplicationLibrarySpec extends Specification<RmiApplicationLibra
                 ignoring(rmiService);
             }});
             
-            RmiApplicationLibrary.main(new String[] {rmiConfigFilePath, applicationClassName, "foo", "bar"});
+            RMILauncher.main(new String[] {rmiConfigFilePath, applicationClassName, "foo", "bar"});
         }
         
         private <T> T injectMock(Class<T> mockedClass, String fieldName, Class<?> target) {
