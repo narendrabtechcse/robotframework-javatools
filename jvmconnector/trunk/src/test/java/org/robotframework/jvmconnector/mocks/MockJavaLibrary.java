@@ -26,14 +26,10 @@ public class MockJavaLibrary implements RobotJavaLibrary {
     public static final String PATTERN_KEYWORD_PROPERTY_NAME = "someProperty";
     public static final String PATTERN_KEYWORD_PROPERTY_VALUE = "patternKeyword";
 
-    public Map keywordMap = new HashMap() {
-        {
-            put(LoggingKeyword.KEYWORD_NAME, new LoggingKeyword());
-            put(ExceptionThrowingKeyword.KEYWORD_NAME, new ExceptionThrowingKeyword());
-            put(new ApplicationIsRunning().getClass().getSimpleName(), new ApplicationIsRunning());
-            put(new StopApplication().getClass().getSimpleName(), new StopApplication());
-        }
-    };
+    public Map<String, Keyword> keywordMap = new HashMap<String, Keyword>() {{
+        put(LoggingKeyword.KEYWORD_NAME, new LoggingKeyword());
+        put(ExceptionThrowingKeyword.KEYWORD_NAME, new ExceptionThrowingKeyword());
+    }};
 
     public String[] getKeywordNames() {
         return (String[]) keywordMap.keySet().toArray(new String[0]);
