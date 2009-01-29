@@ -25,4 +25,9 @@ public class JvmconnectorKeywords extends AnnotationLibrary {
     public void stopApplication() {
         MyApplication.isRunning = false;
     }
+    
+    @RobotKeyword
+    public void stopJvm() {
+        System.exit(0);
+    }
 }

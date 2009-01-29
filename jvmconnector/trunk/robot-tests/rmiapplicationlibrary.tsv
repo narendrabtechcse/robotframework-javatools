@@ -10,4 +10,4 @@ Starts Application And RMI Service
 	myApp.stopApplication
 	${applicationIsRunning}=	myApp.applicationIsRunning
 	shouldNotBeTrue	${applicationIsRunning}
-	sleep	3
+	runKeywordAndIgnoreError	myApp.stopJvm
