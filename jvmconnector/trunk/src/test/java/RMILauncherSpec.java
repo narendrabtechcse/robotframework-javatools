@@ -30,14 +30,17 @@ public class RMILauncherSpec extends Specification<RMILauncher> {
     private String rmiConfigFilePath = "rmiConfig.xml";
     
     public class ActingAsLibrary {
+        private Runtime runtime;
+        private Runtime originalRuntime;
+
         public RMILauncher create() {
+            originalRuntime = Runtime.getRuntime();
+            runtime = mock(Runtime.class);
+            injectRuntime(runtime);
             return new RMILauncher(javaExecutable, jvmArgs);
         }
         
         public void executesItselfWithGivenArgs() throws Exception {
-            final Runtime runtime = mock(Runtime.class);
-            Inject.staticField("currentRuntime").of(Runtime.class).with(runtime);
-            
             String applicationArgs = "foo bar baz";
             
             final String expectedCommand = javaExecutable + " " + jvmArgs + " " + RMILauncher.class.getName()
@@ -48,6 +51,14 @@ public class RMILauncherSpec extends Specification<RMILauncher> {
             }});
             
             context.startApplicationAndRMIService(rmiConfigFilePath, applicationClassName, new String[] {"foo", "bar", "baz" });
+        }
+        
+        public void destroy() {
+            injectRuntime(originalRuntime);
+        }
+        
+        private void injectRuntime(Runtime runtime) {
+            Inject.staticField("currentRuntime").of(Runtime.class).with(runtime);
         }
     }
     
