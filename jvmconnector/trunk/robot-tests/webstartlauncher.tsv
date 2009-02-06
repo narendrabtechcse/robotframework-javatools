@@ -1,0 +1,23 @@
+* Setting *	* Value *
+library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
+library	WebstartLauncher
+suiteSetup	startWebstartService
+suiteTeardown	stopWebstartService
+
+* Variable *	* Value *
+${testAppDir}	${CURDIR}${/}..${/}src${/}test${/}resources${/}test-app
+${rmiConfigFile}	${testAppDir}${/}remoteRobotServiceConfig.xml
+${jnlpUrl}	http://localhost:14563/test-application.jnlp
+
+* Test Case *	* Action *	* Argument *
+WebstartLauncher Launches Java Webstart Application
+	startWebstartApplicationAndRmiService	${rmiConfigFile}	${jnlpUrl}
+	importLibrary	${CURDIR}${/}..${/}tools/RemoteLibrary.py	rmi://localhost:11099/swingLibrary	WITH NAME	swinglibrary
+	waitUntilKeywordSucceeds	30	2	selectMainWindow
+
+* Keyword *	* Action *	* Argument *
+startWebstartService
+	FileServer.start	${testAppDir}
+
+stopWebstartService
+	FileServer.stop

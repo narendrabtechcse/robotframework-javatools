@@ -23,19 +23,36 @@ import org.robotframework.javalib.beans.common.URLFileFactory;
 public class JarExtractor {
     private final URLFileFactory fileFactory;
 
-    public JarExtractor(URLFileFactory fileFactory) {
+    public JarExtractor() {
+        this(new URLFileFactory(System.getProperty("java.io.tmpdir")));
+    }
+    
+    JarExtractor(URLFileFactory fileFactory) {
         this.fileFactory = fileFactory;
     }
 
-    public Jar createMainJar(JNLPElement jnlpRootElement) {
-        String codeBase = jnlpRootElement.getAttributeValue("codebase");
-        JNLPElement jarElement = jnlpRootElement.getFirstChildElement("resources").getFirstChildElement("jar");
-        String jarHref = jarElement.getAttributeValue("href");
-        File jarFile = fileFactory.createFileFromUrl(codeBase + "/" + jarHref);
-        return createJar(jarFile);
+    public Jar createMainJar(Element jnlpRoot) {
+        return createJar(getMainJarFile(jnlpRoot));
     }
 
     Jar createJar(File jarFile) {
         return new JarImpl(jarFile);
+    }
+    
+    private File getMainJarFile(Element jnlpRoot) {
+        return fileFactory.createFileFromUrl(getMainJarUrl(jnlpRoot));
+    }
+    
+    private String getMainJarUrl(Element jnlpRoot) {
+        return getCodeBase(jnlpRoot) + "/" + getMainJarFileName(jnlpRoot);
+    }
+    
+    private String getCodeBase(Element jnlpRoot) {
+        return jnlpRoot.getAttributeValue("codebase");
+    }
+    
+    private String getMainJarFileName(Element jnlpRoot) {
+        Element jarElement = jnlpRoot.getFirstChildElement("resources").getFirstChildElement("jar");
+        return jarElement.getAttributeValue("href");
     }
 }

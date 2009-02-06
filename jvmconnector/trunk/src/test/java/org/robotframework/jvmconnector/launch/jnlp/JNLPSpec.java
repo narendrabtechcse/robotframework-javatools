@@ -17,33 +17,30 @@
 
 package org.robotframework.jvmconnector.launch.jnlp;
 
-import java.util.jar.JarFile;
-
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import org.jmock.Expectations;
 import org.junit.runner.RunWith;
-import org.robotframework.javalib.beans.common.URLFileFactory;
 
 @RunWith(JDaveRunner.class)
 public class JNLPSpec extends Specification<JNLP> {
-    private JNLPElement jnlpRootElement;
-    private JNLPElement appDesc;
+    private Element jnlpRootElement;
+    private Element appDesc;
     private String mainClass = "com.foo.SomeClass";
     
     public class WhenMainClassIsInJNLP {
         public JNLP create() {
-            jnlpRootElement = mock(JNLPElement.class);
-            appDesc = mock(JNLPElement.class, "appDesc");
+            jnlpRootElement = mock(Element.class);
+            appDesc = mock(Element.class, "appDesc");
             
             return new JNLP(jnlpRootElement);
         }
         
         public void knowsItsMainClass() {
             checking(new Expectations() {{
-                one(jnlpRootElement).getFirstChildElement("application-desc"); will(returnValue(appDesc));
-                one(appDesc).getAttributeValue("main-class"); will(returnValue(mainClass));
+                atLeast(1).of(jnlpRootElement).getFirstChildElement("application-desc"); will(returnValue(appDesc));
+                atLeast(1).of(appDesc).getAttributeValue("main-class"); will(returnValue(mainClass));
             }});
             
             specify(context.getMainClass(), mainClass);
@@ -51,36 +48,28 @@ public class JNLPSpec extends Specification<JNLP> {
     }
     
     public class WhenMainClassIsNotInJNLP {
-        private URLFileFactory fileFactory;
+        private JarExtractor jarExtractor;
 
         public JNLP create() {
-            jnlpRootElement = mock(JNLPElement.class);
-            fileFactory = mock(URLFileFactory.class);
-            appDesc = mock(JNLPElement.class, "appDesc");
+            jnlpRootElement = mock(Element.class);
+            jarExtractor = mock(JarExtractor.class);
+            appDesc = mock(Element.class, "appDesc");
             
-            
-            return new JNLP(jnlpRootElement, fileFactory);
+            return new JNLP(jnlpRootElement, jarExtractor);
         }
         
         public void knowsItsMainClass() {
-            final JNLPElement resources = mock(JNLPElement.class, "resources");
-            final JNLPElement firstJar = mock(JNLPElement.class, "firstJar");
-            final JarFile jarFile = mock(JarFile.class);
+            final Jar mainJar = mock(Jar.class);
             
             checking(new Expectations() {{
-                one(jnlpRootElement).getFirstChildElement("application-desc"); will(returnValue(appDesc));
-                one(appDesc).getAttributeValue("main-class"); will(returnValue(null));
+                atLeast(1).of(jnlpRootElement).getFirstChildElement("application-desc"); will(returnValue(appDesc));
+                atLeast(1).of(appDesc).getAttributeValue("main-class"); will(returnValue(null));
                 
-                one(jnlpRootElement).getAttributeValue("codebase"); will(returnValue("http://somehost"));
-                one(jnlpRootElement).getFirstChildElement("resources"); will(returnValue(resources));
-                one(resources).getFirstChildElement("jar"); will(returnValue(firstJar));
-                one(firstJar).getAttributeValue("href"); will(returnValue("someJar.jar"));
-                
-                one(fileFactory).createFileFromUrl("http://somehost/someJar.jar");
-                will(returnValue(jarFile));
+                one(jarExtractor).createMainJar(jnlpRootElement); will(returnValue(mainJar));
+                one(mainJar).getMainClass(); will(returnValue(mainClass));
             }});
             
-            
+            specify(context.getMainClass(), mainClass);
         }
     }
 }

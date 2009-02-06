@@ -17,29 +17,38 @@
 
 package org.robotframework.jvmconnector.launch.jnlp;
 
-import org.robotframework.javalib.beans.common.URLFileFactory;
 
 public class JNLP {
-    private final JNLPElement jnlpRootElement;
-    private final URLFileFactory fileFactory;
+    private final Element jnlpRootElement;
+    private final JarExtractor jarExtractor;
 
-    public JNLP(JNLPElement jnlpRootElement) {
-        this(jnlpRootElement, new URLFileFactory(System.getProperty("java.io.tmpdir")));
+    public JNLP(Element jnlpRootElement) {
+        this(jnlpRootElement, new JarExtractor());
     }
     
-    public JNLP(JNLPElement jnlpRootElement, URLFileFactory fileFactory) {
+    public JNLP(Element jnlpRootElement, JarExtractor jarExtractor) {
         this.jnlpRootElement = jnlpRootElement;
-        this.fileFactory = fileFactory;
+        this.jarExtractor = jarExtractor;
     }
 
     public String getMainClass() {
-        JNLPElement appDesc = jnlpRootElement.getFirstChildElement("application-desc");
-        String mainClass = appDesc.getAttributeValue("main-class");
-        if (mainClass == null) {
-            String codeBase = jnlpRootElement.getAttributeValue("codebase");
-            JNLPElement firstJarElement = jnlpRootElement.getFirstChildElement("resources").getFirstChildElement("jar");
-//            fileFactory.createFileFromUrl(url)
-        }
-        return mainClass;
+        if (mainClassInJNLPDescriptor())
+            return getMainClassFromJnlp();
+
+        return extractMainClassNameFromMainJar();
+    }
+
+    private boolean mainClassInJNLPDescriptor() {
+        return getMainClassFromJnlp() != null;
+    }
+
+    private String getMainClassFromJnlp() {
+        Element appDesc = jnlpRootElement.getFirstChildElement("application-desc");
+        return appDesc.getAttributeValue("main-class");
+    }
+    
+    private String extractMainClassNameFromMainJar() {
+        Jar mainJar = jarExtractor.createMainJar(jnlpRootElement);
+        return mainJar.getMainClass();
     }
 }

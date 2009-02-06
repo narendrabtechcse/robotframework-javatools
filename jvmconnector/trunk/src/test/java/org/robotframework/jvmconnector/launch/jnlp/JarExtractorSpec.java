@@ -33,9 +33,9 @@ public class JarExtractorSpec extends Specification<JarExtractor> {
         }
         
         public void extractsFirstJar() {
-            final JNLPElement jnlpRootElement = mock(JNLPElement.class);
-            final JNLPElement resourcesElement = mock(JNLPElement.class, "resources");
-            final JNLPElement jarElement = mock(JNLPElement.class, "firstJar");
+            final Element jnlpRootElement = mock(Element.class);
+            final Element resourcesElement = mock(Element.class, "resources");
+            final Element jarElement = mock(Element.class, "firstJar");
             final File jarFile = mock(File.class);
             
             checking(new Expectations() {{
