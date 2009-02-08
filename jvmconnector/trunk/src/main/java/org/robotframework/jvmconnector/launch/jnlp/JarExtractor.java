@@ -27,7 +27,7 @@ public class JarExtractor {
         this(new URLFileFactory(System.getProperty("java.io.tmpdir")));
     }
     
-    JarExtractor(URLFileFactory fileFactory) {
+    public JarExtractor(URLFileFactory fileFactory) {
         this.fileFactory = fileFactory;
     }
 

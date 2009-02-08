@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Nodes;
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.robotframework.jvmconnector.xml.Document;
+import org.robotframework.jvmconnector.xml.Document.MyElement;
 
 public class WebstartLauncher {
     private final String javawsExecutable;
@@ -30,21 +32,22 @@ public class WebstartLauncher {
         this.javawsExecutable = javawsExecutable;
     }
     
-    public void startWebstartApplicationAndRmiService(String rmiConfigFilePath, String jnlpUrl) {
-        System.out.println("kukkuu");
+    public void startWebstartApplicationAndRmiService(String rmiConfigFilePath, String jnlpUrl) throws Exception {
+        
     }
     
     public static void main(String[] args) throws Exception {
-        Builder parser = new Builder();
-//        String url = "http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp";
-        String url = "/var/www/jnlp/test-application.jnlp";
-        Document doc = parser.build(url);
-        Element rootElement = doc.getRootElement();
-        Nodes nodes = rootElement.query("//application-desc/@main-class");
-        System.out.println(nodes.get(0).getValue());
-        Element appDesc = doc.getRootElement().getFirstChildElement("application-desc");
-        String mainClass = appDesc.getAttributeValue("main-class");
-//        System.out.println(mainClass);
-        System.out.println(doc.toXML());
+        String url = "./src/test/resources/test-app/test-application.jnlp";
+        Document doc = new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(url)));
+        MyElement appDesc = doc.element("application-desc");
+//        String mainClass = appDesc.getAttribute("main-class");
+//        if (mainClass == null) {
+//            mainClass = doc.getA
+//        }
+        
+        appDesc.insertElement("arg").insertText("foo");
+        appDesc.insertElement("arg").insertText("bar");
+        
+        doc.printTo(System.out);
     }
 }

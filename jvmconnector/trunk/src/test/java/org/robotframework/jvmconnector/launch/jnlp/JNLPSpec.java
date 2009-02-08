@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.robotframework.jvmconnector.launch.jnlp;
 
 import jdave.Specification;
@@ -26,18 +25,20 @@ import org.junit.runner.RunWith;
 @RunWith(JDaveRunner.class)
 public class JNLPSpec extends Specification<JNLP> {
     private Element jnlpRootElement;
-    private Element appDesc;
     private String mainClass = "com.foo.SomeClass";
-    
-    public class WhenMainClassIsInJNLP {
+
+    public class Any {
+        private JarExtractor jarExtractor;
+
         public JNLP create() {
             jnlpRootElement = mock(Element.class);
-            appDesc = mock(Element.class, "appDesc");
+            jarExtractor = mock(JarExtractor.class);
             
-            return new JNLP(jnlpRootElement);
+            return new JNLP(jnlpRootElement, jarExtractor);
         }
         
-        public void knowsItsMainClass() {
+        public void knowsItsMainClassFromJnlp() {
+            final Element appDesc = mock(Element.class, "appDesc");
             checking(new Expectations() {{
                 atLeast(1).of(jnlpRootElement).getFirstChildElement("application-desc"); will(returnValue(appDesc));
                 atLeast(1).of(appDesc).getAttributeValue("main-class"); will(returnValue(mainClass));
@@ -45,21 +46,10 @@ public class JNLPSpec extends Specification<JNLP> {
             
             specify(context.getMainClass(), mainClass);
         }
-    }
-    
-    public class WhenMainClassIsNotInJNLP {
-        private JarExtractor jarExtractor;
-
-        public JNLP create() {
-            jnlpRootElement = mock(Element.class);
-            jarExtractor = mock(JarExtractor.class);
-            appDesc = mock(Element.class, "appDesc");
-            
-            return new JNLP(jnlpRootElement, jarExtractor);
-        }
         
-        public void knowsItsMainClass() {
+        public void knowsItsMainClassFromJar() {
             final Jar mainJar = mock(Jar.class);
+            final Element appDesc = mock(Element.class, "appDesc");
             
             checking(new Expectations() {{
                 atLeast(1).of(jnlpRootElement).getFirstChildElement("application-desc"); will(returnValue(appDesc));
@@ -70,6 +60,29 @@ public class JNLPSpec extends Specification<JNLP> {
             }});
             
             specify(context.getMainClass(), mainClass);
+        }
+        
+        public void knowsItsArguments() {
+            checking(new Expectations() {{
+                
+            }});
+            
+            specify(context.getArguments(), new String[] {"one", "two", "three" });
+        }
+    }
+    
+    public class WritingItself {
+        public JNLP create() {
+            Element rootElement = mock(Element.class);
+            return new JNLP(rootElement) {
+                String getMainClass() {
+                    throw new UnsupportedOperationException("Not implemented.");
+                }
+                
+                String[] getArguments() {
+                    throw new UnsupportedOperationException("Not implemented.");
+                }
+            };
         }
     }
 }

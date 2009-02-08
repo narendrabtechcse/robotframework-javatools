@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.robotframework.jvmconnector.launch.jnlp;
 
 
@@ -31,11 +30,15 @@ public class JNLP {
         this.jarExtractor = jarExtractor;
     }
 
-    public String getMainClass() {
+    String getMainClass() {
         if (mainClassInJNLPDescriptor())
             return getMainClassFromJnlp();
 
         return extractMainClassNameFromMainJar();
+    }
+    
+    String[] getArguments() {
+        throw new UnsupportedOperationException("Not implemented.");
     }
 
     private boolean mainClassInJNLPDescriptor() {
