@@ -19,15 +19,8 @@ package org.robotframework.jvmconnector.server;
 
 import java.lang.reflect.Method;
 
-import org.grlea.log.SimpleLogger;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 public class ApplicationLauncher {
-    private static SimpleLogger logger = new SimpleLogger(ApplicationLauncher.class);
-    
     public void launchApplication(String applicationClassName, String[] args) {
-        logger.info("launching application '" + applicationClassName + "' with args '" + Arrays.asList(args) + "'");
         Method method = getMainMethod(applicationClassName);
         invoke(method, args);
     }
@@ -36,7 +29,6 @@ public class ApplicationLauncher {
         try {
             method.invoke(null, new Object[] { args });
         } catch (Exception e) {
-            logger.errorException(e);
             throw new RuntimeException(e);
         }
     }
@@ -45,7 +37,6 @@ public class ApplicationLauncher {
         try {
             return Class.forName(applicationClassName).getMethod("main", new Class[] { String[].class });
         } catch (Exception e) {
-            logger.errorException(e);
             throw new RuntimeException(e);
         }
     }

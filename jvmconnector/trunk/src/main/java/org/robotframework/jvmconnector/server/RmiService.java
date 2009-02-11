@@ -17,18 +17,12 @@
 
 package org.robotframework.jvmconnector.server;
 
-import org.grlea.log.SimpleLogger;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 
 public class RmiService {
     public void start(final String rmiConfigFilePath) {
-        log("starting the rmi service from '" + rmiConfigFilePath + "'");
         new GenericApplicationContext(new XmlBeanFactory(new FileSystemResource(rmiConfigFilePath))).refresh();
-    }
-
-    private void log(String message) {
-        new SimpleLogger(getClass()).info(message);
     }
 }

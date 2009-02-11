@@ -14,32 +14,34 @@
  * limitations under the License.
  */
 
-import java.io.IOException;
+import static org.robotframework.jvmconnector.util.Logger.log;
 
-import org.grlea.log.SimpleLogger;
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.robotframework.javalib.util.ArrayUtil;
 import org.robotframework.jvmconnector.server.ApplicationLauncher;
 import org.robotframework.jvmconnector.server.RmiService;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 public class RMILauncher {
-    private static SimpleLogger logger = new SimpleLogger(RMILauncher.class);
-    
     private static RmiService rmiService = new RmiService();
     private static ApplicationLauncher applicationLauncher = new ApplicationLauncher();
     
     private final String javaExecutable;
     private final String jvmArgs;
 
+    static {
+        log("RMILauncher class loaded");
+    }
+    
     public static void main(String[] args) throws Exception {
+        log("RMILauncher: " + Arrays.asList(args));
         if (args.length < 2)
             throw new IllegalArgumentException("Usage: java RmiServiceLibrary [jvmArgs] rmiConfigFilePath applicationClassName [applicationArgs]");
 
-        logger.info("starting rmi service with " + args[0]);
         rmiService.start(args[0]);
         String[] restOfTheArgs = extractRestOfTheArgs(args);
-        logger.info("starting the application '" + args[1] + " with args '" + Arrays.asList(restOfTheArgs) + "'");
+        log("starting the application '" + args[1] + " with args '" + Arrays.asList(restOfTheArgs) + "'");
         applicationLauncher.launchApplication(args[1], restOfTheArgs);
     }
 
@@ -59,10 +61,10 @@ public class RMILauncher {
     public void startApplicationAndRMIService(String rmiConfigFilePath, String applicationClassName, String[] args) {
         try {
             String selfExecutableCommand = createSelfExecutableCommand(rmiConfigFilePath, applicationClassName, args);
-            logger.info("self executing: (" + selfExecutableCommand + ")");            
+            log("self executing: (" + selfExecutableCommand + ")");            
             Runtime.getRuntime().exec(selfExecutableCommand);
         } catch (IOException e) {
-            logger.errorException(e);
+            log(e);
             throw new RuntimeException(e);
         }
     }

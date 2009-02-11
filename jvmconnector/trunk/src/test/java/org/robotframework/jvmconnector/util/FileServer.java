@@ -1,5 +1,7 @@
 package org.robotframework.jvmconnector.util;
 
+import java.io.File;
+
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.DefaultHandler;
@@ -32,6 +34,8 @@ public class FileServer {
     }
     
     public static void main(String[] args) throws Exception {
-        start("./src/test/resources");
+        String resourceBase = new File("./src/test/resources").getCanonicalPath();
+        System.out.println(resourceBase);
+        start(resourceBase);
     }
 }

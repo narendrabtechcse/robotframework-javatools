@@ -31,28 +31,15 @@ public class JarExtractor {
         this.fileFactory = fileFactory;
     }
 
-    public Jar createMainJar(Element jnlpRoot) {
-        return createJar(getMainJarFile(jnlpRoot));
+    public Jar createMainJar(String jarUrl) {
+        return createJar(getMainJarFile(jarUrl));
+    }
+    
+    private File getMainJarFile(String mainJarUrl) {
+        return fileFactory.createFileFromUrl(mainJarUrl);
     }
 
     Jar createJar(File jarFile) {
         return new JarImpl(jarFile);
-    }
-    
-    private File getMainJarFile(Element jnlpRoot) {
-        return fileFactory.createFileFromUrl(getMainJarUrl(jnlpRoot));
-    }
-    
-    private String getMainJarUrl(Element jnlpRoot) {
-        return getCodeBase(jnlpRoot) + "/" + getMainJarFileName(jnlpRoot);
-    }
-    
-    private String getCodeBase(Element jnlpRoot) {
-        return jnlpRoot.getAttributeValue("codebase");
-    }
-    
-    private String getMainJarFileName(Element jnlpRoot) {
-        Element jarElement = jnlpRoot.getFirstChildElement("resources").getFirstChildElement("jar");
-        return jarElement.getAttributeValue("href");
     }
 }

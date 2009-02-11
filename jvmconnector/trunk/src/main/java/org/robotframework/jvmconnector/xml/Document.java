@@ -38,16 +38,19 @@ public class Document {
     }
     
     private MyElement element(Node parent, String name) {
-        Queryable queryableParent = (Queryable) Retrofit.partial(parent, Queryable.class);
-        NodeList results = queryableParent.getElementsByTagName(name);
-        Element element = null; 
-        if (results == null || results.item(0) == null) {
+        Element element = getFirstChild(parent, name); 
+        if (element == null) {
             element = add(parent, name);
-        } else {
-            element = (Element) results.item(0);
         }
         
         return new MyElement(element); 
+    }
+
+    private Element getFirstChild(Node parent, String name) {
+        Queryable queryableParent = (Queryable) Retrofit.partial(parent, Queryable.class);
+        NodeList results = queryableParent.getElementsByTagName(name);
+        if (results == null) return null;
+        return (Element) results.item(0);
     }
     
     private interface Queryable {
@@ -57,6 +60,12 @@ public class Document {
     private Element add(Node parent, String name) {
         Element element = createElement(name);
         parent.appendChild(element);
+        return element;
+    }
+    
+    private Element insert(Node parent, String name) {
+        Element element = createElement(name);
+        parent.insertBefore(element, getFirstChild(parent, name));
         return element;
     }
 
@@ -69,6 +78,8 @@ public class Document {
             TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(out));
         } catch (TransformerException e) {
             throw new RuntimeException(e);
+        } finally {
+            out.close();
         }
     }
     
@@ -88,9 +99,12 @@ public class Document {
         }
 
         public MyElement insertElement(String name) {
-            return new MyElement(add(this, name));
+            return new MyElement(insert(this, name));
         }
         
+        public MyElement addElement(String name) {
+            return new MyElement(add(this, name));
+        }
         
         public Node appendChild(Node newChild) throws DOMException {
             return elem.appendChild(newChild);

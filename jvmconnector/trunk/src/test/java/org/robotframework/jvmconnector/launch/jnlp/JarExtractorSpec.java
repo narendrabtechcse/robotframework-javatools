@@ -33,23 +33,15 @@ public class JarExtractorSpec extends Specification<JarExtractor> {
         }
         
         public void extractsFirstJar() {
-            final Element jnlpRootElement = mock(Element.class);
-            final Element resourcesElement = mock(Element.class, "resources");
-            final Element jarElement = mock(Element.class, "firstJar");
             final File jarFile = mock(File.class);
             
             checking(new Expectations() {{
-                one(jnlpRootElement).getAttributeValue("codebase"); will(returnValue("http://somehost"));
-                one(jnlpRootElement).getFirstChildElement("resources"); will(returnValue(resourcesElement));
-                one(resourcesElement).getFirstChildElement("jar"); will(returnValue(jarElement));
-                one(jarElement).getAttributeValue("href"); will(returnValue("someJar.jar"));
-                
                 one(fileFactory).createFileFromUrl("http://somehost/someJar.jar"); will(returnValue(jarFile));
                 one(jarFile).getPath(); will(returnValue(jarFilePath));
                 ignoring(jarFile);
             }});
             
-            Jar firstJar = context.createMainJar(jnlpRootElement);
+            Jar firstJar = context.createMainJar("http://somehost/someJar.jar");
             specify(firstJar.getPath(), "/tmp/someJar.jar");
         }
     }

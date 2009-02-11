@@ -37,7 +37,7 @@ public class JarImpl implements Jar {
 
     public String getMainClass() {
         try {
-            return jarFile.getManifest().getMainAttributes().getValue("Main-Class:");
+            return jarFile.getManifest().getMainAttributes().getValue("Main-Class");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -28,7 +28,7 @@ public class JarImplSpec extends Specification<JarImpl> {
             checking(new Expectations() {{
                 one(jarFile).getManifest(); will(returnValue(manifest));
                 one(manifest).getMainAttributes(); will(returnValue(mainAttributes));
-                one(mainAttributes).getValue("Main-Class:"); will(returnValue(mainClass));
+                one(mainAttributes).getValue("Main-Class"); will(returnValue(mainClass));
             }});
             
             specify(context.getMainClass(), mainClass);

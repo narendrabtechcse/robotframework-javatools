@@ -16,14 +16,11 @@
 
 package org.robotframework.jvmconnector.mocks;
 
-import org.grlea.log.SimpleLogger;
 
 public class MyApplication {
-    private static SimpleLogger logger = new SimpleLogger(MyApplication.class);
     public static boolean isRunning = false;
     
     public static void main(String[] args) throws Exception {
-        logger.info("MyApplication START");
         isRunning = true;
         Thread.sleep(500);
     }
