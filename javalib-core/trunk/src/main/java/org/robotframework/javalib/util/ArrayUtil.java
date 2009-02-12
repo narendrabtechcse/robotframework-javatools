@@ -17,10 +17,14 @@
 package org.robotframework.javalib.util;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import junit.framework.Assert;
+
+import org.apache.commons.collections.CollectionUtils;
 
 public class ArrayUtil {
     public static boolean arrayContains(String needle, String[] haystack) {
@@ -54,5 +58,12 @@ public class ArrayUtil {
 
     public static <T> T[] copyOfRange(T[] original, int from, int to) {
         return copyOfRange(original, from, to, (Class<T[]>) original.getClass());
+    }
+
+    public static <T> T[] add(T[] original, T... newElements) {
+        List<T> results = new ArrayList<T>(original.length + newElements.length);
+        CollectionUtils.addAll(results, original);
+        CollectionUtils.addAll(results, newElements);
+        return results.toArray(original);
     }
 }
