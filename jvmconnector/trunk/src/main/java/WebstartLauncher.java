@@ -20,9 +20,9 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.FilenameUtils;
 import org.robotframework.jvmconnector.launch.jnlp.Jar;
 import org.robotframework.jvmconnector.launch.jnlp.JarExtractor;
-import org.robotframework.jvmconnector.util.Logger;
 import org.robotframework.jvmconnector.xml.Document;
 import org.robotframework.jvmconnector.xml.Document.MyElement;
 
@@ -40,15 +40,30 @@ public class WebstartLauncher {
     }
     
     public void startWebstartApplicationAndRmiService(String rmiConfigFilePath, String jnlpUrl) throws Exception {
-        Document modifiedJnlp = getModifiedJnlp(rmiConfigFilePath, jnlpUrl);
-        File jnlpFileName = new File("modified.jnlp");
-        modifiedJnlp.printTo(new PrintStream(new FileOutputStream(jnlpFileName)));
-        String command = javawsExecutable + " " + jnlpFileName.getCanonicalPath();
-        Logger.log("running following command '" + command + "'");
-        Runtime.getRuntime().exec(command);
+        String pathToJnlp = createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+        launchRmiEnhancedJnlp(pathToJnlp);
     }
 
-    private Document getModifiedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception {
+    private Process launchRmiEnhancedJnlp(String jnlpFile) throws IOException {
+        return Runtime.getRuntime().exec(javawsExecutable + " " + jnlpFile);
+    }
+
+    private String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception, FileNotFoundException {
+        Document modifiedJnlp = createEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+        String localName = getLocalName(jnlpUrl);
+        modifiedJnlp.printTo(new PrintStream(new FileOutputStream(localName)));
+        return localName;
+    }
+
+    private String getLocalName(String jnlpUrl) {
+        try {
+            return new File(System.getProperty("java.io.tmpdir") + "/" + FilenameUtils.getName(jnlpUrl)).getCanonicalPath();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Document createEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception {
         Document doc = createDocument(jnlpUrl);
         MyElement jnlp = doc.element("jnlp");
         jnlp.removeAttribute("href");
@@ -105,24 +120,22 @@ public class WebstartLauncher {
     private String findFirstJarName() {
         List<String> jars = listJars();
         for (String jar : jars) {
-            if (jar.toLowerCase().indexOf("jvmconnector") >= 0)
+            if (isJvmconnectorJar(jar))
                 return jar;
         }
         throw new IllegalStateException(libraryResourceDir + " doesn't contain jvmconnector jar.");
     }
 
+    private boolean isJvmconnectorJar(String jar) {
+        String jarBasename = getBasename(jar).toLowerCase();
+        return jarBasename.indexOf("jvmconnector") >= 0;
+    }
+
+    private String getBasename(String jar) {
+        return jar.substring(jar.lastIndexOf('/'));
+    }
+
     Document createDocument(String jnlpUrl) throws Exception {
         return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(jnlpUrl));
-    }
-    
-    public static void main(String[] args) throws Exception {
-        WebstartLauncher launcher = new WebstartLauncher("/var/www/jnlp") {
-            @Override
-            Document createDocument(String url) throws Exception {
-                return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(url)));        
-            }
-        };
-
-        launcher.getModifiedJnlp("foo", "src/test/resources/test-app/test-application.jnlp").printTo(System.out);
     }
 }

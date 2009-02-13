@@ -18,7 +18,6 @@ package org.robotframework.jvmconnector.server;
 
 import org.jmock.MockObjectTestCase;
 import org.robotframework.jvmconnector.common.PropertyParsingFailedException;
-import org.robotframework.jvmconnector.server.PropertyParser;
 import org.springframework.beans.PropertyValue;
 
 

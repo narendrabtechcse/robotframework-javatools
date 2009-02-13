@@ -20,7 +20,6 @@ import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.robotframework.javalib.util.StdStreamRedirecter;
 import org.robotframework.jvmconnector.common.TestFailedException;
-import org.robotframework.jvmconnector.server.KeywordExecutionResultImpl;
 
 
 public class KeywordExecutionResultImplTest extends MockObjectTestCase {

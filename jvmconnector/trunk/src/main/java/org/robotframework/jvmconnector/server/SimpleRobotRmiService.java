@@ -16,7 +16,10 @@
 
 package org.robotframework.jvmconnector.server;
 
+import java.util.Arrays;
+
 import org.robotframework.javalib.library.RobotJavaLibrary;
+import org.robotframework.javalib.util.Logger;
 import org.robotframework.javalib.util.StdStreamRedirecter;
 import org.robotframework.jvmconnector.common.KeywordExecutionResult;
 import org.robotframework.jvmconnector.common.TestFailedException;
@@ -27,38 +30,37 @@ import org.robotframework.jvmconnector.common.TestFailedException;
  */
 public class SimpleRobotRmiService implements RobotRmiService {
     private RobotJavaLibrary library;
-    private StdStreamRedirecter streamRedirecter;
+    private final StdStreamRedirecter streamRedirecter;
 
     public SimpleRobotRmiService() {
         this(new StdStreamRedirecter());
     }
 
-    /**
-     * @param streamRedirecter
-     *            StdStreamRedirecter that handles the redirection of
-     *            STDOUT and STDERR.
-     */
     public SimpleRobotRmiService(StdStreamRedirecter streamRedirecter) {
         this.streamRedirecter = streamRedirecter;
     }
 
     public String[] getKeywordNames() {
-        return library.getKeywordNames();
+        String[] keywordNames = library.getKeywordNames();
+        Logger.log(Arrays.asList(keywordNames));
+        return keywordNames;
     }
 
     public void setLibrary(RobotJavaLibrary library) {
+        Logger.log("setting library " + library.getClass().getName());
         this.library = library;
     }
 
     public KeywordExecutionResult runKeyword(String keywordName, Object[] keywordArguments) {
         streamRedirecter.redirectStdStreams();
-        KeywordExecutionResult keywordExecutionResult = getExecutionResults(keywordName,
-                keywordArguments);
-        streamRedirecter.resetStdStreams();
-        return keywordExecutionResult;
+        try {
+            return executeKeyword(keywordName, keywordArguments);
+        } finally {
+            streamRedirecter.resetStdStreams();
+        }
     }
 
-    private KeywordExecutionResult getExecutionResults(String keywordName, Object[] keywordArguments) {
+    private KeywordExecutionResult executeKeyword(String keywordName, Object[] keywordArguments) {
         KeywordExecutionResultImpl keywordExecutionResult = new KeywordExecutionResultImpl();
         try {
             keywordExecutionResult.setResult(library.runKeyword(keywordName, keywordArguments));

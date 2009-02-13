@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import static org.robotframework.jvmconnector.util.Logger.log;
+import static org.robotframework.javalib.util.Logger.log;
 
 import java.io.IOException;
 import java.util.Arrays;

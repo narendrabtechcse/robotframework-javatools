@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
-import org.robotframework.jvmconnector.common.PropertyOverrider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 

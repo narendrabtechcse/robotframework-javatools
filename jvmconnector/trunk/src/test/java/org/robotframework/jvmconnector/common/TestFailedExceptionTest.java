@@ -20,11 +20,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-import org.robotframework.jvmconnector.common.TestFailedException;
+import junit.framework.TestCase;
+
 import org.robotframework.jvmconnector.mocks.MockException;
 import org.robotframework.jvmconnector.util.ThrowableUtil;
-
-import junit.framework.TestCase;
 
 
 public class TestFailedExceptionTest extends TestCase {
