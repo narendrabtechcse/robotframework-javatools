@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.robotframework</groupId>
   <artifactId>jvmconnector</artifactId>
-  <version>0.7</version>
+  <version>0.7-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>jvmconnector</name>
   <dependencies>
