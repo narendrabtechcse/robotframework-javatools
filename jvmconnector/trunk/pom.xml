@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
-      <version>0.7.3-SNAPSHOT</version>
+      <version>0.7.3</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
