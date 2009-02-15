@@ -79,7 +79,7 @@ the application's JVM.
 
 ====Usage====
 || * Setting * || * Value * || * Value * ||
-|| Library || !WebstartLauncher || ${test-lib} ||
+|| Library || !WebstartLauncher || test-lib ||
 
 || * Test Case * || * Action * || 
 || !WebstartLauncher Launches Java Webstart Application || Launch My Webstart Application ||
