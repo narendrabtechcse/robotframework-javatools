@@ -90,11 +90,8 @@ the application's JVM.
 
 || * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
 || Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
-|| || || || || || ||
 || Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || !SwingLibrary ||
-|| || || || || || ||
 || Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || ||
-|| || || || || || ||
 || Close The Application || Run Keyword And Ignore Error || System Exit || || || ||
 
 
