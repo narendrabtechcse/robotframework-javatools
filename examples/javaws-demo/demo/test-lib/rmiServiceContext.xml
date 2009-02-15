@@ -15,7 +15,6 @@
   <bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
     <property name="serviceName" value="jvmConnector" />
     <property name="service" ref="closeableRmiService" />
-    <property name="registryPort" value="1099" />
     <property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
   </bean>
 </beans>
