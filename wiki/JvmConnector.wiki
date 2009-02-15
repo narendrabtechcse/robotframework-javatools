@@ -106,5 +106,4 @@ closeTheApplication
 
 There is a plan to integrate !RemoteLibrary into Robot Framework's
 core. Meanwhile you can get it from
-[http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py
-here].
+[here http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py].
