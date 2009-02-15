@@ -69,8 +69,11 @@ The test applications sources can be found from [http://robotframework-javatools
 </beans>
 }}}
 
+ # Copy all the testing dependencies to a directory
+ # Create the library and provide the path to the directory containing the dependencies. All the jar files from this directory will be added to your webstart application's classpath.
+
 || * Setting * || * Value * || * Value * ||
-|| Library || !WebstartLauncher || test-lib ||
+|| Library || !WebstartLauncher || ${CURDIR}${/}test-lib ||
 
 || * Test Case * || * Action * || 
 || !WebstartLauncher Launches Java Webstart Application || Launch My Webstart Application ||
