@@ -79,29 +79,29 @@ Starts a Java webstart application and RMI service for invoking keywords from
 the application's JVM.
 
 =====Usage=====
-|| * Setting * || * Value *        ||             ||
-|| library     || WebstartLauncher || ${test-lib} ||
+|| * Setting * || * Value * || ||
+|| library || !WebstartLauncher || ${test-lib} ||
 
-|| * Test Case *                                       || * Action *                    || 
-|| WebstartLauncher Launches Java Webstart Application ||                               ||
-||                                                     || launchMyWebstartApplication   ||
-||                                                     || importRemoteLibrary           ||
-||                                                     || doSomethingWithTheApplication ||
-||                                                     || closeTheApplication           ||
+|| * Test Case * || * Action * || 
+|| !WebstartLauncher Launches Java Webstart Application || ||
+|| || launchMyWebstartApplication ||
+|| || importRemoteLibrary ||
+|| || doSomethingWithTheApplication ||
+|| || closeTheApplication ||
 
 
-|| * Keyword *                   || * Action * || * Argument * || * Argument * ||
-|| launchMyWebstartApplication   ||            ||              ||              ||
-||                               || startWebstartApplicationAndRmiService || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp ||
-||                               ||            ||              ||              ||
-|| importRemoteLibrary           ||            ||              ||              ||
-||                               || importLibrary || ${CURDIR}${/}${/}lib/RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || SwingLibrary
-||                               ||            ||              ||              ||
-|| doSomethingWithTheApplication ||            ||              ||              ||
-||                               || waitUntilKeywordSucceeds  || 30         || 2 || selectMainWindow ||
-||                               ||            ||              ||              ||
-|| closeTheApplication           ||            ||              ||              ||
-||                               || runKeywordAndIgnoreError || systemExit || || ||
+|| * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
+|| !LaunchMyWebstartApplication || || || || || ||
+|| || startWebstartApplicationAndRmiService || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
+|| || || || || || ||
+|| !ImportRemoteLibrary || || || || || ||
+|| || importLibrary || ${CURDIR}${/}${/}lib/RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || SwingLibrary ||
+|| || || || || || ||
+|| !DoSomethingWithTheApplication || || || || || ||
+|| || waitUntilKeywordSucceeds || 30 || 2 || selectMainWindow || ||
+|| || || || || || ||
+|| !CloseTheApplication || || || || || ||
+|| || runKeywordAndIgnoreError || systemExit || || || ||
 
 
 There is a plan to integrate !RemoteLibrary into Robot Framework's
