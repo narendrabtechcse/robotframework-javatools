@@ -79,7 +79,7 @@ Starts a Java webstart application and RMI service for invoking keywords from
 the application's JVM.
 
 =====Usage=====
-|| * Setting * || * Value * || ||
+|| * Setting * || * Value * || * Value * ||
 || library || !WebstartLauncher || ${test-lib} ||
 
 || * Test Case * || * Action * || 
