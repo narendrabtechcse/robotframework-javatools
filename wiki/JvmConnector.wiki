@@ -46,7 +46,7 @@ To use jvmconnector in your maven2 project add the following sections in your _p
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>jvmconnector</artifactId>
-      <version>0.5</version>
+      <version>0.7</version>
     </dependency>
   </dependencies>
 
@@ -65,8 +65,46 @@ For those using jre 1.4 just add `<classifier>jre1.4</classifier>` to the depend
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>jvmconnector</artifactId>
-      <version>0.5</version>
+      <version>0.7</version>
       <classifier>jre1.4</classifier>
     </dependency>
   </dependencies>
 }}}
+
+===Libraries===
+
+====!WebstartLauncher====
+
+Starts a Java webstart application and RMI service for invoking keywords from
+the application's JVM.
+
+=====Usage=====
+{{{
+* Setting *	* Value *
+library	WebstartLauncher	${test-lib}
+
+* Test Case *	* Action *	* Argument *
+WebstartLauncher Launches Java Webstart Application
+  launchMyWebstartApplication
+  importRemoteLibrary
+  doSomethingWithTheApplication
+  closeTheApplication
+
+* Keyword *	* Action *	* Argument *
+launchMyWebstartApplication
+  startWebstartApplicationAndRmiService	${CURDIR}${/}lib${/}myRmiConfig.xml	http://myhost.com/myApp.jnlp
+
+importRemoteLibrary
+  importLibrary	${CURDIR}${/}${/}lib/RemoteLibrary.py	rmi://localhost:11099/swingLibrary	WITH NAME	SwingLibrary
+
+doSomethingWithTheApplication
+	waitUntilKeywordSucceeds	30	2	selectMainWindow
+
+closeTheApplication
+	runKeywordAndIgnoreError	systemExit
+}}}
+
+There is a plan to integrate !RemoteLibrary into Robot Framework's
+core. Meanwhile you can get it from
+[http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py
+here].
