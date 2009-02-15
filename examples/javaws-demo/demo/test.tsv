@@ -1,11 +1,11 @@
 *Setting*	*Value*
-library	WebstartLauncher
+library	WebstartLauncher	test-lib
 suiteSetup	startApplication
 suiteTeardown	closeApplication
 
 *Variable*	*Value*	*Value*
-${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp
-${rmiConfigFile}	test-lib${/}rmiServiceContext.xml
+${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/src/test/resources/test-app/test-application.jnlp
+${rmiConfigFile}	${CURDIR}${/}test-lib${/}rmiServiceContext.xml
 
 *TestCase*	*Action*	*Argument*
 Demonstration

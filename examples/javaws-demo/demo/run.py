@@ -6,7 +6,7 @@ from glob import glob
 
 def main(args):
     dir = os.path.dirname(__file__)
-    jars = glob(os.path.join(dir, 'lib', '*.jar'))
+    jars = glob(os.path.join(dir, 'test-lib', '*.jar'))
     os.environ['CLASSPATH'] = os.pathsep.join(jars)
     outputdir = os.path.join(dir, 'results')
     os.system("jybot --outputdir %s %s" % (outputdir, ' '.join(args)))

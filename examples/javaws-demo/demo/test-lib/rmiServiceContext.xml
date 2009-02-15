@@ -2,20 +2,20 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="library" class="SwingLibrary" />
+  <bean id="library" class="SwingLibrary" />
 
-	<bean id="rmiService" class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
-		<property name="library" ref="library" />
-	</bean>
+  <bean id="rmiService" class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
+    <property name="library" ref="library" />
+  </bean>
 
-	<bean id="closeableRmiService" class="org.robotframework.jvmconnector.server.CloseableRobotRmiService">
+  <bean id="closeableRmiService" class="org.robotframework.jvmconnector.server.CloseableRobotRmiService">
     <constructor-arg ref="rmiService" />
-	</bean>
+  </bean>
 
-	<bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
-		<property name="serviceName" value="jvmConnector" />
-		<property name="service" ref="closeableRmiService" />
-		<property name="registryPort" value="1099" />
-		<property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
-	</bean>
+  <bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
+    <property name="serviceName" value="jvmConnector" />
+    <property name="service" ref="closeableRmiService" />
+    <property name="registryPort" value="1099" />
+    <property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
+  </bean>
 </beans>

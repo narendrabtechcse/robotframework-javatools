@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp>
+   <information>
+      <title>JvmConnector Demo</title>
+      <vendor>http://www.robotframework.org</vendor>
+      <description>JvmConnector Demo</description>
+      <homepage href="http://code.google.com/p/robotframework-javatools/wiki/JvmConnector"/>
+      <offline-allowed/>
+   </information>
+    <security><all-permissions/></security>
+    <resources>
+        <jar href="http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/src/test/resources/test-app/test-application.jar"/>
+        <j2se version="1.4+" href="http://java.sun.com/products/autodl/j2se"/>
+    </resources>
+    <application-desc main-class="org.robotframework.swing.testapp.TestApplication"/>
+</jnlp>
