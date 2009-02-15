@@ -71,14 +71,13 @@ For those using jre 1.4 just add `<classifier>jre1.4</classifier>` to the depend
   </dependencies>
 }}}
 
-===Libraries===
 
-====!WebstartLauncher====
+===!WebstartLauncher===
 
 Starts a Java webstart application and RMI service for invoking keywords from
 the application's JVM.
 
-=====Usage=====
+====Usage====
 || * Setting * || * Value * || * Value * ||
 || Library || !WebstartLauncher || ${test-lib} ||
 
