@@ -44,10 +44,8 @@ The test applications sources can be found from [http://robotframework-javatools
 
 ====Using !WebstartLauncher====
 
- * 1. * Sign testing jars, [http://code.google.com/p/robotframework-javatools/downloads/list jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
-
- * 2. * Configure your libraries, here is an example configuration file which imports !SwingLibrary. !CloseableRobotRmiService, used here, provides an extra keyword called "System Exit" which can be used to close the webstart application's JVM.
-
+ # Sign testing jars, [http://code.google.com/p/robotframework-javatools/downloads/list jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
+ #. Configure your libraries, here is an example configuration file which imports !SwingLibrary. !CloseableRobotRmiService, used here, provides an extra keyword called "System Exit" which can be used to close the webstart application's JVM.
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
@@ -69,10 +67,8 @@ The test applications sources can be found from [http://robotframework-javatools
   </bean>
 </beans>
 }}}
-
- * 3. * Copy all the testing dependencies to a directory
-
- * 4. * Create the library and provide the path to the directory containing the dependencies. All the jar files from this directory will be added to your webstart application's classpath.
+ # Copy all the testing dependencies to a directory
+ # Create the library and provide the path to the directory containing the dependencies. All the jar files from this directory will be added to your webstart application's classpath.
 
 || * Setting * || * Value * || * Value * ||
 || Library || !WebstartLauncher || ${CURDIR}${/}test-lib ||
