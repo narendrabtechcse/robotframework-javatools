@@ -1,4 +1,7 @@
-﻿== Jvmconnector 0.6 ==
+﻿== Jvmconnector 0.7 ==
+Added a new library !WebstartLauncher that helps with testing Java Webstart applications. See [JvmConnector#WebstartLauncher  WebstartLauncher] for details.
+
+== Jvmconnector 0.6 ==
 
 Extended Jvmconnector with [http://code.google.com/p/robotframework-javatools/source/browse/jvmconnector/trunk/tools/RemoteLibrary.py RemoteLibrary] which simplifies use of remotelibraries.
 Support for using multiple libraries with Jvmconnector added.
