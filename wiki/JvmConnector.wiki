@@ -42,7 +42,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-====How to use !WebstartLauncher====
+====Using !WebstartLauncher====
 
  # Sign testing jars, [http://code.google.com/p/robotframework-javatools/downloads/list jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
  # Configure your libraries, here is an example configuration file which imports !SwingLibrary. !CloseableRobotRmiService, used here, provides an extra keyword called "System Exit" which can be used to close the webstart application's JVM.
@@ -62,10 +62,9 @@ The test applications sources can be found from [http://robotframework-javatools
   </bean>
 
   <bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
-    <property name="serviceName" value="swingLibrary" />
+    <property name="serviceName" value="jvmConnector" />
     <property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
     <property name="service" ref="swingService" />
-    <property name="registryPort" value="11099" />
   </bean>
 </beans>
 }}}
@@ -80,10 +79,10 @@ The test applications sources can be found from [http://robotframework-javatools
 || || Close The Application ||
 
 || * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
-|| Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
-|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || !SwingLibrary ||
-|| Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || ||
-|| Close The Application || Run Keyword And Ignore Error || System Exit || || || ||
+|| Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || 
+|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || ||
+|| Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || 
+|| Close The Application || Run Keyword And Ignore Error || System Exit || || || 
 
 There is a plan to integrate !RemoteLibrary into Robot Framework's
 core. Meanwhile you can get it from
