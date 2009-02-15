@@ -80,28 +80,24 @@ the application's JVM.
 
 =====Usage=====
 || * Setting * || * Value * || * Value * ||
-|| library || !WebstartLauncher || ${test-lib} ||
+|| Library || !WebstartLauncher || ${test-lib} ||
 
 || * Test Case * || * Action * || 
 || !WebstartLauncher Launches Java Webstart Application || ||
-|| || launchMyWebstartApplication ||
-|| || importRemoteLibrary ||
-|| || doSomethingWithTheApplication ||
-|| || closeTheApplication ||
+|| || Launch My Webstart Application ||
+|| || Import !RemoteLibrary ||
+|| || Do Something With The Application ||
+|| || Close The Application ||
 
 
 || * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
-|| !LaunchMyWebstartApplication || || || || || ||
-|| || startWebstartApplicationAndRmiService || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
+|| Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
 || || || || || || ||
-|| !ImportRemoteLibrary || || || || || ||
-|| || importLibrary || ${CURDIR}${/}${/}lib/RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || SwingLibrary ||
+|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || !SwingLibrary ||
 || || || || || || ||
-|| !DoSomethingWithTheApplication || || || || || ||
-|| || waitUntilKeywordSucceeds || 30 || 2 || selectMainWindow || ||
+|| Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || ||
 || || || || || || ||
-|| !CloseTheApplication || || || || || ||
-|| || runKeywordAndIgnoreError || systemExit || || || ||
+|| Close The Application || Run Keyword And Ignore Error || System Exit || || || ||
 
 
 There is a plan to integrate !RemoteLibrary into Robot Framework's
