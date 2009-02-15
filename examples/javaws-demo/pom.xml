@@ -9,17 +9,28 @@
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>jvmconnector</artifactId>
-      <version>0.5</version>
+      <version>0.7</version>
     </dependency>
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
-      <version>0.7.2</version>
+      <version>0.7.3</version>
     </dependency>
   </dependencies>
   
   <build>
     <plugins> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>
+              src/main/resources/META-INF/MANIFEST.MF
+            </manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
