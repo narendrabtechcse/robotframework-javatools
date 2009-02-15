@@ -4,7 +4,7 @@ suiteSetup	startApplication
 suiteTeardown	closeApplication
 
 *Variable*	*Value*	*Value*
-${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/src/test/resources/test-app/test-application.jnlp
+${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp
 ${rmiConfigFile}	${CURDIR}${/}test-lib${/}rmiServiceContext.xml
 
 *TestCase*	*Action*	*Argument*
@@ -19,4 +19,4 @@ startApplication
 	importLibrary	${CURDIR}${/}tools${/}RemoteLibrary.py
 
 closeApplication
-	systemExit
+	runKeywordAndIgnoreError	systemExit
