@@ -9,8 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 public class TestApplication {
     private JPanel panel;
     private JFrame frame;
@@ -30,8 +28,6 @@ public class TestApplication {
                 showGUI();
             }
         });
-        
-        startTestLibrary();
     }
 
     private void showGUI() {
@@ -68,9 +64,5 @@ public class TestApplication {
 
     private void addComponentsToMainPanel() {
         panel.add(new SystemExitButton());
-    }
-    
-    private void startTestLibrary() {
-        new ClassPathXmlApplicationContext("org/robotframework/rmiServiceContext.xml");
     }
 }
