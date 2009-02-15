@@ -83,8 +83,7 @@ the application's JVM.
 || Library || !WebstartLauncher || ${test-lib} ||
 
 || * Test Case * || * Action * || 
-|| !WebstartLauncher Launches Java Webstart Application || ||
-|| || Launch My Webstart Application ||
+|| !WebstartLauncher Launches Java Webstart Application || Launch My Webstart Application ||
 || || Import !RemoteLibrary ||
 || || Do Something With The Application ||
 || || Close The Application ||
