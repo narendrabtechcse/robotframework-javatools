@@ -78,9 +78,9 @@ The test applications sources can be found from [http://robotframework-javatools
 || || Do Something With The Application ||
 || || Close The Application ||
 
-|| * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
+|| * Keyword * || * Action * || * Argument * || * Argument * || * Argument * ||
 || Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || 
-|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || ||
+|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || || ||
 || Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || 
 || Close The Application || Run Keyword And Ignore Error || System Exit || || || 
 
