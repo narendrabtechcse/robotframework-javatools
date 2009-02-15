@@ -25,13 +25,15 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
 ===!WebstartLauncher===
 
-Starts a Java webstart application and RMI service for invoking keywords from
-the application's JVM.
+!WebstartLauncher is a convenience library that comes with !JvmConnector. It
+can be used to launch a Java webstart application while starting a RMI service
+inside that application's JVM so that keyword invocations can reach the
+application.
 
 ====Example====
 *Prerequisites:*
  # You'll need javaws and jybot in the path.
- # [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog.
+ # [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary.
 
 *Then:*
 
@@ -41,7 +43,7 @@ the application's JVM.
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-====Usage====
+====More Details====
 || * Setting * || * Value * || * Value * ||
 || Library || !WebstartLauncher || test-lib ||
 
@@ -57,14 +59,13 @@ The test applications sources can be found from [http://robotframework-javatools
 || Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || ||
 || Close The Application || Run Keyword And Ignore Error || System Exit || || || ||
 
-
 There is a plan to integrate !RemoteLibrary into Robot Framework's
 core. Meanwhile you can get it from
 [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py here].
 
-TODO:
-- Signing
-- Remotelibrary
+*TODO:*
+ # Signing
+ # Remotelibrary
 
 ===Maven2===
 
