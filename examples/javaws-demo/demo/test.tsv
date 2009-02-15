@@ -1,10 +1,11 @@
 *Setting*	*Value*
-library	OperatingSystem
+library	WebstartLauncher
 suiteSetup	startApplication
 suiteTeardown	closeApplication
 
 *Variable*	*Value*	*Value*
 ${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp
+${rmiConfigFile}	test-lib${/}rmiServiceContext.xml
 
 *TestCase*	*Action*	*Argument*
 Demonstration
@@ -14,9 +15,8 @@ Demonstration
 
 *Keyword*	*Action*	*Argument*
 startApplication
-	startProcess	javaws ${jnlpUrl}
+	startWebstartApplicationAndRmiService	${rmiConfigFile}	${jnlpUrl}
 	importLibrary	${CURDIR}${/}tools${/}RemoteLibrary.py
 
 closeApplication
-	selectMainWindow
-	runKeywordAndIgnoreError	pushButton	systemExitButton
+	systemExit
