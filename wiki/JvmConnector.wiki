@@ -21,21 +21,51 @@ redirecting all the logging that keywords do on the target system back
 to robot and handles exceptions thrown on the remote system so that
 robot error messages are presented in a meaningful way.
 
-====!JvmConnector in action===
-
 http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
-===Demo===
+===!WebstartLauncher===
 
-In this example we use !JvmConnector and [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary] to test a simple [http://en.wikipedia.org/wiki/Java_Web_Start Java Web Start] application. [http://robotframework-javatools.googlecode.com/svn/wiki/demo/jvmconnector-demo/test-application.jnlp Try the application].
+Starts a Java webstart application and RMI service for invoking keywords from
+the application's JVM.
 
- # Download the [http://robotframework-javatools.googlecode.com/files/jvmconnector-with-javaws-demo.zip jvmconnector-with-javaws-demo.zip]
+====Example====
+*Prerequisites:*
+ # You'll need javaws and jybot in the path.
+ # [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application]
+manually and agree with the confirmation dialog.
+
+*Then:*
+
+ # Download the [http://robotframework-javatools.googlecode.com/files/javaws-demo-2009-02-15.zip javaws-demo.zip]
  # Unzip it and chdir to demo directory
  # Run `./run.py test.tsv`
 
-You'll need javaws and jython in the path.
-
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
+
+====Usage====
+|| * Setting * || * Value * || * Value * ||
+|| Library || !WebstartLauncher || test-lib ||
+
+|| * Test Case * || * Action * || 
+|| !WebstartLauncher Launches Java Webstart Application || Launch My Webstart Application ||
+|| || Import !RemoteLibrary ||
+|| || Do Something With The Application ||
+|| || Close The Application ||
+
+|| * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
+|| Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
+|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || !SwingLibrary ||
+|| Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || ||
+|| Close The Application || Run Keyword And Ignore Error || System Exit || || || ||
+
+
+There is a plan to integrate !RemoteLibrary into Robot Framework's
+core. Meanwhile you can get it from
+[http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py here].
+
+TODO:
+- Signing
+- Remotelibrary
 
 ===Maven2===
 
@@ -71,30 +101,3 @@ For those using jre 1.4 just add `<classifier>jre1.4</classifier>` to the depend
   </dependencies>
 }}}
 
-
-===!WebstartLauncher===
-
-Starts a Java webstart application and RMI service for invoking keywords from
-the application's JVM.
-
-====Usage====
-|| * Setting * || * Value * || * Value * ||
-|| Library || !WebstartLauncher || test-lib ||
-
-|| * Test Case * || * Action * || 
-|| !WebstartLauncher Launches Java Webstart Application || Launch My Webstart Application ||
-|| || Import !RemoteLibrary ||
-|| || Do Something With The Application ||
-|| || Close The Application ||
-
-
-|| * Keyword * || * Action * || * Argument * || * Argument * || * Argument * || * Argument * ||
-|| Launch My Webstart Application || Start Webstart Application And Rmi Service || ${CURDIR}${/}lib${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp || || ||
-|| Import !RemoteLibrary || Import Library || ${CURDIR}${/}${/}lib/!RemoteLibrary.py || rmi://localhost:11099/swingLibrary || WITH NAME || !SwingLibrary ||
-|| Do Something With The Application ||  Wait Until Keyword Succeeds || 30 || 2 || Select Main Window || ||
-|| Close The Application || Run Keyword And Ignore Error || System Exit || || || ||
-
-
-There is a plan to integrate !RemoteLibrary into Robot Framework's
-core. Meanwhile you can get it from
-[http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py here].
