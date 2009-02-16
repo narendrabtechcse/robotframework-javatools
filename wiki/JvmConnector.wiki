@@ -26,7 +26,7 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 ===!WebstartLauncher===
 
 !WebstartLauncher is a convenience library that comes with !JvmConnector.
-It is used for launching a Java webstart application and for starting a RMI
+It is used for launching a Java Web Start application and for starting a RMI
 service inside that application's JVM so that keyword invocations can reach it.
 
 ====Example====
@@ -107,4 +107,3 @@ For those using jre 1.4 just add `<classifier>jre1.4</classifier>` to the depend
     </dependency>
   </dependencies>
 }}}
-
