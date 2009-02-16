@@ -15,6 +15,8 @@
  */
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +39,9 @@ public class WebstartLauncher {
     public WebstartLauncher(String libraryResourceDir, String javawsExecutable) {
         this.libraryResourceDir = libraryResourceDir;
         this.javawsExecutable = javawsExecutable;
+        setProxyIfNecessary();
     }
-    
+
     public void startWebstartApplicationAndRmiService(String rmiConfigFilePath, String jnlpUrl) throws Exception {
         String pathToJnlp = createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
         launchRmiEnhancedJnlp(pathToJnlp);
@@ -137,5 +140,38 @@ public class WebstartLauncher {
 
     Document createDocument(String jnlpUrl) throws Exception {
         return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(jnlpUrl));
+    }
+    
+    private void setProxyIfNecessary() {
+        if (proxyDefinedInEnvironment()) {
+            setProxy();
+        }
+    }
+
+    private boolean proxyDefinedInEnvironment() {
+        return getProxyFromEnv() != null;
+    }
+    
+    private void setProxy() {
+        URL url = createURL(getProxyFromEnv());
+        System.setProperty("http.proxyHost", url.getHost());
+        System.setProperty("http.proxyPort", Integer.toString(url.getPort()));
+    }
+    
+    private URL createURL(String proxy) {
+        try {
+            return new URL(proxy);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getProxyFromEnv() {
+        String proxy = System.getenv("HTTP_PROXY");
+        if (proxy == null) {
+            proxy = System.getenv("http_proxy");
+        }
+        
+        return proxy;
     }
 }
