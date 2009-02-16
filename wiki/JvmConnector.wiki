@@ -33,6 +33,13 @@ service inside that application's JVM so that keyword invocations can reach it.
 *Prerequisites:*
  # You'll need javaws and jybot in the path.
  # [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary.
+ # If you are behind a firewall, you'll need to set _http_proxy_ environment variable:
+{{{
+On Windows:
+set http_proxy=http://myproxy:8080
+On Linux:
+export http_proxy=http://myproxy:8080
+}}}
 
 *Then:*
 
