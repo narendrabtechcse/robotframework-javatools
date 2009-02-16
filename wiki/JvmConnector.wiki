@@ -36,7 +36,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 *Then:*
 
- # Download the [http://robotframework-javatools.googlecode.com/files/javaws-demo-2009-02-15.zip javaws-demo.zip]
+ # Download the [http://robotframework-javatools.googlecode.com/files/javaws-demo-2009-02-16.zip javaws-demo.zip]
  # Unzip it and chdir to demo directory
  # Run `./run.py test.tsv`
 
