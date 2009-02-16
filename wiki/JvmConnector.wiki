@@ -44,8 +44,8 @@ The test applications sources can be found from [http://robotframework-javatools
 
 ====Using !WebstartLauncher====
 
- # Sign testing jars, [http://code.google.com/p/robotframework-javatools/downloads/list jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
- #. Configure your libraries, here is an example configuration file which imports !SwingLibrary. !CloseableRobotRmiService, used here, provides an extra keyword called "System Exit" which can be used to close the webstart application's JVM.
+ # Sign testing jars. [http://code.google.com/p/robotframework-javatools/downloads/list Jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
+ # Configure your Robot Framework libraries. Here is an example configuration file which imports !SwingLibrary.
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
