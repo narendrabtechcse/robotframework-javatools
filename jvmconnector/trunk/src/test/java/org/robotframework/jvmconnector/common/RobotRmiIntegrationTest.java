@@ -29,7 +29,6 @@ import org.robotframework.jvmconnector.util.RmiHelperUtil;
 import org.robotframework.jvmconnector.util.RmiHelperUtil.FakeRmiClient;
 import org.springframework.context.support.GenericApplicationContext;
 
-
 public class RobotRmiIntegrationTest extends TestCase {
     private GenericApplicationContext serverAppCtx;
     private GenericApplicationContext clientBeanFactory;
