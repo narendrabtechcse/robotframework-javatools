@@ -19,6 +19,12 @@
       <version>1.1</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>beaninject</groupId>
+      <artifactId>beaninject</artifactId>
+      <version>0.3</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
