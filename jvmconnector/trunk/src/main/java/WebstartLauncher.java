@@ -39,7 +39,6 @@ public class WebstartLauncher {
     public WebstartLauncher(String libraryResourceDir, String javawsExecutable) {
         this.libraryResourceDir = libraryResourceDir;
         this.javawsExecutable = javawsExecutable;
-        setProxyIfNecessary();
     }
 
     public void startWebstartApplicationAndRmiService(String rmiConfigFilePath, String jnlpUrl) throws Exception {
@@ -48,7 +47,7 @@ public class WebstartLauncher {
     }
 
     private Process launchRmiEnhancedJnlp(String jnlpFile) throws IOException {
-        return Runtime.getRuntime().exec(javawsExecutable + " " + jnlpFile);
+        return Runtime.getRuntime().exec(javawsExecutable + " \"" + jnlpFile + "\"");
     }
 
     private String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception, FileNotFoundException {
@@ -111,11 +110,7 @@ public class WebstartLauncher {
     private List<String> toUrlFormat(File[] jars) {
         List<String> paths = new ArrayList<String>();
         for (File jar : jars) {
-            try {
-                paths.add("file://" + jar.getCanonicalPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            paths.add("file:///" + jar.getAbsolutePath().replace('\\', '/'));
         }
         return paths;
     }
@@ -139,7 +134,12 @@ public class WebstartLauncher {
     }
 
     Document createDocument(String jnlpUrl) throws Exception {
-        return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(jnlpUrl));
+        setProxyIfNecessary();
+        try {
+            return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(jnlpUrl));
+        } finally {
+            clearProxy();
+        }
     }
     
     private void setProxyIfNecessary() {
@@ -173,5 +173,10 @@ public class WebstartLauncher {
         }
         
         return proxy;
+    }
+    
+    private void clearProxy() {
+        System.clearProperty("http.proxyHost");
+        System.clearProperty("http.proxyPort");
     }
 }

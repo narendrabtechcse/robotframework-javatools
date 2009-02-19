@@ -3,10 +3,10 @@
 dir=`dirname $0`
 cd "$dir/.."
 if [ ! -d 'target/test-classes' ]; then
-  mvn -o test-compile
+  mvn test-compile
 fi
 if [ ! -d 'target/dependency' ]; then
-  mvn -o dependency:copy-dependencies
+  mvn dependency:copy-dependencies
 fi
 cd -
 
