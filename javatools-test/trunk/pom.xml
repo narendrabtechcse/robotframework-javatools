@@ -45,4 +45,17 @@
       <url>http://www.laughingpanda.org/maven2</url>
     </repository>
   </repositories>
+
+  <scm>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/trunk</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/trunk</developerConnection>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>laughingpanda</id>
+      <url>scp://www.laughingpanda.org/var/www/localhost/htdocs/maven2/</url>
+    </repository>
+  </distributionManagement>
 </project>
+
