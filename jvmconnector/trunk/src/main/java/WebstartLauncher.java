@@ -23,6 +23,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FilenameUtils;
+import org.robotframework.javalib.util.Logger;
 import org.robotframework.jvmconnector.launch.jnlp.Jar;
 import org.robotframework.jvmconnector.launch.jnlp.JarExtractor;
 import org.robotframework.jvmconnector.xml.Document;
@@ -47,7 +48,8 @@ public class WebstartLauncher {
     }
 
     private Process launchRmiEnhancedJnlp(String jnlpFile) throws IOException {
-        return Runtime.getRuntime().exec(javawsExecutable + " \"" + jnlpFile + "\"");
+        Logger.log("Path to jnlp: " + jnlpFile);
+        return Runtime.getRuntime().exec(javawsExecutable + " " + jnlpFile);
     }
 
     private String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception, FileNotFoundException {
@@ -59,7 +61,8 @@ public class WebstartLauncher {
 
     private String getLocalName(String jnlpUrl) {
         try {
-            return new File(System.getProperty("java.io.tmpdir") + "/" + FilenameUtils.getName(jnlpUrl)).getCanonicalPath();
+            URL url = new File(System.getProperty("java.io.tmpdir") + "/" + FilenameUtils.getName(jnlpUrl)).toURL();
+            return url.getPath();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -110,7 +113,7 @@ public class WebstartLauncher {
     private List<String> toUrlFormat(File[] jars) {
         List<String> paths = new ArrayList<String>();
         for (File jar : jars) {
-            paths.add("file:///" + jar.getAbsolutePath().replace('\\', '/'));
+            paths.add(toURLFormat(jar));
         }
         return paths;
     }
@@ -134,49 +137,15 @@ public class WebstartLauncher {
     }
 
     Document createDocument(String jnlpUrl) throws Exception {
-        setProxyIfNecessary();
-        try {
-            return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(jnlpUrl));
-        } finally {
-            clearProxy();
-        }
-    }
-    
-    private void setProxyIfNecessary() {
-        if (proxyDefinedInEnvironment()) {
-            setProxy();
-        }
+        return new Document(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(jnlpUrl));
     }
 
-    private boolean proxyDefinedInEnvironment() {
-        return getProxyFromEnv() != null;
-    }
-    
-    private void setProxy() {
-        URL url = createURL(getProxyFromEnv());
-        System.setProperty("http.proxyHost", url.getHost());
-        System.setProperty("http.proxyPort", Integer.toString(url.getPort()));
-    }
-    
-    private URL createURL(String proxy) {
+    private String toURLFormat(File file) {
         try {
-            return new URL(proxy);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            URL fileURL = file.toURL();
+            return fileURL.toExternalForm();
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
         }
-    }
-
-    private String getProxyFromEnv() {
-        String proxy = System.getenv("HTTP_PROXY");
-        if (proxy == null) {
-            proxy = System.getenv("http_proxy");
-        }
-        
-        return proxy;
-    }
-    
-    private void clearProxy() {
-        System.clearProperty("http.proxyHost");
-        System.clearProperty("http.proxyPort");
     }
 }
