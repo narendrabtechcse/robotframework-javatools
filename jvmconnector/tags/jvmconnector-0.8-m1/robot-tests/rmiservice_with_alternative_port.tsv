@@ -1,0 +1,17 @@
+* Setting *	* Value *
+library	org.robotframework.jvmconnector.server.RmiServiceLibrary	3333
+suiteSetup	startRmiServiceAndImportRemoteRobot
+
+* Variable *	* Value *
+
+* Test Case *	* Action *	* Argument *
+Robot Remote Library With Alternate Port Is Found From User Specified Port
+	someRemoteKeyword
+
+* Keyword *	* Action *	* Argument *
+startRmiServiceAndImportRemoteRobot
+	startRmiService	
+	importLibrary	org.robotframework.jvmconnector.client.RobotRemoteLibrary	rmi://localhost:3333/jvmConnector
+
+someRemoteKeyword
+	loggingKeyword
