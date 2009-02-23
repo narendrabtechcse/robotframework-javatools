@@ -14,7 +14,7 @@ The other, better way of doing this is to have a library that implements methods
 
 Javalib-core provides an implementation of the latter library model. You can add keywords either by simply implementing a `Keyword` -interface and having your classes in the classpath when running Robot, or by tagging methods with `@RobotKeyword` annotations. You can also create keywords using Spring configuration files to wire them.
 
-===Provided libraries===
+===Provided "Core" libraries===
 
 These libraries do not provide any keywords. They are merely common implementations of libraries so you don't need to your own. You only need to write keyword implementations. How the libraries find the keywords is explained below.
 
@@ -27,6 +27,9 @@ There are three different ways of creating keywords with Javalib-Core:
 A fourth library combining all the abovementioned libraries is also provided:
   * CompositeLibrary combines SpringLibrary, ClassPathLibrary and AnnotationLibrary. With CompositeLibrary you can use all the different methods to add new keywords.
 
+===!JavaTools library===
+
+!JavaTools is a library containing keywords for commonly used tasks. For the moment the only keywords it contains are _Set System Property_ and _Get System Property_. See the [http://robotframework-javatools.googlecode.com/svn/javalib-core/tags/javalib-core-0.8/doc/javatools.html documentation] for details.
 
 ===Keyword and Config File Patterns===
 
