@@ -26,7 +26,7 @@ public class JavaToolsKeywords {
         + "See http://java.sun.com/javase/6/docs/api/java/lang/System.html#setProperty(java.lang.String,%20java.lang.String) for details\n\n"
         + "Example:\n"
         + "| Set System Property | _http.proxyHost_ | _myproxy.com_ | # sets the proxy host |\n"
-        + "| Set System Property | _http.proxyPort_ | _8080_ | # sets the proxy port \n")
+        + "| Set System Property | _http.proxyPort_ | _8080_ | # sets the proxy port |\n")
     @ArgumentNames({"key", "value"})
     public void setSystemProperty(String key, String value) {
         System.setProperty(key, value);
