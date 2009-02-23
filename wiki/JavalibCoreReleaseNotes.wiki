@@ -1,4 +1,13 @@
-﻿== Javalib-Core 0.7.2 ==
+﻿== Javalib-Core 0.8 ==
+
+This release introduces a new library, !JavaTools which is intended to be a general purpose library
+for the commonly used tasks. For the moment it contains _Set System Property_ and _Get System Property_ keywords.
+For details go [http://code.google.com/p/robotframework-javatools/wiki/JavalibCore#JavaTools_library here].
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 8 || Enhancement || Medium || Create !JavaTools library ||
+
+== Javalib-Core 0.7.2 ==
 
 This release fixes an issue affecting testing of java webstart applications.
 Jar files exposed through the jnlp descriptor file were not scanned for
