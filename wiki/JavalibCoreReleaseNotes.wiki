@@ -2,7 +2,7 @@
 
 This release introduces a new library, !JavaTools which is intended to be a general purpose library
 for the commonly used tasks. For the moment it contains _Set System Property_ and _Get System Property_ keywords.
-For details go [http://code.google.com/p/robotframework-javatools/wiki/JavalibCore#JavaTools_library here].
+For documentation go [http://robotframework-javatools.googlecode.com/svn/javalib-core/tags/javalib-core-0.8/doc/javatools.html here].
 
 || *ID* || *Type* || *Priority* || *Summary* ||
 || Issue 8 || Enhancement || Medium || Create !JavaTools library ||
