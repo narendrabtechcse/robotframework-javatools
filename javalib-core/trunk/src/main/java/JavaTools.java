@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package org.robotframework.javabuiltin.keywords;
-
-import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+import org.robotframework.javalib.library.AnnotationLibrary;
 
 @RobotKeywords
-public class JavaBuiltinKeywords {
-    @RobotKeyword("Sets system property.\n"
-        + "See http://java.sun.com/javase/6/docs/api/java/lang/System.html#setProperty(java.lang.String,%20java.lang.String) for details\n\n"
-        + "Example:\n"
-        + "| Set System Property | _http.proxyHost_ | _myproxy.com_ | # sets the proxy host |\n"
-        + "| Set System Property | _http.proxyPort_ | _8080_ | # sets the proxy port \n")
-    public void setSystemProperty(String key, String value) {
-        System.setProperty(key, value);
+public class JavaTools extends AnnotationLibrary {
+    public JavaTools() {
+        super("org/robotframework/javabuiltin/keywords/*.class");
     }
 }

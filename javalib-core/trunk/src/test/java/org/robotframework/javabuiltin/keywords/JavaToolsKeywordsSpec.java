@@ -25,10 +25,10 @@ import org.robotframework.jdave.contract.RobotKeywordContract;
 import org.robotframework.jdave.contract.RobotKeywordsContract;
 
 @RunWith(JDaveRunner.class)
-public class JavaBuiltinKeywordsSpec extends Specification<JavaBuiltinKeywords> {
+public class JavaToolsKeywordsSpec extends Specification<JavaToolsKeywords> {
     public class Any {
-        public JavaBuiltinKeywords create() {
-            return new JavaBuiltinKeywords();
+        public JavaToolsKeywords create() {
+            return new JavaToolsKeywords();
         }
 
         public void isRobotKeywordsAnnotated() {
@@ -39,9 +39,18 @@ public class JavaBuiltinKeywordsSpec extends Specification<JavaBuiltinKeywords> 
             specify(context, satisfies(new RobotKeywordContract("setSystemProperty")));
         }
         
+        public void hasGetSystemPropertyKeyword() {
+            specify(context, satisfies(new RobotKeywordContract("getSystemProperty")));
+        }
+        
         public void setsSystemProperties() {
             context.setSystemProperty("someProperty", "someValue");
             specify(System.getProperty("someProperty"), "someValue");
+        }
+        
+        public void getsSystemProperties() {
+            System.setProperty("someProperty", "otherValue");
+            specify(context.getSystemProperty("someProperty"), "otherValue");
         }
     }
 }

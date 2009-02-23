@@ -19,13 +19,16 @@ def root_dir
 end
 
 ENV['CLASSPATH'] = root_dir do |dir|
-  unless File.exist?("#{dir}/target/.assembly")
-    system "mvn assembly:assembly -DdescriptorId=jar-with-dependencies"
-    FileUtils.touch("#{dir}/target/.assembly")
+  unless File.directory?("#{dir}/target/test-classes")
+    system "mvn test-compile"
   end
 
-  classpath = Dir["#{dir}/target/*.jar"] << "#{dir}/target/test-classes"
+  unless File.directory?("#{dir}/target/dependencies")
+    system "mvn dependency:copy-dependencies -Dscope=test"
+  end
+
+  classpath = Dir["#{dir}/target/dependency/*.jar"] << "#{dir}/target/classes" << "#{dir}/target/test-classes"
   classpath.join(':')
 end
 
-system "jybot --outputdir /tmp --critical regression #{ARGV.join(' ')}"
+system "jybot --loglevel TRACE --outputdir /tmp #{ARGV.join(' ')}"
