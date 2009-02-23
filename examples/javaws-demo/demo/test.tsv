@@ -1,5 +1,5 @@
 *Setting*	*Value*
-library	WebstartLauncher	test-lib
+library	WebstartLauncher	test-lib	/home/hhulkko/opt/j2sdk1.4.2_13/jre/javaws/javaws
 suiteSetup	startApplication
 suiteTeardown	closeApplication
 
