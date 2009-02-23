@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.robotframework</groupId>
   <artifactId>javatools-test</artifactId>
   <packaging>jar</packaging>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <name>javatools-test</name>
   <dependencies>
     <dependency>
@@ -23,7 +22,7 @@
       <groupId>beaninject</groupId>
       <artifactId>beaninject</artifactId>
       <version>0.3</version>
-      <scope>test</scope>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
@@ -55,8 +54,8 @@
   </repositories>
 
   <scm>
-    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/trunk</connection>
-    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/trunk</developerConnection>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/tags/javatools-test-0.1</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/tags/javatools-test-0.1</developerConnection>
   </scm>
 
   <distributionManagement>
