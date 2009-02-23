@@ -20,7 +20,7 @@ public class URLFileFactoryIntegrationTest {
     private String localDirectoryPath = System.getProperty("java.io.tmpdir");
     private String fileSeparator = System.getProperty("file.separator");
     private String localFilePath = localDirectoryPath + "/network_file.txt";
-    private String url = "http://localhost:8080/network_file.txt";
+    private String url = FileServer.URL_BASE + "/network_file.txt";
     
     @BeforeClass
     public static void startFileServer() throws Exception {
@@ -81,6 +81,6 @@ public class URLFileFactoryIntegrationTest {
     }
     
     private void updateURLContent() throws IOException {
-        FileUtils.touch(new File(FileServer.resourceBase + fileSeparator + "network_file.txt"));
+        FileUtils.touch(new File(FileServer.RESOURCE_BASE + fileSeparator + "network_file.txt"));
     }
 }
