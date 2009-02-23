@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.robotframework.javabuiltin.keywords;
+package org.robotframework.javalib.keywords;
 
+import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
@@ -26,6 +27,7 @@ public class JavaToolsKeywords {
         + "Example:\n"
         + "| Set System Property | _http.proxyHost_ | _myproxy.com_ | # sets the proxy host |\n"
         + "| Set System Property | _http.proxyPort_ | _8080_ | # sets the proxy port \n")
+    @ArgumentNames({"key", "value"})
     public void setSystemProperty(String key, String value) {
         System.setProperty(key, value);
     }
@@ -35,6 +37,7 @@ public class JavaToolsKeywords {
         + "Example:\n"
         + "| ${prop}= | Get System Property | _http.proxyHost_ |\n"
         + "| Should Be Equal | _myproxy.com_ | _${prop}_ |\n")
+    @ArgumentNames({"key"})
     public String getSystemProperty(String key) {
         return System.getProperty(key);
     }

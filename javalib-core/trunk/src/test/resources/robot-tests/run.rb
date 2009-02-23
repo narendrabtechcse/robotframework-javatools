@@ -23,7 +23,7 @@ ENV['CLASSPATH'] = root_dir do |dir|
     system "mvn test-compile"
   end
 
-  unless File.directory?("#{dir}/target/dependencies")
+  unless File.directory?("#{dir}/target/dependency")
     system "mvn dependency:copy-dependencies -Dscope=test"
   end
 

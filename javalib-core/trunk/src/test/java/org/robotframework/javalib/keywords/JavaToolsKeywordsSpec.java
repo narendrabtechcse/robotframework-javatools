@@ -15,12 +15,13 @@
  */
 
 
-package org.robotframework.javabuiltin.keywords;
+package org.robotframework.javalib.keywords;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import org.junit.runner.RunWith;
+import org.robotframework.javalib.keywords.JavaToolsKeywords;
 import org.robotframework.jdave.contract.RobotKeywordContract;
 import org.robotframework.jdave.contract.RobotKeywordsContract;
 
