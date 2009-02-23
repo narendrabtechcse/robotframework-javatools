@@ -3,7 +3,7 @@
   <groupId>org.robotframework</groupId>
   <artifactId>javalib-core</artifactId>
   <packaging>jar</packaging>
-  <version>0.7.4</version>
+  <version>0.7.4-SNAPSHOT</version>
   <name>javalib-core</name>
   <dependencies>
     <dependency>
@@ -93,7 +93,7 @@
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javatools-test</artifactId>
-      <version>0.1</version>
+      <version>0.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -164,8 +164,8 @@
   </repositories>
 
   <scm>
-    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/tags/javalib-core-0.7.4</connection>
-    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/tags/javalib-core-0.7.4</developerConnection>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/trunk</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/trunk</developerConnection>
   </scm>
 
   <distributionManagement>
