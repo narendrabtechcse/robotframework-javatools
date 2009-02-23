@@ -9,7 +9,7 @@ def main(args):
     jars = glob(os.path.join(dir, 'test-lib', '*.jar'))
     os.environ['CLASSPATH'] = os.pathsep.join(jars)
     outputdir = os.path.join(dir, 'results')
-    os.system("jybot --loglevel TRACE --outputdir %s %s" % (outputdir, ' '.join(args)))
+    os.system("jybot --loglevel TRACE --outputdir \"%s\" %s" % (outputdir, ' '.join(args)))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
