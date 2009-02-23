@@ -9,7 +9,7 @@ from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 class RemoteLibrary:
 
     def __init__(self, uri='rmi://localhost:1099/jvmConnector', 
-                 timeout="30 seconds"):
+                 timeout="60 seconds"):
         self.uri = uri
         self.timeout = timeout
         self.open_connection()
