@@ -27,10 +27,6 @@ There are three different ways of creating keywords with Javalib-Core:
 A fourth library combining all the abovementioned libraries is also provided:
   * CompositeLibrary combines SpringLibrary, ClassPathLibrary and AnnotationLibrary. With CompositeLibrary you can use all the different methods to add new keywords.
 
-===!JavaTools library===
-
-!JavaTools is a library containing keywords for commonly used tasks. For the moment the only keywords it contains are _Set System Property_ and _Get System Property_. See the [http://robotframework-javatools.googlecode.com/svn/javalib-core/tags/javalib-core-0.8/doc/javatools.html documentation] for details.
-
 ===Keyword and Config File Patterns===
 
 Javalib-core libraries requires you to explicitly set the pattern that specifies under which packages the keywords should be searched for. If javalib-core just scanned through all the classes in the classpath a keyword naming conflict would occur in case of having two javalib-core libraries in the same test file. 
@@ -98,7 +94,6 @@ To use javalib-core in your maven2 project add the following sections in your _p
 
 If you are stuck with jre 1.4 just add `<classifier>jre1.4</classifier>` to the dependency.
 
-
 {{{
   <dependencies>
     <dependency>
@@ -109,3 +104,8 @@ If you are stuck with jre 1.4 just add `<classifier>jre1.4</classifier>` to the 
     </dependency>
   </dependencies>
 }}}
+
+
+===!JavaTools library===
+
+!JavaTools is a library containing keywords for commonly used tasks. For the moment the only keywords it contains are _Set System Property_ and _Get System Property_. See the [http://robotframework-javatools.googlecode.com/svn/javalib-core/tags/javalib-core-0.8/doc/javatools.html documentation] for details.
