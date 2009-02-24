@@ -1,6 +1,7 @@
 *Setting*	*Value*
+#library	JavaTools
 library	WebstartLauncher	test-lib
-suiteSetup	startApplication
+#suiteSetup	setProxy
 suiteTeardown	closeApplication
 
 *Variable*	*Value*	*Value*
@@ -9,6 +10,7 @@ ${rmiConfigFile}	${CURDIR}${/}test-lib${/}rmiServiceContext.xml
 
 *TestCase*	*Action*	*Argument*
 Demonstration
+	startApplication
 	selectFromMainMenu	Test Menu|Show Dialog
 	selectDialog	Message
 	pushButton	OK
@@ -20,3 +22,7 @@ startApplication
 
 closeApplication
 	runKeywordAndIgnoreError	systemExit
+
+#setProxy
+	#setSystemProperty	http.proxyHost	172.16.42.133
+	#setSystemProperty	http.proxyPort	8080
