@@ -39,7 +39,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 
  * Download the [http://robotframework-javatools.googlecode.com/files/javaws-demo-2009-02-24.zip javaws-demo.zip]
  * Unzip it and chdir to demo directory
- * If you are behind a firewall, you'll need to set the proxy properties need also to be set for !WebstartLauncher. To do this, edit the `robot-javaws-test.html` file and uncomment the lines that have been commented out *and* set the correct values for you in the _Set Proxy_ user keyword:
+ * If you are behind a firewall, you'll need to set the proxy properties for !WebstartLauncher. To do this, edit the `robot-javaws-test.html` file and uncomment the lines that have been commented out *and* set the correct values for you in the _Set Proxy_ user keyword:
 || *Set Proxy* ||Set System Property||http.proxyHost||_yourproxyhost_||
 ||         ||Set System Property||http.proxyPort||_yourproxyport_||
 
