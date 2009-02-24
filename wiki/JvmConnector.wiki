@@ -32,13 +32,14 @@ service inside that application's JVM so that keyword invocations can reach it.
 ====Example====
 *Prerequisites:*
  * You'll need javaws and jybot in the path.
+ * Configure your proxy settings to Java Web Start if necessary.
  * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary.
  
 *Then:*
 
  * Download the [http://robotframework-javatools.googlecode.com/files/javaws-demo-2009-02-24.zip javaws-demo.zip]
  * Unzip it and chdir to demo directory
- * If you are behind a firewall, you'll need to set the proxy properties. Just edit the `robot-javaws-test.html` file and uncomment the lines that have been commented out *and* set the correct values for you in the _Set Proxy_ user keyword:
+ * If you are behind a firewall, you'll need to set the proxy properties need also to be set for !WebstartLauncher. To do this, edit the `robot-javaws-test.html` file and uncomment the lines that have been commented out *and* set the correct values for you in the _Set Proxy_ user keyword:
 || *Set Proxy* ||Set System Property||http.proxyHost||_yourproxyhost_||
 ||         ||Set System Property||http.proxyPort||_yourproxyport_||
 
