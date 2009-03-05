@@ -1,0 +1,53 @@
+﻿!WebstartLauncher is a convenience library that comes with !JvmConnector.
+It is used for launching a Java Web Start application and for starting a RMI
+service inside that application's JVM so that keyword invocations can reach it.
+
+====Example====
+*Prerequisites:*
+ * You'll need javaws and jybot in the path.
+ * Configure your proxy settings to Java Web Start if necessary.
+ * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary.
+ 
+*Then:*
+
+ * Download the [http://robotframework-javatools.googlecode.com/files/javaws-demo-2009-02-24.zip javaws-demo.zip]
+ * Unzip it and chdir to demo directory
+ * If you are behind a firewall, you'll need to set the proxy properties for !WebstartLauncher. To do this, edit the `robot-javaws-test.html` file and uncomment the lines that have been commented out *and* set the correct values for you in the _Set Proxy_ user keyword:
+|| *Set Proxy* ||Set System Property||http.proxyHost||_yourproxyhost_||
+||         ||Set System Property||http.proxyPort||_yourproxyport_||
+
+ * Last, from command line, run `./run.py robot-javaws-test.html`
+
+The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
+
+====Using !WebstartLauncher====
+
+ # Sign testing jars. [http://code.google.com/p/robotframework-javatools/downloads/list Jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
+ # Configure your Robot Framework libraries. Here is an example configuration file which imports !SwingLibrary.
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <bean id="swingLibrary" class="SwingLibrary" />
+  <bean id="swingService" class="org.robotframework.jvmconnector.server.CloseableRobotRmiService">
+    <constructor-arg>
+      <bean class="org.robotframework.jvmconnector.server.SimpleRobotRmiService">
+        <property name="library" ref="swingLibrary" />
+      </bean>
+    </constructor-arg>
+  </bean>
+
+  <bean id="serviceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
+    <property name="serviceName" value="jvmConnector" />
+    <property name="serviceInterface" value="org.robotframework.jvmconnector.server.RobotRmiService" />
+    <property name="service" ref="swingService" />
+  </bean>
+</beans>
+}}}
+ # Copy all the testing dependencies to a directory.
+ # When you create the library you'll need to provide the path to the directory containing the dependencies. All the jar files from this directory will be added to your webstart application's classpath: || Library     || !WebstartLauncher || ${CURDIR}${/}test-lib ||
+ # Launch the application and the RMI service: || Start Webstart Application And Rmi Service || ${CURDIR}${/}myRmiConfig.xml || http://myhost.com/myApp.jnlp ||
+ # Use the [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py RemoteLibrary] to open the RMI channel. In the near future !RemoteLibrary will be integrated into [http://code.google.com/p/robotframework/source/browse/#svn/trunk/proto/remote Robot Framework]. Meanwhile you can get it from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py here].  || Import Library || ${CURDIR}${/}test-lib${/}!RemoteLibrary.py ||
+ # Start testing, notice that the _first_ keyword invocation will probably have to be done with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Wait%20Until%20Keyword%20Succeeds Wait Until Keyword Succeeds] because your application might take some time to start.  || Wait Until Keyword Succeeds || 30 || 2 || Select Main Window ||
+ # At the end, close the application. For the moment "System Exit" keyword cannot handle gracefully the shutdown of the Webstart JVM so it needs to be used in conjunction with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Run%20Keyword%20And%20Ignore%20Error Run Keyword And Ignore Error] || Run Keyword And Ignore Error || System Exit ||
