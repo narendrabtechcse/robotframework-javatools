@@ -51,3 +51,12 @@ The test applications sources can be found from [http://robotframework-javatools
  # Use the [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py RemoteLibrary] to open the RMI channel. In the near future !RemoteLibrary will be integrated into [http://code.google.com/p/robotframework/source/browse/#svn/trunk/proto/remote Robot Framework]. Meanwhile you can get it from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7/tools/RemoteLibrary.py here].  || Import Library || ${CURDIR}${/}test-lib${/}!RemoteLibrary.py ||
  # Start testing, notice that the _first_ keyword invocation will probably have to be done with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Wait%20Until%20Keyword%20Succeeds Wait Until Keyword Succeeds] because your application might take some time to start.  || Wait Until Keyword Succeeds || 30 || 2 || Select Main Window ||
  # At the end, close the application. For the moment "System Exit" keyword cannot handle gracefully the shutdown of the Webstart JVM so it needs to be used in conjunction with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Run%20Keyword%20And%20Ignore%20Error Run Keyword And Ignore Error] || Run Keyword And Ignore Error || System Exit ||
+
+====!WebstartLauncher and Https====
+
+If you get the following exception when trying to use !WebstartLauncher with https
+
+{{{
+  SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+}}}
+
