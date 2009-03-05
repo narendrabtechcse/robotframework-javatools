@@ -53,7 +53,7 @@ public class CompositeLibrary extends KeywordFactoryBasedLibrary<Keyword> {
         classPathLibrary.setClassLoader(getClassLoader());
         if (needToSetKeywordPattern) {
             classPathLibrary.setKeywordPattern(keywordPattern);
-            annotationLibrary.setKeywordPattern(keywordPattern);
+            annotationLibrary.addKeywordPattern(keywordPattern);
         }
 
         CompositeKeywordFactory factory = new CompositeKeywordFactory();

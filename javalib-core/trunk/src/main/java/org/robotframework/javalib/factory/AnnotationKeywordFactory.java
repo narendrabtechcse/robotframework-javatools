@@ -37,6 +37,12 @@ public class AnnotationKeywordFactory implements KeywordFactory<DocumentedKeywor
         extractKeywordsFromKeywordBeans(keywordBeansMap);
     }
 
+    public AnnotationKeywordFactory(List<Map> keywordBeansMaps) {
+    	for (Map<String, Object> keywordBeansMap : keywordBeansMaps) {
+        	extractKeywordsFromKeywordBeans(keywordBeansMap);			
+		}
+    }
+
     public DocumentedKeyword createKeyword(String keywordName) {
         String normalizedKeywordName = keywordNameNormalizer.normalize(keywordName);
         return keywords.get(normalizedKeywordName);
@@ -63,10 +69,17 @@ public class AnnotationKeywordFactory implements KeywordFactory<DocumentedKeywor
 
     private void addKeywords(Map<String, DocumentedKeyword> extractedKeywords) {
         for (String keywordName : extractedKeywords.keySet()) {
-            keywords.put(keywordNameNormalizer.normalize(keywordName), extractedKeywords.get(keywordName));
+        	handleDuplicateKeywordNames(keywordName);
+        	keywords.put(keywordNameNormalizer.normalize(keywordName), extractedKeywords.get(keywordName));
         }
     }
 
+    private void handleDuplicateKeywordNames(String keywordName) {
+    	if (keywords.containsKey(keywordNameNormalizer.normalize(keywordName))) {
+    		throw new RuntimeException("Two keywords with name '"+ keywordName + "' found!");
+        }
+    }
+    
     private void addKeywordNames(Map<String, DocumentedKeyword> extractedKeywords) {
         keywordNames.addAll(extractedKeywords.keySet());
     }

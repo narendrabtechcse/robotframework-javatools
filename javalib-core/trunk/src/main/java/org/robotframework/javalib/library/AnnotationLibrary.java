@@ -17,6 +17,9 @@
 package org.robotframework.javalib.library;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.robotframework.javalib.beans.annotation.AnnotationBasedKeywordFilter;
 import org.robotframework.javalib.beans.annotation.IBeanLoader;
@@ -27,21 +30,31 @@ import org.robotframework.javalib.factory.KeywordFactory;
 import org.robotframework.javalib.keyword.DocumentedKeyword;
 
 public class AnnotationLibrary extends KeywordFactoryBasedLibrary<DocumentedKeyword> implements KeywordDocumentationRepository {
-    private IBeanLoader beanLoader;
+    private List<IBeanLoader> beanLoaders = new ArrayList<IBeanLoader>();
     private IClassFilter classFilter = new AnnotationBasedKeywordFilter();
     private KeywordFactory<DocumentedKeyword> keywordFactory;
 
     public AnnotationLibrary() {}
 
     public AnnotationLibrary(String keywordPattern) {
-        setKeywordPattern(keywordPattern);
+        addKeywordPattern(keywordPattern);
     }
 
-    @Override
+    public AnnotationLibrary(List<String> keywordPatters) {
+    	for (String pattern : keywordPatters) {
+            addKeywordPattern(pattern);
+		}
+	}
+
+	@Override
     protected KeywordFactory<DocumentedKeyword> createKeywordFactory() {
         assumeKeywordPatternIsSet();
         if (keywordFactory == null) {
-            keywordFactory = new AnnotationKeywordFactory(beanLoader.loadBeanDefinitions(classFilter));
+        	List<Map> keywordBeansMaps = new ArrayList<Map>();
+        	for (IBeanLoader beanLoader : beanLoaders) {
+        		keywordBeansMaps.add(beanLoader.loadBeanDefinitions(classFilter));
+			}
+            keywordFactory = new AnnotationKeywordFactory(keywordBeansMaps);
         }
         return keywordFactory;
     }
@@ -63,12 +76,12 @@ public class AnnotationLibrary extends KeywordFactoryBasedLibrary<DocumentedKeyw
         }
     }
 
-    public void setKeywordPattern(String keywordPattern) {
-        beanLoader = new KeywordBeanLoader(keywordPattern);
+    public void addKeywordPattern(String keywordPattern) {
+        beanLoaders.add(new KeywordBeanLoader(keywordPattern));
     }
 
     private void assumeKeywordPatternIsSet() {
-        if (beanLoader == null) {
+        if (beanLoaders.isEmpty()) {
             throw new IllegalStateException("Keyword pattern must be set before calling getKeywordNames.");
         }
     }

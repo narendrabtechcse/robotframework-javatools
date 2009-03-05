@@ -1,5 +1,7 @@
 package org.robotframework.javalib.library;
 
+import java.util.List;
+
 import org.jmock.MockObjectTestCase;
 import org.laughingpanda.beaninject.impl.Accessor;
 import org.robotframework.javalib.beans.annotation.KeywordBeanLoader;
@@ -14,7 +16,7 @@ public class AnnotationLibraryTest extends MockObjectTestCase {
     protected void setUp() throws Exception {
         annotationLibrary = new AnnotationLibrary();
         beanLoaderAtInitialization = extractBeanLoaderFromAnnotationLibrary();
-        annotationLibrary.setKeywordPattern(keywordPattern);
+        annotationLibrary.addKeywordPattern(keywordPattern);
         beanLoaderAfterSettingKeywordPattern = extractBeanLoaderFromAnnotationLibrary();
     }
 
@@ -41,6 +43,10 @@ public class AnnotationLibraryTest extends MockObjectTestCase {
     }
 
     private KeywordBeanLoader extractBeanLoaderFromAnnotationLibrary() throws IllegalAccessException {
-        return (KeywordBeanLoader) Accessor.field("beanLoader", annotationLibrary.getClass()).get(annotationLibrary);
+    	try {
+    		return ((List<KeywordBeanLoader>) Accessor.field("beanLoaders", annotationLibrary.getClass()).get(annotationLibrary)).get(0);
+    	} catch (IndexOutOfBoundsException e){
+    		return null;
+    	}
     }
 }

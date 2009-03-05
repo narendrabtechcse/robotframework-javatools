@@ -1,6 +1,8 @@
 package org.robotframework.javalib.library;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jmock.Mock;
@@ -24,8 +26,10 @@ public class AnnotationLibraryLoadingBeansTest extends MockObjectTestCase {
     private void injectBeanDefinitionsToAnnotationLibrary() {
         Mock beanLoader = mock(IBeanLoader.class);
         Object classFilter = mock(IClassFilter.class).proxy();
-
-        Inject.field("beanLoader").of(annotationLibrary).with(beanLoader.proxy());
+        IBeanLoader proxy = (IBeanLoader) beanLoader.proxy();
+        List<IBeanLoader> beanLoaders = new ArrayList<IBeanLoader>();
+        beanLoaders.add(proxy);
+		Inject.field("beanLoaders").of(annotationLibrary).with(beanLoaders);
         Inject.field("classFilter").of(annotationLibrary).with(classFilter);
 
         beanLoader.expects(once()).method("loadBeanDefinitions")
