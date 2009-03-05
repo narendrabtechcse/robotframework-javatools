@@ -57,6 +57,7 @@ The test applications sources can be found from [http://robotframework-javatools
 If you get the following exception when trying to use !WebstartLauncher with https
 
 {{{
-  SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+  SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
+  unable to find valid certification path to requested target
 }}}
 
