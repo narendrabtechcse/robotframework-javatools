@@ -23,7 +23,7 @@ robot error messages are presented in a meaningful way.
 
 http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
-===WebstartLauncher===
+===!WebstartLauncher===
 
 WebstartLauncher is a convenience library that comes with !JvmConnector.
 It is used for launching a Java Web Start application and for starting a RMI
