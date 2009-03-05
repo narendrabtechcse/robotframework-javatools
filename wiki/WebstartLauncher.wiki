@@ -52,12 +52,13 @@ The test applications sources can be found from [http://robotframework-javatools
  # Start testing, notice that the _first_ keyword invocation will probably have to be done with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Wait%20Until%20Keyword%20Succeeds Wait Until Keyword Succeeds] because your application might take some time to start.  || Wait Until Keyword Succeeds || 30 || 2 || Select Main Window ||
  # At the end, close the application. For the moment "System Exit" keyword cannot handle gracefully the shutdown of the Webstart JVM so it needs to be used in conjunction with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Run%20Keyword%20And%20Ignore%20Error Run Keyword And Ignore Error] || Run Keyword And Ignore Error || System Exit ||
 
-====!WebstartLauncher and Https====
+====Troubleshooting====
 
-If you get the following exception when trying to use !WebstartLauncher with https
+*Problem:* You get the following exception when trying to launch your application:
 
 {{{
   SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
   unable to find valid certification path to requested target
 }}}
 
+*Solution:* 
