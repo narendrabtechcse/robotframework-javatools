@@ -2,7 +2,7 @@
 It is used for launching a Java Web Start application and for starting a RMI
 service inside that application's JVM so that keyword invocations can reach it.
 
-====Example====
+===Example===
 *Prerequisites:*
  * You'll need javaws and jybot in the path.
  * Configure your proxy settings to Java Web Start if necessary.
@@ -20,7 +20,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-====Using !WebstartLauncher====
+===Using !WebstartLauncher===
 
  # Sign testing jars. [http://code.google.com/p/robotframework-javatools/downloads/list Jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
  # Configure your Robot Framework libraries. Here is an example configuration file which imports !SwingLibrary.
@@ -52,7 +52,7 @@ The test applications sources can be found from [http://robotframework-javatools
  # Start testing, notice that the _first_ keyword invocation will probably have to be done with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Wait%20Until%20Keyword%20Succeeds Wait Until Keyword Succeeds] because your application might take some time to start.  || Wait Until Keyword Succeeds || 30 || 2 || Select Main Window ||
  # At the end, close the application. For the moment "System Exit" keyword cannot handle gracefully the shutdown of the Webstart JVM so it needs to be used in conjunction with [http://robotframework.googlecode.com/svn/tags/robotframework-2.0.4/doc/libraries/BuiltIn.html#Run%20Keyword%20And%20Ignore%20Error Run Keyword And Ignore Error] || Run Keyword And Ignore Error || System Exit ||
 
-====Troubleshooting====
+===Troubleshooting===
 
 *Problem:* You get the following exception when trying to launch your application:
 
