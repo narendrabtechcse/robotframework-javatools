@@ -16,25 +16,21 @@
 
 package org.robotframework.javalib.beans.common;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 public interface IKeywordBeanDefintionReader {
     /**
      * Loads bean definitions from keyword classes in class path. By
-     * default, uses {@link DefaultClassFinder} to find classes with
+     * default, uses DefaultClassFinder to find classes with
      * given pattern.
      *
-     * @param pattern pattern to resolve configuration files, see {@link PathMatchingResourcePatternResolver}
+     * @param pattern pattern to resolve configuration files, see PathMatchingResourcePatternResolver
      * @param filter filter to determine which classes to accept for loading
      * @return number of bean definitions loaded
      */
     int loadBeanDefinitions(String pattern, IClassFilter filter);
 
     /**
-     * Default is {@link DefaultClassFinder}. Must be set prior to calling
-     * {@link #loadBeanDefinitions(String, String, IClassFilter)}.
-     *
-     * @param classFinder
+     * Default is DefaultClassFinder. Must be set prior to calling
+     * loadBeanDefinitions(String, String, IClassFilter).
      */
     void setClassFinder(ClassFinder classFinder);
 }
