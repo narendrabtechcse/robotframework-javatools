@@ -1,10 +1,17 @@
-﻿== Jvmconnector 0.7.2 ==
+﻿== Jvmconnector 0.7.3 ==
+
+This release contains a small fix that enables the usage of !WebstartLauncher with https. Please see [WebstartLauncher#Troubleshooting WebstartLauncher] for more details.
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 11 || Defect || High || !WebstartLauncher should work with https ||
+
+== Jvmconnector 0.7.2 ==
 
 This release makes [JvmConnector#WebstartLauncher  WebstartLauncher] usable on MS Windows and with JRE 1.4.
 
 || *ID* || *Type* || *Priority* || *Summary* ||
-|| Issue 12 || Defect || High || WebstartLauncher should handle MS Windows paths ||
-|| Issue 13 || Defect || High || WebstartLauncher should work with JRE 1.4 ||
+|| Issue 12 || Defect || High || !WebstartLauncher should handle MS Windows paths ||
+|| Issue 13 || Defect || High || !WebstartLauncher should work with JRE 1.4 ||
 
 == Jvmconnector 0.7.1 ==
 This is an emergency release fixing a bug that prevented using !WebstartLauncher with proxy.
