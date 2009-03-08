@@ -8,10 +8,37 @@ A keyword implementation has to fill the following requirements:
    * the class has a default constructor 
    * the class is public and non-abstract 
 
-*Usage:*
+===Usage===
 || *Setting* || *Value* || *Value* ||
 || Library || org.robotframework.javalib.library.!AnnotationLibrary || com/acme/`**`/keyword/`**`/`*`.class ||
 
+Or you can create a wrapper library:
+
+{{{
+  public class MyLibrary extends AnnotationLibrary {
+	public MyLibrary() {
+	  super("com/acme/**/keyword/**/*.class");
+	}
+  }
+}}}
+
+|| *Setting* || *Value* || *Value* ||
+|| Library || !MyLibrary ||
+
+With wrapper libraries you can also add multiple keyword patterns, eg:
+
+{{{
+  public class MyLibrary extends AnnotationLibrary {
+	List<String> keywordPatterns = new ArrayList<String>() {{
+	  add("com/acme/**/keyword/**/*.class");
+	  add("org/some/other/place/**.class");
+	}};
+
+	public MyLibrary() {
+	  super(keywordPatterns); // keywords are looked in all the places speficied by the different patterns
+	}
+  }
+}}}
 
 ===Documenting keywords===
 ====Keyword documentation====
@@ -23,7 +50,7 @@ A keyword implementation has to fill the following requirements:
 Keyword argument names used in documentation generation can be added by using a special annotation `@ArgumentNames`. Robot framework also uses keyword names are to check if the keyword is invoked with a correct number of arguments and makes the test fail if incorrect number of arguments is provided.
 If the argument of the keyword is of type `String[]` can the keyword accept from zero to infinity arguments. This should be indicated to Robot framework by inserting '`*`' in front of the argument name.
 
-====Example====
+====Keyword example====
 {{{
 @RobotKeyword("Launches application with the given arguments.\n\n"
     + "Example:\n"
