@@ -65,5 +65,5 @@ The test applications sources can be found from [http://robotframework-javatools
 
 *Solution:* Create your own truststore using the instructions found here: http://blogs.sun.com/andreas/entry/no_more_unable_to_find and set the correspondig system properties:
 
-|| *Set System Property* || _javax.net.ssl.trustStore_ || ${path}${/}to${/}jssecacerts ||
-|| *Set System Property* || _javax.net.ssl.trustStorePassword_ || changeit || 
+|| *Set System Property* || _javax.net.ssl.trustStore_ || _${path}${/}to${/}jssecacerts_ ||
+|| *Set System Property* || _javax.net.ssl.trustStorePassword_ || _changeit_ || 
