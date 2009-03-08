@@ -38,7 +38,7 @@ To use jvmconnector in your maven2 project add the following sections in your _p
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>jvmconnector</artifactId>
-      <version>0.7</version>
+      <version>0.7.3</version>
     </dependency>
   </dependencies>
 
@@ -57,7 +57,7 @@ For those using jre 1.4 just add `<classifier>jre1.4</classifier>` to the depend
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>jvmconnector</artifactId>
-      <version>0.7</version>
+      <version>0.7.3</version>
       <classifier>jre1.4</classifier>
     </dependency>
   </dependencies>
