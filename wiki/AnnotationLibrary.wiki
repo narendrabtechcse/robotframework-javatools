@@ -22,6 +22,8 @@ Or you can create a wrapper library:
   }
 }}}
 
+And then use it like this:
+
 || *Setting* || *Value* || 
 || Library || !MyLibrary ||
 
