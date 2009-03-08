@@ -22,7 +22,7 @@ Or you can create a wrapper library:
   }
 }}}
 
-|| *Setting* || *Value* || *Value* ||
+|| *Setting* || *Value* || 
 || Library || !MyLibrary ||
 
 With wrapper libraries you can also add multiple keyword patterns, eg:
