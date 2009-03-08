@@ -1,4 +1,12 @@
-﻿== Javalib-Core 0.8 ==
+﻿== Javalib-Core 0.8.1 ==
+
+!AnnotationLibrary now supports multiple search paths so that it is easier to add keywords from multiple package locations.
+For more details see [AnnotationLibrary#Usage AnnotationLibrary usage].
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 15 || Enhancement || High || !AnnotationLibrary should support multiple search paths ||
+
+== Javalib-Core 0.8 ==
 
 This release introduces a new library, !JavaTools which is intended to be a general purpose library
 for the commonly used tasks. For the moment it contains _Set System Property_ and _Get System Property_ keywords.
