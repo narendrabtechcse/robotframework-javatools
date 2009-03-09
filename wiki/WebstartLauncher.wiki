@@ -12,9 +12,8 @@ _path_to_testing_resources_directory_: should point to a directory that contains
 
 Launches the webstart application and the rmi service. 
 
-_path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example.
-
-_jnlp_url_: your applications url.
+_path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example. <br/>
+_jnlp_url_: your applications url. <br/>
 
 Example: 
 
