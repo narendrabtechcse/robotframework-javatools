@@ -6,19 +6,22 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 || Library || !WebstartLauncher || _<path_to_testing_resources_directory>_ ||
 
-_<path_to_testing_resources_directory>_ should point to a directory that contains at least the jvmconnector jar (which you can get from the [http://code.google.com/p/robotframework-javatools/downloads/list download page]) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application.
+_path_to_testing_resources_directory_: should point to a directory that contains at least the jvmconnector jar (which you can get from the [http://code.google.com/p/robotframework-javatools/downloads/list download page]) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application.
 
 || Start Webstart Application And Rmi Service || _<path_to_rmi_configuration_file>_ || _<jnlp_url>_ ||
 
 Launches the webstart application and the rmi service. 
-_<path_to_rmi_configuration_file>_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example.
-_<jnlp_url>_: your applications url.
+_path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example.
+_jnlp_url_: your applications url.
 
 Example: 
 
+|| *Setting* || *Value* || *Value* ||
 || Library || !WebstartLauncher || _$CURDIR${/}test-lib$_ ||
 
 
+|| *Test Case* || *Action* || *Argument* ||
+|| Start Application || || ||
 || Start Webstart Application And Rmi Service || _${CURDIR}${/}test-lib${/}rmiConfig.xml_ || _http://acme.com/myapp.jnlp_ ||
 
 ===Example===
