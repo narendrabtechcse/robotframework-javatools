@@ -21,9 +21,8 @@ Example:
 || Library || !WebstartLauncher || _$CURDIR${/}test-lib$_ ||
 
 
-|| *Test Case* || *Action* || *Argument* ||
-|| Start Application || || ||
-|| Start Webstart Application And Rmi Service || _${CURDIR}${/}test-lib${/}rmiConfig.xml_ || _http://acme.com/myapp.jnlp_ ||
+|| *Test Case* || *Action* || *Argument* || *Argument* ||
+|| _Start Application_ || Start Webstart Application And Rmi Service || _${CURDIR}${/}test-lib${/}rmiConfig.xml_ || _http://acme.com/myapp.jnlp_ ||
 
 ===Example===
 *Prerequisites:*
