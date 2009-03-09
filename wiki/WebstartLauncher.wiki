@@ -2,6 +2,25 @@
 It is used for launching a Java Web Start application and for starting a RMI
 service inside that application's JVM so that keyword invocations can reach it.
 
+===Library documentation===
+
+|| Library || !WebstartLauncher || _<path_to_testing_resources_directory>_ ||
+
+_<path_to_testing_resources_directory>_ should point to a directory that contains at least the jvmconnector jar (which you can get from the [http://code.google.com/p/robotframework-javatools/downloads/list download page]) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application.
+
+|| Start Webstart Application And Rmi Service || _<path_to_rmi_configuration_file>_ || _<jnlp_url>_ ||
+
+Launches the webstart application and the rmi service. 
+_<path_to_rmi_configuration_file>_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example.
+_<jnlp_url>_: your applications url.
+
+Example: 
+
+|| Library || !WebstartLauncher || _$CURDIR${/}test-lib$_ ||
+
+
+|| Start Webstart Application And Rmi Service || _${CURDIR}${/}test-lib${/}rmiConfig.xml_ || _http://acme.com/myapp.jnlp_ ||
+
 ===Example===
 *Prerequisites:*
  * You'll need javaws and jybot in the path.
@@ -20,7 +39,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-===Using !WebstartLauncher===
+===Usage===
 
  # Sign testing jars. [http://code.google.com/p/robotframework-javatools/downloads/list Jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
  # Configure your Robot Framework libraries. Here is an example configuration file which imports !SwingLibrary.
