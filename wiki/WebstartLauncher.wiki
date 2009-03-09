@@ -4,14 +4,16 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 ===Library documentation===
 
-|| Library || !WebstartLauncher || _<path_to_testing_resources_directory>_ ||
+|| Library || !WebstartLauncher || _path_to_testing_resources_directory_ ||
 
 _path_to_testing_resources_directory_: should point to a directory that contains at least the jvmconnector jar (which you can get from the [http://code.google.com/p/robotframework-javatools/downloads/list download page]) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application.
 
-|| Start Webstart Application And Rmi Service || _<path_to_rmi_configuration_file>_ || _<jnlp_url>_ ||
+|| Start Webstart Application And Rmi Service || _path_to_rmi_configuration_file_ || _jnlp_url_ ||
 
 Launches the webstart application and the rmi service. 
+
 _path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example.
+
 _jnlp_url_: your applications url.
 
 Example: 
