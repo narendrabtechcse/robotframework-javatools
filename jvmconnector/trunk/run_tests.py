@@ -5,8 +5,9 @@ import os
 import sys
 import re
 
+sys.path.insert(0, '/usr/lib/python2.5/site-packages')
 base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
-for path in [ "src/main/python" ]:
+for path in [ "./src/main/python" ]:
     path = os.path.join(base, path.replace('/', os.sep))
     if path not in sys.path:
         sys.path.insert(0, path)
@@ -31,7 +32,6 @@ def get_tests(directory):
 
 if __name__ == '__main__':
     tests = get_tests(".")
-    print tests
     suite = unittest.TestSuite(tests)
     runner = unittest.TextTestRunner(descriptions=0, verbosity=1)
     result = runner.run(suite)

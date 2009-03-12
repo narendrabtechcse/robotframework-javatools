@@ -1,13 +1,10 @@
-
 import time
-
+import sys
+from robot.utils import timestr_to_secs
+from java.lang import Class
 from org.springframework.remoting import RemoteConnectFailureException
 from org.springframework.beans.factory import BeanCreationException
-from robot.utils import timestr_to_secs
-
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
-
-from java.lang import Class
 
 class RemoteLibrary:
 
@@ -73,21 +70,23 @@ class MyRmiWrapper:
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from os import pathsep
-class MyRmiLauncher:
+class RmiLauncher:
+    def __init__(self, os_library=OperatingSystem()):
+        self.os_library = os_library
+
     def launch_rmi_and_application(self, application):
         pythonpath = pathsep.join(sys.path)
-        OperatingSystem().start_process("jython -Dpython.path=%s %s %s" % (pythonpath, __file__, application))
+        self.os_library.start_process("jython -Dpython.path=%s %s %s" % (pythonpath, __file__, application))
 
 if __name__ == '__main__':
     my_exporter = MyRmiServiceExporter()
     my_exporter.export()
 
-#import sys
-#if __name__ == '__main__':
-#    if len(sys.argv[1:]) >= 1:
-#        wrapper = MyRmiWrapper()
-#        wrapper.launch(sys.argv[1:])
-#    else:
-#        launcher = MyRmiLauncher()
-#        print( "launcher.launch_rmi_and_application(\"org.robotframework.swing.testapp.TestApplication\")")
-#        launcher.launch_rmi_and_application("org.robotframework.swing.testapp.TestApplication")
+if __name__ == '__main__':
+    if len(sys.argv[1:]) >= 1:
+        wrapper = MyRmiWrapper()
+        wrapper.launch(sys.argv[1:])
+    else:
+        launcher = MyRmiLauncher()
+        print( "launcher.launch_rmi_and_application(\"org.robotframework.swing.testapp.TestApplication\")")
+        launcher.launch_rmi_and_application("org.robotframework.swing.testapp.TestApplication")
