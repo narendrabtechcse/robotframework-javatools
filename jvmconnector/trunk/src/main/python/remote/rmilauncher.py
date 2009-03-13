@@ -53,20 +53,24 @@ class MyLibraryImporter(LibraryImporter):
         
 
 from org.springframework.remoting.rmi import RmiServiceExporter
-class MyRmiServiceExporter:
-    def export(self):
+class RmiExporter:
+    def export(self, service_name="rmirobotservice"):
         exporter = RmiServiceExporter()
-        exporter.setServiceName("rmirobotservice")
+        exporter.setServiceName(service_name)
         #todo: free port finder
         exporter.setRegistryPort(11099)
         exporter.setService(MyLibraryImporter())
         exporter.setServiceInterface(Class.forName("org.robotframework.jvmconnector.server.LibraryImporter"))
         exporter.prepare()
 
-class MyRmiWrapper:
-    def launch(self, application):
-        #todo: handle args
-        Class.forName(application[0]).main(None)
+class RmiWrapper:
+    def __init__(self, service_exporter=RmiExporter(), clzz=Class):
+        self.service_exporter = service_exporter
+        self.clzz = clzz
+
+    def export_rmi_service_and_launch_application(self, application, args=None):
+        self.service_exporter.export()
+        self.clzz.forName(application).main(args)
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from os import pathsep
@@ -74,19 +78,11 @@ class RmiLauncher:
     def __init__(self, os_library=OperatingSystem()):
         self.os_library = os_library
 
-    def launch_rmi_and_application(self, application):
+    def start_application(self, application):
         pythonpath = pathsep.join(sys.path)
         self.os_library.start_process("jython -Dpython.path=%s %s %s" % (pythonpath, __file__, application))
 
 if __name__ == '__main__':
-    my_exporter = MyRmiServiceExporter()
-    my_exporter.export()
-
-if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
         wrapper = MyRmiWrapper()
-        wrapper.launch(sys.argv[1:])
-    else:
-        launcher = MyRmiLauncher()
-        print( "launcher.launch_rmi_and_application(\"org.robotframework.swing.testapp.TestApplication\")")
-        launcher.launch_rmi_and_application("org.robotframework.swing.testapp.TestApplication")
+        wrapper.export_rmi_service_and_launch_application(sys.argv[1], sys.argv[2:])

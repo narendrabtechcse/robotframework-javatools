@@ -1,25 +1,45 @@
 import unittest
 import os
 import sys
-from robot.utils.asserts import assert_equals
-from rmilauncher import RmiLauncher
+from robot.utils.asserts import *
+from rmilauncher import *
 
 application = "com.acme.SomeApp"
 
-class _MockOperatingSystemLibrary:
+class _FakeOperatingSystemLibrary:
     def start_process(self, command):
         self.command = command
 
-    def get_command_used(self):
-        return self.command
+class _FakeRmiExporter:
+    def export(self):
+        self.export_was_invoked = True
+
+class _FakeClass:
+    def forName(self, name):
+        self.name = name
+        return self 
+
+    def main(self, args):
+        self.main_args = args
 
 class TestRmiLauncher(unittest.TestCase):
-    def test_launches_rmi_service_and_application(self):
-        os_library = _MockOperatingSystemLibrary()
+    def test_starts_application(self):
+        os_library = _FakeOperatingSystemLibrary()
         rmi_launcher = RmiLauncher(os_library)
-        rmi_launcher.launch_rmi_and_application(application)
+        rmi_launcher.start_application(application)
         
-        assert_equals(_get_expected_command(), os_library.get_command_used())
+        assert_equals(_get_expected_command(), os_library.command)
+
+class TestRmiWrapper(unittest.TestCase):
+    def test_exports_rmi_service_and_launches_application(self):
+        rmi_exporter = _FakeRmiExporter()
+        clazz = _FakeClass()
+        wrapper = RmiWrapper(rmi_exporter, clazz)
+        wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
+        
+        assert_true(rmi_exporter.export_was_invoked)
+        assert_equals(application, clazz.name)
+        assert_equals(["one", "two"], clazz.main_args)
 
 def _get_expected_command():
     return "jython -Dpython.path=%s %s %s" % (_get_current_pythonpath(), _get_file(), application)
