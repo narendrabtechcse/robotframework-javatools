@@ -54,7 +54,10 @@ class MyLibraryImporter(LibraryImporter):
 
 from org.springframework.remoting.rmi import RmiServiceExporter
 class RmiExporter:
-    def export(self, service_name="rmirobotservice"):
+    def __init__(self, java_class=Class):
+        self.java_class = java_class
+
+    def export(self, ):
         exporter = RmiServiceExporter()
         exporter.setServiceName(service_name)
         #todo: free port finder
@@ -63,14 +66,16 @@ class RmiExporter:
         exporter.setServiceInterface(Class.forName("org.robotframework.jvmconnector.server.LibraryImporter"))
         exporter.prepare()
 
+#class DefaultRmiExporter(RmiExporter):
+    
 class RmiWrapper:
-    def __init__(self, service_exporter=RmiExporter(), clzz=Class):
+    def __init__(self, service_exporter=RmiExporter(), java_class=Class):
         self.service_exporter = service_exporter
-        self.clzz = clzz
+        self.java_class = java_class
 
     def export_rmi_service_and_launch_application(self, application, args=None):
         self.service_exporter.export()
-        self.clzz.forName(application).main(args)
+        self.java_class.forName(application).main(args)
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from os import pathsep
