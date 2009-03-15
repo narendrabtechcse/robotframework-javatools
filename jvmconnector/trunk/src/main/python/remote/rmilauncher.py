@@ -39,35 +39,34 @@ class RemoteLibrary:
 
 
 from org.robotframework.jvmconnector.server import LibraryImporter
-from java.net import ServerSocket
 class MyLibraryImporter(LibraryImporter):
     def importLibrary(self, libraryName):
         "imported [%s]" % libraryName
 
-    def _findFreePort(self):
+
+from java.net import ServerSocket
+class FreePortFinder:
+    def find_free_port(self):
         try:
             s = ServerSocket(0)
             return s.getLocalPort()
         finally:
             s.close()
-        
 
 from org.springframework.remoting.rmi import RmiServiceExporter
 class RmiExporter:
-    def __init__(self, java_class=Class):
+    def __init__(self, java_class=Class, exporter=RmiServiceExporter(), free_port_finder=FreePortFinder()): #, rmi_url_communicator):
         self.java_class = java_class
+        self.exporter = exporter
+        self.free_port_finder = free_port_finder
 
-    def export(self, ):
-        exporter = RmiServiceExporter()
-        exporter.setServiceName(service_name)
-        #todo: free port finder
-        exporter.setRegistryPort(11099)
-        exporter.setService(MyLibraryImporter())
-        exporter.setServiceInterface(Class.forName("org.robotframework.jvmconnector.server.LibraryImporter"))
-        exporter.prepare()
+    def export(self, service_name="remoterobot", service=MyLibraryImporter(), service_interface_name="org.robotframework.jvmconnector.server.LibraryImporter"):
+        self.exporter.setServiceName(service_name)
+        self.exporter.setRegistryPort(11099)
+        self.exporter.setService(service)
+        self.exporter.setServiceInterface(self.java_class.forName(service_interface_name))
+        self.exporter.prepare()
 
-#class DefaultRmiExporter(RmiExporter):
-    
 class RmiWrapper:
     def __init__(self, service_exporter=RmiExporter(), java_class=Class):
         self.service_exporter = service_exporter
