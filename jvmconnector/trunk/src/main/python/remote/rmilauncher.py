@@ -62,10 +62,12 @@ class RmiExporter:
 
     def export(self, service_name="remoterobot", service=MyLibraryImporter(), service_interface_name="org.robotframework.jvmconnector.server.LibraryImporter"):
         self.exporter.setServiceName(service_name)
-        self.exporter.setRegistryPort(self.port_finder.find_free_port())
+        port = self.port_finder.find_free_port()
+        self.exporter.setRegistryPort(port)
         self.exporter.setService(service)
         self.exporter.setServiceInterface(self.java_class.forName(service_interface_name))
         self.exporter.prepare()
+        self.rmi_url = "rmi://localhost:%s/%s" % (port, service_name)
 
 class RmiWrapper:
     def __init__(self, service_exporter=RmiExporter(), java_class=Class):

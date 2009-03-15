@@ -49,12 +49,16 @@ class TestRmiExporter(unittest.TestCase):
         self.java_class = _FakeJavaClass()
         self.spring_exporter = _FakeServiceExporter()
         self.port_finder = _StubPortFinder(11099)
+        self.exporter = RmiExporter(self.java_class, self.spring_exporter, self.port_finder)
 
     def test_exports_default_service(self):
-        exporter = RmiExporter(self.java_class, self.spring_exporter, self.port_finder)
-        exporter.export()
+        self.exporter.export()
 
         self._assert_default_service_was_exported()
+
+    def test_gets_rmi_url(self):
+        self.exporter.export()
+        assert_equals("rmi://localhost:11099/remoterobot", self.exporter.rmi_url)
     
     def _assert_default_service_was_exported(self):
         assert_equals("remoterobot", self.spring_exporter.service_name)
