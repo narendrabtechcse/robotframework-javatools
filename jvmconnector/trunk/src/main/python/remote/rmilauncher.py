@@ -37,12 +37,6 @@ class RemoteLibrary:
             self.open_connection()
             return self.remote_lib.runKeyword(name, args)
 
-
-from org.robotframework.jvmconnector.server import LibraryImporter
-class DefaultLibraryImporter(LibraryImporter):
-    def importLibrary(self, libraryName):
-        "imported [%s]" % libraryName
-
 from java.net import ServerSocket
 class FreePortFinder:
     def find_free_port(self, socket=ServerSocket(0)):
@@ -56,7 +50,7 @@ class RmiExporter:
         self.exporter = exporter
         self.port_finder = port_finder
 
-    def export(self, service_name="remoterobot", service=DefaultLibraryImporter(), service_interface_name="org.robotframework.jvmconnector.server.LibraryImporter"):
+    def export(self, service_name, service, service_interface_name):
         self.exporter.setServiceName(service_name)
         port = self.port_finder.find_free_port()
         self.exporter.setRegistryPort(port)
@@ -64,6 +58,16 @@ class RmiExporter:
         self.exporter.setServiceInterface(self.java_class.forName(service_interface_name))
         self.exporter.prepare()
         self.rmi_url = "rmi://localhost:%s/%s" % (port, service_name)
+
+from org.robotframework.jvmconnector.server import LibraryImporter
+class DefaultLibraryImporter(LibraryImporter):
+    def __init__(self, rmi_exporter=RmiExporter()):
+        self.rmi_exporter = rmi_exporter
+
+    def import_library(self, libraryName):
+        pass
+        #self.rmi_exporter.export(libraryName)
+        #return self.rmi_exporter.rmi_url
 
 class RmiWrapper:
     def __init__(self, service_exporter=RmiExporter(), java_class=Class):

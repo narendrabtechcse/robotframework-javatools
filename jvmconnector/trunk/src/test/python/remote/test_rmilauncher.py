@@ -53,20 +53,10 @@ class TestRmiExporter(unittest.TestCase):
         self.port_finder = _StubPortFinder(self.free_port)
         self.exporter = RmiExporter(self.java_class, self.spring_exporter, self.port_finder)
 
-    def test_exports_default_service(self):
-        self.exporter.export()
-        self._assert_default_service_was_exported()
-
-    def test_exports_any_service(self):
+    def test_exports_services(self):
         self.exporter.export("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
         self._assert_service_was_exported("mylib", self.free_port, SimpleRobotRmiService, "org.robotframework.jvmconnector.server.RobotRmiService")
-
-    def test_gets_rmi_url(self):
-        self.exporter.export()
-        assert_equals("rmi://localhost:%s/remoterobot" % self.free_port, self.exporter.rmi_url)
-    
-    def _assert_default_service_was_exported(self):
-        self._assert_service_was_exported("remoterobot", self.free_port, DefaultLibraryImporter, "org.robotframework.jvmconnector.server.LibraryImporter")
+        assert_equals("rmi://localhost:%s/mylib" % self.free_port, self.exporter.rmi_url)
 
     def _assert_service_was_exported(self, expected_service_name, expected_registry_port, expected_service, expected_service_interface):
         assert_equals(expected_service_name, self.spring_exporter.service_name)
@@ -100,6 +90,12 @@ class TestFreePortFinder(unittest.TestCase):
         except: pass
         assert_true(self.socket.closed)
 
+class TestDefaultLibraryImporter(unittest.TestCase):
+    def test_imports_library(self):
+        library_importer = DefaultLibraryImporter(_FakeRmiExporter())
+        url = library_importer.import_library("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
+        #assert_equals("rmi://localhost:11099/myservice", url)
+
 class _FakeServerSocket:
     def __init__(self, port):
         self.port = port
@@ -113,8 +109,11 @@ class _FakeOperatingSystemLibrary:
         self.command = command
 
 class _FakeRmiExporter:
-    def export(self):
+    def export(self, service_name="", service=None, service_interface_name=""):
         self.export_was_invoked = True
+        self.service_name = service_name
+        self.service = service
+        self.service_interface_name = service_interface_name
 
 class _FakeJavaClass:
     def forName(self, name):
