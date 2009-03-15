@@ -39,10 +39,9 @@ class RemoteLibrary:
 
 
 from org.robotframework.jvmconnector.server import LibraryImporter
-class MyLibraryImporter(LibraryImporter):
+class DefaultLibraryImporter(LibraryImporter):
     def importLibrary(self, libraryName):
         "imported [%s]" % libraryName
-
 
 from java.net import ServerSocket
 class FreePortFinder:
@@ -57,7 +56,7 @@ class RmiExporter:
         self.exporter = exporter
         self.port_finder = port_finder
 
-    def export(self, service_name="remoterobot", service=MyLibraryImporter(), service_interface_name="org.robotframework.jvmconnector.server.LibraryImporter"):
+    def export(self, service_name="remoterobot", service=DefaultLibraryImporter(), service_interface_name="org.robotframework.jvmconnector.server.LibraryImporter"):
         self.exporter.setServiceName(service_name)
         port = self.port_finder.find_free_port()
         self.exporter.setRegistryPort(port)

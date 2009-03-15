@@ -66,7 +66,7 @@ class TestRmiExporter(unittest.TestCase):
         assert_equals("rmi://localhost:%s/remoterobot" % self.free_port, self.exporter.rmi_url)
     
     def _assert_default_service_was_exported(self):
-        self._assert_service_was_exported("remoterobot", self.free_port, MyLibraryImporter, "org.robotframework.jvmconnector.server.LibraryImporter")
+        self._assert_service_was_exported("remoterobot", self.free_port, DefaultLibraryImporter, "org.robotframework.jvmconnector.server.LibraryImporter")
 
     def _assert_service_was_exported(self, expected_service_name, expected_registry_port, expected_service, expected_service_interface):
         assert_equals(expected_service_name, self.spring_exporter.service_name)
