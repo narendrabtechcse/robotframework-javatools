@@ -48,7 +48,8 @@ class TestRmiExporter(unittest.TestCase):
     def setUp(self):
         self.java_class = _FakeJavaClass()
         self.spring_exporter = _FakeServiceExporter()
-        self.port_finder = _StubPortFinder(11099)
+        self.free_port = 11099
+        self.port_finder = _StubPortFinder(self.free_port)
         self.exporter = RmiExporter(self.java_class, self.spring_exporter, self.port_finder)
 
     def test_exports_default_service(self):
@@ -58,13 +59,16 @@ class TestRmiExporter(unittest.TestCase):
 
     def test_gets_rmi_url(self):
         self.exporter.export()
-        assert_equals("rmi://localhost:11099/remoterobot", self.exporter.rmi_url)
+        assert_equals("rmi://localhost:%s/remoterobot" % self.free_port, self.exporter.rmi_url)
     
     def _assert_default_service_was_exported(self):
-        assert_equals("remoterobot", self.spring_exporter.service_name)
-        assert_equals(11099, self.spring_exporter.registry_port)
-        assert_true(isinstance(self.spring_exporter.service, MyLibraryImporter))
-        assert_equals("org.robotframework.jvmconnector.server.LibraryImporter", self.java_class.name)
+        self._assert_service_was_exported("remoterobot", self.free_port, MyLibraryImporter, "org.robotframework.jvmconnector.server.LibraryImporter")
+
+    def _assert_service_was_exported(self, expected_service_name, expected_registry_port, expected_service, expected_service_interface):
+        assert_equals(expected_service_name, self.spring_exporter.service_name)
+        assert_equals(expected_registry_port, self.spring_exporter.registry_port)
+        assert_true(isinstance(self.spring_exporter.service, expected_service))
+        assert_equals(expected_service_interface, self.java_class.name)
         assert_true(self.spring_exporter.prepare_was_called)
     
 
