@@ -44,6 +44,7 @@ class TestRmiWrapper(unittest.TestCase):
         wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         assert_equals(["one", "two"], [i for i in SomeClass.args])
 
+from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 class TestRmiExporter(unittest.TestCase):
     def setUp(self):
         self.java_class = _FakeJavaClass()
@@ -56,6 +57,10 @@ class TestRmiExporter(unittest.TestCase):
         self.exporter.export()
 
         self._assert_default_service_was_exported()
+
+    def test_exports_any_service(self):
+        self.exporter.export("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
+        self._assert_service_was_exported("mylib", self.free_port, SimpleRobotRmiService, "org.robotframework.jvmconnector.server.RobotRmiService")
 
     def test_gets_rmi_url(self):
         self.exporter.export()
