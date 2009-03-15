@@ -97,4 +97,4 @@ class _StubPortFinder:
         self.port = port
 
     def find_free_port(self):
-        return port
+        return self.port

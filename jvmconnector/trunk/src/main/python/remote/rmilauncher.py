@@ -55,14 +55,14 @@ class FreePortFinder:
 
 from org.springframework.remoting.rmi import RmiServiceExporter
 class RmiExporter:
-    def __init__(self, java_class=Class, exporter=RmiServiceExporter(), free_port_finder=FreePortFinder()): #, rmi_url_communicator):
+    def __init__(self, java_class=Class, exporter=RmiServiceExporter(), port_finder=FreePortFinder()):
         self.java_class = java_class
         self.exporter = exporter
-        self.free_port_finder = free_port_finder
+        self.port_finder = port_finder
 
     def export(self, service_name="remoterobot", service=MyLibraryImporter(), service_interface_name="org.robotframework.jvmconnector.server.LibraryImporter"):
         self.exporter.setServiceName(service_name)
-        self.exporter.setRegistryPort(11099)
+        self.exporter.setRegistryPort(self.port_finder.find_free_port())
         self.exporter.setService(service)
         self.exporter.setServiceInterface(self.java_class.forName(service_interface_name))
         self.exporter.prepare()
