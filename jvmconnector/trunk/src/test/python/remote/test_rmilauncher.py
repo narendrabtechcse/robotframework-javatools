@@ -77,11 +77,18 @@ class TestRmiExporter(unittest.TestCase):
     
 from java.net import ServerSocket
 class TestFreePortFinder(unittest.TestCase):
+    def setUp(self):
+        self.port = 5555
+        self.socket = _FakeServerSocket(self.port)
+        self.port_finder = FreePortFinder()
+
     def test_finds_free_port(self):
-        socket = _FakeServerSocket(5555)
-        free_port = FreePortFinder().find_free_port(socket)
-        assert_equals(5555, free_port)
-        assert_true(socket.closed)
+        free_port = self.port_finder.find_free_port(self.socket)
+        assert_equals(self.port, free_port)
+
+    def test_closes_socket(self):
+        self.port_finder.find_free_port(self.socket)
+        assert_true(self.socket.closed)
 
 class _FakeServerSocket:
     def __init__(self, port):
