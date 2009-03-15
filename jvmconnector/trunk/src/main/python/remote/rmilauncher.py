@@ -46,12 +46,10 @@ class MyLibraryImporter(LibraryImporter):
 
 from java.net import ServerSocket
 class FreePortFinder:
-    def find_free_port(self):
-        try:
-            s = ServerSocket(0)
-            return s.getLocalPort()
-        finally:
-            s.close()
+    def find_free_port(self, socket=ServerSocket(0)):
+        port = socket.getLocalPort()
+        socket.close()
+        return port
 
 from org.springframework.remoting.rmi import RmiServiceExporter
 class RmiExporter:
@@ -74,7 +72,7 @@ class RmiWrapper:
         self.service_exporter = service_exporter
         self.java_class = java_class
 
-    def export_rmi_service_and_launch_application(self, application, args=None):
+    def export_rmi_service_and_launch_application(self, application, args):
         self.service_exporter.export()
         self.java_class.forName(application).main(args)
 
@@ -90,5 +88,5 @@ class RmiLauncher:
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
-        wrapper = MyRmiWrapper()
+        wrapper = RmiWrapper()
         wrapper.export_rmi_service_and_launch_application(sys.argv[1], sys.argv[2:])

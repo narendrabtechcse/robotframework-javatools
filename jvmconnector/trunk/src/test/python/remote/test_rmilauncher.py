@@ -55,7 +55,6 @@ class TestRmiExporter(unittest.TestCase):
 
     def test_exports_default_service(self):
         self.exporter.export()
-
         self._assert_default_service_was_exported()
 
     def test_exports_any_service(self):
@@ -76,6 +75,21 @@ class TestRmiExporter(unittest.TestCase):
         assert_equals(expected_service_interface, self.java_class.name)
         assert_true(self.spring_exporter.prepare_was_called)
     
+from java.net import ServerSocket
+class TestFreePortFinder(unittest.TestCase):
+    def test_finds_free_port(self):
+        socket = _FakeServerSocket(5555)
+        free_port = FreePortFinder().find_free_port(socket)
+        assert_equals(5555, free_port)
+        assert_true(socket.closed)
+
+class _FakeServerSocket:
+    def __init__(self, port):
+        self.port = port
+    def getLocalPort(self):
+        return self.port
+    def close(self):
+        self.closed = True
 
 class _FakeOperatingSystemLibrary:
     def start_process(self, command):
@@ -111,3 +125,7 @@ class _StubPortFinder:
 
     def find_free_port(self):
         return self.port
+
+
+if __name__ == '__main__':
+    unittest.main()
