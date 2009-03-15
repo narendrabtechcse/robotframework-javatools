@@ -47,9 +47,8 @@ class MyLibraryImporter(LibraryImporter):
 from java.net import ServerSocket
 class FreePortFinder:
     def find_free_port(self, socket=ServerSocket(0)):
-        port = socket.getLocalPort()
-        socket.close()
-        return port
+        try: return socket.getLocalPort()
+        finally: socket.close()
 
 from org.springframework.remoting.rmi import RmiServiceExporter
 class RmiExporter:

@@ -90,6 +90,16 @@ class TestFreePortFinder(unittest.TestCase):
         self.port_finder.find_free_port(self.socket)
         assert_true(self.socket.closed)
 
+    def test_closes_socket_when_exception_occurs(self):
+        def newGetLocalPort():
+            raise Exception
+
+        self.socket.getLocalPort = newGetLocalPort
+        try:
+            self.port_finder.find_free_port(self.socket)
+        except: pass
+        assert_true(self.socket.closed)
+
 class _FakeServerSocket:
     def __init__(self, port):
         self.port = port
