@@ -39,7 +39,7 @@ class TestRmiWrapper(unittest.TestCase):
         assert_equals(application, class_loader.name)
         assert_equals(["one", "two"], class_loader.main_args)
 
-    def test_loads_class_correctly(self):
+    def test_application_is_launched_by_invoking_java_classes_main_method(self):
         wrapper = RmiWrapper(self.rmi_exporter)
         wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         assert_equals(["one", "two"], [i for i in SomeClass.args])
@@ -76,11 +76,11 @@ class TestFreePortFinder(unittest.TestCase):
         free_port = self.port_finder.find_free_port(self.socket)
         assert_equals(self.port, free_port)
 
-    def test_closes_socket(self):
+    def test_frees_resources_after_port_is_found(self):
         self.port_finder.find_free_port(self.socket)
         assert_true(self.socket.closed)
 
-    def test_closes_socket_when_exception_occurs(self):
+    def test_frees_resources_even_in_case_of_error(self):
         def newGetLocalPort():
             raise Exception
 
@@ -95,7 +95,7 @@ class TestRemoteLibraryImporter(unittest.TestCase):
         rmi_exporter = _FakeMyRmiServiceExporter()
         classloader = _FakeClassLoader(SimpleRobotRmiService)
         library_importer = RemoteLibraryImporter(rmi_exporter, classloader)
-        url = library_importer.import_library("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
+        url = library_importer.importLibrary("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
 
         assert_true(rmi_exporter.export_was_invoked)
         assert_equals("orgrobotframeworkjvmconnectormocksMockJavaLibrary", rmi_exporter.service_name)

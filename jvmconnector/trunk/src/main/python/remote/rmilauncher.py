@@ -69,7 +69,7 @@ class RemoteLibraryImporter(LibraryImporter):
         self.rmi_exporter = rmi_exporter
         self.class_loader = class_loader
 
-    def import_library(self, libraryName):
+    def importLibrary(self, libraryName):
         service_name = re.sub('\.', '', libraryName)
         service = self.class_loader.forName(libraryName)()
         self.rmi_exporter.export(service_name, service, 'org.robotframework.jvmconnector.server.RobotRmiService')
