@@ -40,13 +40,15 @@ class RemoteLibrary:
 from java.net import ServerSocket
 class FreePortFinder:
     def find_free_port(self, socket=ServerSocket(0)):
-        try: return socket.getLocalPort()
-        finally: socket.close()
+        try:
+            return socket.getLocalPort()
+        finally:
+            socket.close()
 
 from org.springframework.remoting.rmi import RmiServiceExporter
-class RmiExporter:
-    def __init__(self, java_class=Class, exporter=RmiServiceExporter(), port_finder=FreePortFinder()):
-        self.java_class = java_class
+class MyRmiServiceExporter:
+    def __init__(self, class_loader=Class, exporter=RmiServiceExporter(), port_finder=FreePortFinder()):
+        self.class_loader = class_loader
         self.exporter = exporter
         self.port_finder = port_finder
 
@@ -55,28 +57,32 @@ class RmiExporter:
         port = self.port_finder.find_free_port()
         self.exporter.setRegistryPort(port)
         self.exporter.setService(service)
-        self.exporter.setServiceInterface(self.java_class.forName(service_interface_name))
+        self.exporter.setServiceInterface(self.class_loader.forName(service_interface_name))
         self.exporter.prepare()
         self.rmi_url = "rmi://localhost:%s/%s" % (port, service_name)
 
 from org.robotframework.jvmconnector.server import LibraryImporter
-class DefaultLibraryImporter(LibraryImporter):
-    def __init__(self, rmi_exporter=RmiExporter()):
+from org.robotframework.jvmconnector.server import SimpleRobotRmiService
+import re
+class RemoteLibraryImporter(LibraryImporter):
+    def __init__(self, rmi_exporter=MyRmiServiceExporter(), class_loader=Class):
         self.rmi_exporter = rmi_exporter
+        self.class_loader = class_loader
 
     def import_library(self, libraryName):
-        pass
-        #self.rmi_exporter.export(libraryName)
-        #return self.rmi_exporter.rmi_url
+        service_name = re.sub('\.', '', libraryName)
+        service = self.class_loader.forName(libraryName)()
+        self.rmi_exporter.export(service_name, service, 'org.robotframework.jvmconnector.server.RobotRmiService')
+        return self.rmi_exporter.rmi_url
 
 class RmiWrapper:
-    def __init__(self, service_exporter=RmiExporter(), java_class=Class):
+    def __init__(self, service_exporter=MyRmiServiceExporter(), class_loader=Class):
         self.service_exporter = service_exporter
-        self.java_class = java_class
+        self.class_loader = class_loader
 
     def export_rmi_service_and_launch_application(self, application, args):
         self.service_exporter.export()
-        self.java_class.forName(application).main(args)
+        self.class_loader.forName(application).main(args)
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from os import pathsep

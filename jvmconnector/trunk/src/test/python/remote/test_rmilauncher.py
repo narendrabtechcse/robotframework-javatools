@@ -28,16 +28,16 @@ class TestRmiLauncher(unittest.TestCase):
 from org.robotframework.jvmconnector.mocks import SomeClass
 class TestRmiWrapper(unittest.TestCase):
     def setUp(self):
-        self.rmi_exporter = _FakeRmiExporter()
+        self.rmi_exporter = _FakeMyRmiServiceExporter()
 
     def test_exports_rmi_service_and_launches_application(self):
-        java_class = _FakeJavaClass()
-        wrapper = RmiWrapper(self.rmi_exporter, java_class)
+        class_loader = _FakeClassLoader()
+        wrapper = RmiWrapper(self.rmi_exporter, class_loader)
         wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         
         assert_true(self.rmi_exporter.export_was_invoked)
-        assert_equals(application, java_class.name)
-        assert_equals(["one", "two"], java_class.main_args)
+        assert_equals(application, class_loader.name)
+        assert_equals(["one", "two"], class_loader.main_args)
 
     def test_loads_class_correctly(self):
         wrapper = RmiWrapper(self.rmi_exporter)
@@ -45,13 +45,13 @@ class TestRmiWrapper(unittest.TestCase):
         assert_equals(["one", "two"], [i for i in SomeClass.args])
 
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
-class TestRmiExporter(unittest.TestCase):
+class TestMyRmiServiceExporter(unittest.TestCase):
     def setUp(self):
-        self.java_class = _FakeJavaClass()
+        self.class_loader = _FakeClassLoader()
         self.spring_exporter = _FakeServiceExporter()
         self.free_port = 11099
         self.port_finder = _StubPortFinder(self.free_port)
-        self.exporter = RmiExporter(self.java_class, self.spring_exporter, self.port_finder)
+        self.exporter = MyRmiServiceExporter(self.class_loader, self.spring_exporter, self.port_finder)
 
     def test_exports_services(self):
         self.exporter.export("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
@@ -62,7 +62,7 @@ class TestRmiExporter(unittest.TestCase):
         assert_equals(expected_service_name, self.spring_exporter.service_name)
         assert_equals(expected_registry_port, self.spring_exporter.registry_port)
         assert_true(isinstance(self.spring_exporter.service, expected_service))
-        assert_equals(expected_service_interface, self.java_class.name)
+        assert_equals(expected_service_interface, self.class_loader.name)
         assert_true(self.spring_exporter.prepare_was_called)
     
 from java.net import ServerSocket
@@ -90,11 +90,18 @@ class TestFreePortFinder(unittest.TestCase):
         except: pass
         assert_true(self.socket.closed)
 
-class TestDefaultLibraryImporter(unittest.TestCase):
+class TestRemoteLibraryImporter(unittest.TestCase):
     def test_imports_library(self):
-        library_importer = DefaultLibraryImporter(_FakeRmiExporter())
+        rmi_exporter = _FakeMyRmiServiceExporter()
+        classloader = _FakeClassLoader(SimpleRobotRmiService)
+        library_importer = RemoteLibraryImporter(rmi_exporter, classloader)
         url = library_importer.import_library("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
-        #assert_equals("rmi://localhost:11099/myservice", url)
+
+        assert_true(rmi_exporter.export_was_invoked)
+        assert_equals("orgrobotframeworkjvmconnectormocksMockJavaLibrary", rmi_exporter.service_name)
+        assert_true(isinstance(rmi_exporter.service, SimpleRobotRmiService))
+        assert_equals("org.robotframework.jvmconnector.server.RobotRmiService", rmi_exporter.service_interface_name)
+        assert_equals("rmi://localhost:11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary", url)
 
 class _FakeServerSocket:
     def __init__(self, port):
@@ -108,17 +115,21 @@ class _FakeOperatingSystemLibrary:
     def start_process(self, command):
         self.command = command
 
-class _FakeRmiExporter:
+class _FakeMyRmiServiceExporter:
     def export(self, service_name="", service=None, service_interface_name=""):
         self.export_was_invoked = True
         self.service_name = service_name
         self.service = service
         self.service_interface_name = service_interface_name
+        self.rmi_url = "rmi://localhost:11099/%s" % service_name
 
-class _FakeJavaClass:
+class _FakeClassLoader:
+    def __init__(self, class_=None):
+        self.class_ = class_ or self
+
     def forName(self, name):
         self.name = name
-        return self 
+        return self.class_
 
     def main(self, args):
         self.main_args = args
@@ -141,7 +152,6 @@ class _StubPortFinder:
 
     def find_free_port(self):
         return self.port
-
 
 if __name__ == '__main__':
     unittest.main()
