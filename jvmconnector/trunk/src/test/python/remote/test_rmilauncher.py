@@ -28,7 +28,7 @@ class TestRmiLauncher(unittest.TestCase):
 from org.robotframework.jvmconnector.mocks import SomeClass
 class TestRmiWrapper(unittest.TestCase):
     def setUp(self):
-        self.rmi_exporter = _FakeMyRmiServiceExporter()
+        self.rmi_exporter = _FakeMyRmiServicePublisher()
 
     def test_exports_rmi_service_and_launches_application(self):
         class_loader = _FakeClassLoader()
@@ -45,16 +45,16 @@ class TestRmiWrapper(unittest.TestCase):
         assert_equals(["one", "two"], [i for i in SomeClass.args])
 
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
-class TestMyRmiServiceExporter(unittest.TestCase):
+class TestMyRmiServicePublisher(unittest.TestCase):
     def setUp(self):
         self.class_loader = _FakeClassLoader()
-        self.spring_exporter = _FakeServiceExporter()
+        self.spring_exporter = _FakeServicePublisher()
         self.free_port = 11099
         self.port_finder = _StubPortFinder(self.free_port)
-        self.exporter = MyRmiServiceExporter(self.class_loader, self.spring_exporter, self.port_finder)
+        self.exporter = MyRmiServicePublisher(self.class_loader, self.spring_exporter, self.port_finder)
 
     def test_exports_services(self):
-        self.exporter.export("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
+        self.exporter.publish("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
         self._assert_service_was_exported("mylib", self.free_port, SimpleRobotRmiService, "org.robotframework.jvmconnector.server.RobotRmiService")
         assert_equals("rmi://localhost:%s/mylib" % self.free_port, self.exporter.rmi_url)
 
@@ -92,7 +92,7 @@ class TestFreePortFinder(unittest.TestCase):
 
 class TestRemoteLibraryImporter(unittest.TestCase):
     def test_imports_library(self):
-        rmi_exporter = _FakeMyRmiServiceExporter()
+        rmi_exporter = _FakeMyRmiServicePublisher()
         classloader = _FakeClassLoader(SimpleRobotRmiService)
         library_importer = RemoteLibraryImporter(rmi_exporter, classloader)
         url = library_importer.importLibrary("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
@@ -115,8 +115,8 @@ class _FakeOperatingSystemLibrary:
     def start_process(self, command):
         self.command = command
 
-class _FakeMyRmiServiceExporter:
-    def export(self, service_name="", service=None, service_interface_name=""):
+class _FakeMyRmiServicePublisher:
+    def publish(self, service_name="", service=None, service_interface_name=""):
         self.export_was_invoked = True
         self.service_name = service_name
         self.service = service
@@ -134,7 +134,7 @@ class _FakeClassLoader:
     def main(self, args):
         self.main_args = args
 
-class _FakeServiceExporter:
+class _FakeServicePublisher:
     def setServiceName(self, service_name):
         self.service_name = service_name
     def setRegistryPort(self, registry_port):
