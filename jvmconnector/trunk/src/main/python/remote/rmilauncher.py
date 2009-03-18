@@ -62,17 +62,22 @@ class MyRmiServicePublisher:
         self.rmi_url = "rmi://localhost:%s/%s" % (port, service_name)
 
 class LibraryDb:
-    pass
+    def __init__(self, path):
+        self.path = path
+
+    def store(self, application, url):
+        file = open(self.path, 'w')
+        file.write("%s:0:%s" % (application, url))
+        file.close()
 
 class LibraryImporterPublisher:
     def __init__(self, my_rmi_service_publisher=MyRmiServicePublisher(), library_db=LibraryDb):
         self.my_rmi_service_publisher = my_rmi_service_publisher
         self.library_db = library_db
 
-    #todo: takes the communication file name as parameter and writes the rmi service url to it
     def publish(self, application):
         self.my_rmi_service_publisher.publish("robotrmiservice", RemoteLibraryImporter(), "org.robotframework.jvmconnector.server.LibraryImporter")
-        self.library_db.store(self.db_path, application)
+        self.library_db.store(application, self.my_rmi_service_publisher.rmi_url)
 
 from org.robotframework.jvmconnector.server import LibraryImporter
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
@@ -89,13 +94,12 @@ class RemoteLibraryImporter(LibraryImporter):
         return self.rmi_publisher.rmi_url
 
 class RmiWrapper:
-    def __init__(self, library_db_path, remote_library_importer=LibraryImporterPublisher(), class_loader=Class):
-        remote_library_importer.db_path = library_db_path
-        self.remote_library_importer = remote_library_importer
-        self.class_loader = class_loader
+    def __init__(self, library_importer_publisher):
+        self.library_importer_publisher = library_importer_publisher
+        self.class_loader = Class
 
     def export_rmi_service_and_launch_application(self, application, args):
-        self.remote_library_importer.publish(application)
+        self.library_importer_publisher.publish(application)
         self.class_loader.forName(application).main(args)
 
 from robot.libraries.OperatingSystem import OperatingSystem
@@ -121,5 +125,6 @@ class RmiLauncher:
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
-        wrapper = RmiWrapper()
-        wrapper.export_rmi_service_and_launch_application(sys.argv[1], sys.argv[2:])
+        db = LibraryDb(sys.argv[1])
+        wrapper = RmiWrapper(LibraryImporterPublisher(db))
+        wrapper.export_rmi_service_and_launch_application(sys.argv[2], sys.argv[2:])

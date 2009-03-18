@@ -32,21 +32,19 @@ from org.robotframework.jvmconnector.mocks import SomeClass
 class TestRmiWrapper(unittest.TestCase):
     def setUp(self):
         self.library_importer_publisher = _FakePublisher()
-        self.db_path = "/tmp/library.db"
+        self.wrapper = RmiWrapper(self.library_importer_publisher)
 
     def test_exports_rmi_service_and_launches_application(self):
         class_loader = _FakeClassLoader()
-        wrapper = RmiWrapper(self.db_path, self.library_importer_publisher, class_loader)
-        wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
+        self.wrapper.class_loader = class_loader
+        self.wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         
-        assert_equals(self.db_path, self.library_importer_publisher.db_path)
         assert_equals(application, self.library_importer_publisher.application)
         assert_equals(application, class_loader.name)
         assert_equals(["one", "two"], class_loader.main_args)
 
     def test_application_is_launched_by_invoking_java_classes_main_method(self):
-        wrapper = RmiWrapper(self.db_path, self.library_importer_publisher)
-        wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
+        self.wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         assert_equals(application, self.library_importer_publisher.application)
         assert_equals(["one", "two"], [i for i in SomeClass.args])
 
@@ -112,9 +110,8 @@ class TestRemoteLibraryImporter(unittest.TestCase):
 class TestLibraryImporterPublisher(unittest.TestCase):
     def test_exports_remote_library_publisher(self):
         rmi_publisher = _FakeMyRmiServicePublisher()
-        library_db = _FakeLibraryDb()
+        library_db = _FakeLibraryDb("path/to/db")
         library_importer_publisher = LibraryImporterPublisher(rmi_publisher, library_db)
-        library_importer_publisher.db_path = "path/to/db"
         library_importer_publisher.publish(application)
 
         assert_true(rmi_publisher.publish_was_invoked)
@@ -123,11 +120,51 @@ class TestLibraryImporterPublisher(unittest.TestCase):
         assert_equals("org.robotframework.jvmconnector.server.LibraryImporter", rmi_publisher.service_interface_name)
         assert_equals("path/to/db", library_db.db_path)
         assert_equals(application, library_db.application)
+        assert_equals(rmi_publisher.rmi_url, library_db.rmi_url)
+
+import __builtin__
+class TestLibaryDb(unittest.TestCase):
+    original_open = __builtin__.open
+
+    def setUp(self):
+        self.file = _FakeFile()
+
+    def test_stores_applications_rmi_url(self):
+        db = LibraryDb("path/to/db")
+        self._replace_open()
+        try:
+            db.store(application, "rmi://someurl")
+        finally:
+            self._restore_open()
+
+        assert_equals("path/to/db", self.path)
+        assert_equals("w", self.mode)
+        assert_equals("%s:0:rmi://someurl" % (application) , self.file.txt)
+        assert_true(self.file.closed)
+
+    def _restore_open(self):
+        __builtin__.open = self.original_open
+        
+    def _replace_open(self):
+        def fake_open(path, mode):
+            self.path = path
+            self.mode = mode
+            return self.file
+        __builtin__.open = fake_open
+        
+class _FakeFile:
+    def write(self, txt):
+        self.txt = txt
+    def close(self):
+        self.closed = True
 
 class _FakeLibraryDb:
-    def store(self, db_path, application):
+    def __init__(self, db_path):
         self.db_path = db_path
+
+    def store(self, application, rmi_url):
         self.application = application
+        self.rmi_url = rmi_url
 
 class _FakeServerSocket:
     def __init__(self, port):
