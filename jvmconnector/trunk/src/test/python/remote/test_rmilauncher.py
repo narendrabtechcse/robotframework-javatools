@@ -7,20 +7,34 @@ from rmilauncher import *
 application = "org.robotframework.jvmconnector.mocks.SomeClass"
 
 class TestRmiLauncher(unittest.TestCase):
-    def test_starts_application(self):
-        os_library = _FakeOperatingSystemLibrary()
-        rmi_launcher = RmiLauncher(os_library)
-        rmi_launcher.start_application(application)
-        
-        assert_equals(self._get_expected_command(), os_library.command)
-
     def test_is_global_library(self):
         assert_equals('GLOBAL', getattr(RmiLauncher, 'ROBOT_LIBRARY_SCOPE'))
 
-    def _get_expected_command(self):
+    def test_has_path_to_db(self):
+        db_path1 = RmiLauncher().db_path
+        db_path2 = RmiLauncher().db_path
+        os.path.exists(db_path1)
+        os.path.exists(db_path2)
+        assert_not_equals(db_path1, db_path2)
+
+class TestRmiLauncherStartingApplication(unittest.TestCase):
+    def setUp(self):
+        self.os_library = _FakeOperatingSystemLibrary()
+        self.rmi_launcher = RmiLauncher(self.os_library)
+        self.rmi_launcher.db_path = '/tempfile'
+
+    def test_starts_application(self):
+        self.rmi_launcher.start_application(application)
+        assert_equals(self._get_expected_command(), self.os_library.command)
+
+    def tests_passes_arguments(self):
+        self.rmi_launcher.start_application(application, 'one two three', '-Done=two -Dthree=four')
+        assert_equals(self._get_expected_command('one two three', '-Done=two -Dthree=four'), self.os_library.command)
+
+    def _get_expected_command(self, args='', jvm_args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
-        return "jython -Dpython.path=%s %s %s" % (current_pythonpath, script_path, application)
+        return "jython -Dpython.path=%s %s %s /tempfile %s %s" % (current_pythonpath, jvm_args, script_path, application, args)
 
     def _get_current_pythonpath(self):
         return os.pathsep.join(sys.path)
@@ -141,8 +155,6 @@ class TestLibaryDb(unittest.TestCase):
         assert_equals("w", self.mode)
         assert_equals("%s:0:11111/someservice" % (application) , self.file.txt)
         assert_true(self.file.closed)
-    
-    #def test_
 
     def _restore_open(self):
         __builtin__.open = self.original_open

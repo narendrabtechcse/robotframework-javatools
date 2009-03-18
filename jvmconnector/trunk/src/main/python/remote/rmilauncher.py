@@ -104,18 +104,17 @@ class RmiWrapper:
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from os import pathsep
+from tempfile import mktemp
 class RmiLauncher:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self, os_library=OperatingSystem()):
         self.os_library = os_library
+        self.db_path = mktemp('.robot-rmi-launcher')
 
-    #todo: - handle args and jvm args
-    #      - passes the communication file name as argument to the new process
-    #      - communication file generation: tempfile.mktemp('.robot-rmi-launcher')
-    def start_application(self, application):
+    def start_application(self, application, args='', jvm_args=''):
         pythonpath = pathsep.join(sys.path)
-        self.os_library.start_process("jython -Dpython.path=%s %s %s" % (pythonpath, __file__, application))
+        self.os_library.start_process("jython -Dpython.path=%s %s %s %s %s %s" % (pythonpath, jvm_args, __file__, self.db_path, application, args))
     
     #todo: - use something like RemoteLibrary's open_connection and the rmi url
     #        from the communication file here
