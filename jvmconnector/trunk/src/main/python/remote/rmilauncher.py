@@ -84,8 +84,8 @@ class RemoteLibraryImporter(LibraryImporter):
         return self.rmi_publisher.rmi_url
 
 class RmiWrapper:
-    #todo: mediates the communication file name to the remote_library_importer
     def __init__(self, library_db_path, remote_library_importer=LibraryImporterPublisher(), class_loader=Class):
+        remote_library_importer.db_path = library_db_path
         self.remote_library_importer = remote_library_importer
         self.class_loader = class_loader
 

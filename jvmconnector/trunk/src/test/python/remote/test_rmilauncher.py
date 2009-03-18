@@ -40,6 +40,7 @@ class TestRmiWrapper(unittest.TestCase):
         wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         
         assert_true(self.library_importer_publisher.publish_was_invoked)
+        assert_equals(self.db_path, self.library_importer_publisher.db_path)
         assert_equals(application, class_loader.name)
         assert_equals(["one", "two"], class_loader.main_args)
 
@@ -136,9 +137,9 @@ class _FakePublisher:
     def publish(self):
         self.publish_was_invoked = True
 
-class _FakeMyRmiServicePublisher(_FakePublisher):
+class _FakeMyRmiServicePublisher:
     def publish(self, service_name="", service=None, service_interface_name=""):
-        _FakePublisher.publish(self)
+        self.publish_was_invoked = True
         self.service_name = service_name
         self.service = service
         self.service_interface_name = service_interface_name
