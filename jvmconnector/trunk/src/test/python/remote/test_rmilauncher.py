@@ -113,17 +113,21 @@ class TestLibraryImporterPublisher(unittest.TestCase):
     def test_exports_remote_library_publisher(self):
         rmi_publisher = _FakeMyRmiServicePublisher()
         library_db = _FakeLibraryDb()
-        service_publisher = LibraryImporterPublisher(rmi_publisher, library_db)
-        service_publisher.publish(application)
+        library_importer_publisher = LibraryImporterPublisher(rmi_publisher, library_db)
+        library_importer_publisher.db_path = "path/to/db"
+        library_importer_publisher.publish(application)
 
         assert_true(rmi_publisher.publish_was_invoked)
         assert_equals("robotrmiservice", rmi_publisher.service_name)
         assert_true(isinstance(rmi_publisher.service, RemoteLibraryImporter))
         assert_equals("org.robotframework.jvmconnector.server.LibraryImporter", rmi_publisher.service_interface_name)
-        #assert_equals("rmi://localhost:11099/robotrmiservice", url)
+        assert_equals("path/to/db", library_db.db_path)
+        assert_equals(application, library_db.application)
 
 class _FakeLibraryDb:
-    pass
+    def store(self, db_path, application):
+        self.db_path = db_path
+        self.application = application
 
 class _FakeServerSocket:
     def __init__(self, port):

@@ -57,6 +57,7 @@ def add_dependencies_to_path():
     os.environ['CLASSPATH'] = os.pathsep.join(dependencies)
 
 if __name__ == '__main__':
+    rc = 0
     if os.name == 'java':
         tests = get_tests(".")
         suite = unittest.TestSuite(tests)
@@ -64,7 +65,8 @@ if __name__ == '__main__':
         result = runner.run(suite)
         rc = len(result.failures) + len(result.errors)
         if rc > 250: rc = 250
-        sys.exit(rc)
     else:
         add_dependencies_to_path()
-        os.system("jython %s" % __file__)
+        rc = os.system("jython %s" % __file__)
+
+    sys.exit(rc)

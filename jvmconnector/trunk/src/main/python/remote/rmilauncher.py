@@ -65,12 +65,14 @@ class LibraryDb:
     pass
 
 class LibraryImporterPublisher:
-    def __init__(self, my_rmi_service_publisher=MyRmiServicePublisher(), library_db=LibraryDb()):
+    def __init__(self, my_rmi_service_publisher=MyRmiServicePublisher(), library_db=LibraryDb):
         self.my_rmi_service_publisher = my_rmi_service_publisher
+        self.library_db = library_db
 
     #todo: takes the communication file name as parameter and writes the rmi service url to it
     def publish(self, application):
         self.my_rmi_service_publisher.publish("robotrmiservice", RemoteLibraryImporter(), "org.robotframework.jvmconnector.server.LibraryImporter")
+        self.library_db.store(self.db_path, application)
 
 from org.robotframework.jvmconnector.server import LibraryImporter
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
