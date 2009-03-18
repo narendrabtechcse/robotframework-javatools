@@ -59,15 +59,15 @@ class MyRmiServicePublisher:
         self.exporter.setService(service)
         self.exporter.setServiceInterface(self.class_loader.forName(service_interface_name))
         self.exporter.prepare()
-        self.rmi_url = "rmi://localhost:%s/%s" % (port, service_name)
+        self.rmi_info = "rmi://localhost:%s/%s" % (port, service_name)
 
 class LibraryDb:
     def __init__(self, path):
         self.path = path
 
-    def store(self, application, url):
+    def store(self, application, rmi_info):
         file = open(self.path, 'w')
-        file.write("%s:0:%s" % (application, url))
+        file.write("%s:0:%s" % (application, rmi_info))
         file.close()
 
 class LibraryImporterPublisher:
@@ -77,7 +77,7 @@ class LibraryImporterPublisher:
 
     def publish(self, application):
         self.my_rmi_service_publisher.publish("robotrmiservice", RemoteLibraryImporter(), "org.robotframework.jvmconnector.server.LibraryImporter")
-        self.library_db.store(application, self.my_rmi_service_publisher.rmi_url)
+        self.library_db.store(application, self.my_rmi_service_publisher.rmi_info)
 
 from org.robotframework.jvmconnector.server import LibraryImporter
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
@@ -91,7 +91,7 @@ class RemoteLibraryImporter(LibraryImporter):
         service_name = re.sub('\.', '', library_name)
         service = self.class_loader.forName(library_name)()
         self.rmi_publisher.publish(service_name, service, 'org.robotframework.jvmconnector.server.RobotRmiService')
-        return self.rmi_publisher.rmi_url
+        return self.rmi_publisher.rmi_info
 
 class RmiWrapper:
     def __init__(self, library_importer_publisher):
@@ -112,6 +112,7 @@ class RmiLauncher:
 
     #todo: - handle args and jvm args
     #      - passes the communication file name as argument to the new process
+    #      - communication file generation: tempfile.mktemp('.robot-rmi-launcher')
     def start_application(self, application):
         pythonpath = pathsep.join(sys.path)
         self.os_library.start_process("jython -Dpython.path=%s %s %s" % (pythonpath, __file__, application))

@@ -60,7 +60,7 @@ class TestMyRmiServicePublisher(unittest.TestCase):
     def test_exports_services(self):
         self.publisher.publish("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
         self._assert_service_was_exported("mylib", self.free_port, SimpleRobotRmiService, "org.robotframework.jvmconnector.server.RobotRmiService")
-        assert_equals("rmi://localhost:%s/mylib" % self.free_port, self.publisher.rmi_url)
+        assert_equals("rmi://localhost:%s/mylib" % self.free_port, self.publisher.rmi_info)
 
     def _assert_service_was_exported(self, expected_service_name, expected_registry_port, expected_service, expected_service_interface):
         assert_equals(expected_service_name, self.spring_publisher.service_name)
@@ -99,13 +99,13 @@ class TestRemoteLibraryImporter(unittest.TestCase):
         rmi_publisher = _FakeMyRmiServicePublisher()
         classloader = _FakeClassLoader(SimpleRobotRmiService)
         library_importer = RemoteLibraryImporter(rmi_publisher, classloader)
-        url = library_importer.importLibrary("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
+        rmi_info = library_importer.importLibrary("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
 
         assert_true(rmi_publisher.publish_was_invoked)
         assert_equals("orgrobotframeworkjvmconnectormocksMockJavaLibrary", rmi_publisher.service_name)
         assert_true(isinstance(rmi_publisher.service, SimpleRobotRmiService))
         assert_equals("org.robotframework.jvmconnector.server.RobotRmiService", rmi_publisher.service_interface_name)
-        assert_equals("rmi://localhost:11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary", url)
+        assert_equals("11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary", rmi_info)
 
 class TestLibraryImporterPublisher(unittest.TestCase):
     def test_exports_remote_library_publisher(self):
@@ -120,7 +120,7 @@ class TestLibraryImporterPublisher(unittest.TestCase):
         assert_equals("org.robotframework.jvmconnector.server.LibraryImporter", rmi_publisher.service_interface_name)
         assert_equals("path/to/db", library_db.db_path)
         assert_equals(application, library_db.application)
-        assert_equals(rmi_publisher.rmi_url, library_db.rmi_url)
+        assert_equals(rmi_publisher.rmi_info, library_db.rmi_info)
 
 import __builtin__
 class TestLibaryDb(unittest.TestCase):
@@ -129,18 +129,20 @@ class TestLibaryDb(unittest.TestCase):
     def setUp(self):
         self.file = _FakeFile()
 
-    def test_stores_applications_rmi_url(self):
+    def test_stores_applications_rmi_info(self):
         db = LibraryDb("path/to/db")
         self._replace_open()
         try:
-            db.store(application, "rmi://someurl")
+            db.store(application, "11111/someservice")
         finally:
             self._restore_open()
 
         assert_equals("path/to/db", self.path)
         assert_equals("w", self.mode)
-        assert_equals("%s:0:rmi://someurl" % (application) , self.file.txt)
+        assert_equals("%s:0:11111/someservice" % (application) , self.file.txt)
         assert_true(self.file.closed)
+    
+    #def test_
 
     def _restore_open(self):
         __builtin__.open = self.original_open
@@ -162,9 +164,9 @@ class _FakeLibraryDb:
     def __init__(self, db_path):
         self.db_path = db_path
 
-    def store(self, application, rmi_url):
+    def store(self, application, rmi_info):
         self.application = application
-        self.rmi_url = rmi_url
+        self.rmi_info = rmi_info
 
 class _FakeServerSocket:
     def __init__(self, port):
@@ -188,7 +190,7 @@ class _FakeMyRmiServicePublisher:
         self.service_name = service_name
         self.service = service
         self.service_interface_name = service_interface_name
-        self.rmi_url = "rmi://localhost:11099/%s" % service_name
+        self.rmi_info = "11099/%s" % service_name
 
 class _FakeClassLoader:
     def __init__(self, class_=None):
