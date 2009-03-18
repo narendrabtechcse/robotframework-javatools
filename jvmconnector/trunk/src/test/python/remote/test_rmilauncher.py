@@ -39,15 +39,15 @@ class TestRmiWrapper(unittest.TestCase):
         wrapper = RmiWrapper(self.db_path, self.library_importer_publisher, class_loader)
         wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
         
-        assert_true(self.library_importer_publisher.publish_was_invoked)
         assert_equals(self.db_path, self.library_importer_publisher.db_path)
+        assert_equals(application, self.library_importer_publisher.application)
         assert_equals(application, class_loader.name)
         assert_equals(["one", "two"], class_loader.main_args)
 
     def test_application_is_launched_by_invoking_java_classes_main_method(self):
         wrapper = RmiWrapper(self.db_path, self.library_importer_publisher)
         wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
-        assert_true(self.library_importer_publisher.publish_was_invoked)
+        assert_equals(application, self.library_importer_publisher.application)
         assert_equals(["one", "two"], [i for i in SomeClass.args])
 
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
@@ -112,14 +112,18 @@ class TestRemoteLibraryImporter(unittest.TestCase):
 class TestLibraryImporterPublisher(unittest.TestCase):
     def test_exports_remote_library_publisher(self):
         rmi_publisher = _FakeMyRmiServicePublisher()
-        service_publisher = LibraryImporterPublisher(rmi_publisher)
-        service_publisher.publish()
+        library_db = _FakeLibraryDb()
+        service_publisher = LibraryImporterPublisher(rmi_publisher, library_db)
+        service_publisher.publish(application)
 
         assert_true(rmi_publisher.publish_was_invoked)
         assert_equals("robotrmiservice", rmi_publisher.service_name)
         assert_true(isinstance(rmi_publisher.service, RemoteLibraryImporter))
         assert_equals("org.robotframework.jvmconnector.server.LibraryImporter", rmi_publisher.service_interface_name)
         #assert_equals("rmi://localhost:11099/robotrmiservice", url)
+
+class _FakeLibraryDb:
+    pass
 
 class _FakeServerSocket:
     def __init__(self, port):
@@ -134,8 +138,8 @@ class _FakeOperatingSystemLibrary:
         self.command = command
 
 class _FakePublisher:
-    def publish(self):
-        self.publish_was_invoked = True
+    def publish(self, application):
+        self.application = application
 
 class _FakeMyRmiServicePublisher:
     def publish(self, service_name="", service=None, service_interface_name=""):

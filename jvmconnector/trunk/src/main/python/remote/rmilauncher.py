@@ -61,12 +61,15 @@ class MyRmiServicePublisher:
         self.exporter.prepare()
         self.rmi_url = "rmi://localhost:%s/%s" % (port, service_name)
 
+class LibraryDb:
+    pass
+
 class LibraryImporterPublisher:
-    def __init__(self, my_rmi_service_publisher=MyRmiServicePublisher()):
+    def __init__(self, my_rmi_service_publisher=MyRmiServicePublisher(), library_db=LibraryDb()):
         self.my_rmi_service_publisher = my_rmi_service_publisher
 
     #todo: takes the communication file name as parameter and writes the rmi service url to it
-    def publish(self):
+    def publish(self, application):
         self.my_rmi_service_publisher.publish("robotrmiservice", RemoteLibraryImporter(), "org.robotframework.jvmconnector.server.LibraryImporter")
 
 from org.robotframework.jvmconnector.server import LibraryImporter
@@ -90,7 +93,7 @@ class RmiWrapper:
         self.class_loader = class_loader
 
     def export_rmi_service_and_launch_application(self, application, args):
-        self.remote_library_importer.publish()
+        self.remote_library_importer.publish(application)
         self.class_loader.forName(application).main(args)
 
 from robot.libraries.OperatingSystem import OperatingSystem
