@@ -168,30 +168,25 @@ class TestLibaryDb(unittest.TestCase):
 
     def setUp(self):
         self.file = _FakeFile()
+        self.builtin = _FakeBuiltin(self.file)
 
     def test_stores_applications_rmi_info(self):
-        db = LibraryDb("path/to/db")
-        self._replace_open()
-        try:
-            db.store(application, "11111/someservice")
-        finally:
-            self._restore_open()
+        db = LibraryDb("path/to/db", self.builtin)
+        db.store(application, "11111/someservice")
 
-        assert_equals("path/to/db", self.path)
-        assert_equals("w", self.mode)
+        assert_equals("path/to/db", self.builtin.path)
+        assert_equals('w+', self.builtin.mode)
         assert_equals("%s:0:11111/someservice" % (application) , self.file.txt)
         assert_true(self.file.closed)
+        
+class _FakeBuiltin:
+    def __init__(self, file):
+        self.file = file
+    def open(self, path, mode):
+        self.path = path
+        self.mode = mode
+        return self.file
 
-    def _restore_open(self):
-        __builtin__.open = self.original_open
-        
-    def _replace_open(self):
-        def fake_open(path, mode):
-            self.path = path
-            self.mode = mode
-            return self.file
-        __builtin__.open = fake_open
-        
 class _FakeFile:
     def write(self, txt):
         self.txt = txt

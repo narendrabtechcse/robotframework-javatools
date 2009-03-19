@@ -64,12 +64,14 @@ class MyRmiServicePublisher:
         self.exporter.prepare()
         self.rmi_info = "rmi://localhost:%s/%s" % (port, service_name)
 
+import __builtin__
 class LibraryDb:
-    def __init__(self, path):
+    def __init__(self, path, fileutil=__builtin__):
         self.path = path
+        self.fileutil = fileutil
 
     def store(self, application, rmi_info):
-        file = open(self.path, 'w')
+        file = self.fileutil.open(self.path, 'w+')
         file.write("%s:0:%s" % (application, rmi_info))
         file.close()
 
