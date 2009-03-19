@@ -28,19 +28,27 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         assert_equals(self._get_expected_command(), self.os_library.command)
 
     def tests_passes_arguments(self):
-        self.rmi_launcher.start_application(application, 'one two three', '-Done=two -Dthree=four')
-        assert_equals(self._get_expected_command('one two three', '-Done=two -Dthree=four'), self.os_library.command)
+        self.rmi_launcher.start_application(application,
+                                            'one two three',
+                                            '-Done=two -Dthree=four')
+        expected_command = self._get_expected_command('one two three',
+                                                      '-Done=two -Dthree=four')
+
+        assert_equals(expected_command, self.os_library.command)
 
     def _get_expected_command(self, args='', jvm_args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
-        return "jython -Dpython.path=%s %s %s /tempfile %s %s" % (current_pythonpath, jvm_args, script_path, application, args)
+        template = "jython -Dpython.path=%s %s %s /tempfile %s %s"
+        return template % (current_pythonpath, jvm_args, script_path,
+                           application, args)
 
     def _get_current_pythonpath(self):
         return os.pathsep.join(sys.path)
 
     def _get_path_to_script(self):
-        return "%s/src/main/python/remote/rmilauncher.py" % os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
+        base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
+        return "%s/src/main/python/remote/rmilauncher.py" % base
 
 from org.robotframework.jvmconnector.mocks import SomeClass
 class TestRmiWrapper(unittest.TestCase):
@@ -51,16 +59,18 @@ class TestRmiWrapper(unittest.TestCase):
     def test_exports_rmi_service_and_launches_application(self):
         class_loader = _FakeClassLoader()
         self.wrapper.class_loader = class_loader
-        self.wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
+        args = ["one", "two"]
+        self.wrapper.export_rmi_service_and_launch_application(application, args)
         
         assert_equals(application, self.library_importer_publisher.application)
         assert_equals(application, class_loader.name)
-        assert_equals(["one", "two"], class_loader.main_args)
+        assert_equals(args, class_loader.main_args)
 
     def test_application_is_launched_by_invoking_java_classes_main_method(self):
-        self.wrapper.export_rmi_service_and_launch_application(application, ["one", "two"])
+        args = ["one", "two"]
+        self.wrapper.export_rmi_service_and_launch_application(application, args)
         assert_equals(application, self.library_importer_publisher.application)
-        assert_equals(["one", "two"], [i for i in SomeClass.args])
+        assert_equals(args, [i for i in SomeClass.args])
 
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 class TestMyRmiServicePublisher(unittest.TestCase):
@@ -69,14 +79,21 @@ class TestMyRmiServicePublisher(unittest.TestCase):
         self.spring_publisher = _FakeServicePublisher()
         self.free_port = 11099
         self.port_finder = _StubPortFinder(self.free_port)
-        self.publisher = MyRmiServicePublisher(self.class_loader, self.spring_publisher, self.port_finder)
+        self.publisher = MyRmiServicePublisher(self.class_loader,
+                             self.spring_publisher, self.port_finder)
 
     def test_exports_services(self):
-        self.publisher.publish("mylib", SimpleRobotRmiService(), "org.robotframework.jvmconnector.server.RobotRmiService")
-        self._assert_service_was_exported("mylib", self.free_port, SimpleRobotRmiService, "org.robotframework.jvmconnector.server.RobotRmiService")
-        assert_equals("rmi://localhost:%s/mylib" % self.free_port, self.publisher.rmi_info)
+        interface_name = "org.robotframework.jvmconnector.server.RobotRmiService"
+        service_name = "mylib"
+        self.publisher.publish(service_name, SimpleRobotRmiService(), interface_name)
+        self._assert_service_was_exported(service_name, self.free_port,
+                                          SimpleRobotRmiService, interface_name)
+        assert_equals("rmi://localhost:%s/mylib" % self.free_port,
+                                                   self.publisher.rmi_info)
 
-    def _assert_service_was_exported(self, expected_service_name, expected_registry_port, expected_service, expected_service_interface):
+    def _assert_service_was_exported(self, expected_service_name,
+                                     expected_registry_port, expected_service,
+                                     expected_service_interface):
         assert_equals(expected_service_name, self.spring_publisher.service_name)
         assert_equals(expected_registry_port, self.spring_publisher.registry_port)
         assert_true(isinstance(self.spring_publisher.service, expected_service))
@@ -113,25 +130,34 @@ class TestRemoteLibraryImporter(unittest.TestCase):
         rmi_publisher = _FakeMyRmiServicePublisher()
         classloader = _FakeClassLoader(SimpleRobotRmiService)
         library_importer = RemoteLibraryImporter(rmi_publisher, classloader)
-        rmi_info = library_importer.importLibrary("org.robotframework.jvmconnector.mocks.MockJavaLibrary")
+        library_name = "org.robotframework.jvmconnector.mocks.MockJavaLibrary"
+        rmi_info = library_importer.importLibrary(library_name)
+
+        expected_service_name = "orgrobotframeworkjvmconnectormocksMockJavaLibrary"
+        expected_interface_name = "org.robotframework.jvmconnector.server.RobotRmiService"
+        expected_rmi_info = "11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary"
 
         assert_true(rmi_publisher.publish_was_invoked)
-        assert_equals("orgrobotframeworkjvmconnectormocksMockJavaLibrary", rmi_publisher.service_name)
+        assert_equals(expected_service_name, rmi_publisher.service_name)
         assert_true(isinstance(rmi_publisher.service, SimpleRobotRmiService))
-        assert_equals("org.robotframework.jvmconnector.server.RobotRmiService", rmi_publisher.service_interface_name)
-        assert_equals("11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary", rmi_info)
+        assert_equals(expected_interface_name, rmi_publisher.service_interface_name)
+        assert_equals(expected_rmi_info, rmi_info)
 
 class TestLibraryImporterPublisher(unittest.TestCase):
     def test_exports_remote_library_publisher(self):
         rmi_publisher = _FakeMyRmiServicePublisher()
         library_db = _FakeLibraryDb("path/to/db")
-        library_importer_publisher = LibraryImporterPublisher(rmi_publisher, library_db)
+        library_importer_publisher = LibraryImporterPublisher(library_db,
+                                                              rmi_publisher)
         library_importer_publisher.publish(application)
 
+        expected_interface_name = "org.robotframework.jvmconnector.server.LibraryImporter"
+        expected_service_name = "robotrmiservice"
         assert_true(rmi_publisher.publish_was_invoked)
-        assert_equals("robotrmiservice", rmi_publisher.service_name)
+        assert_equals(expected_service_name, rmi_publisher.service_name)
         assert_true(isinstance(rmi_publisher.service, RemoteLibraryImporter))
-        assert_equals("org.robotframework.jvmconnector.server.LibraryImporter", rmi_publisher.service_interface_name)
+        assert_equals(expected_interface_name,
+                      rmi_publisher.service_interface_name)
         assert_equals("path/to/db", library_db.db_path)
         assert_equals(application, library_db.application)
         assert_equals(rmi_publisher.rmi_info, library_db.rmi_info)
