@@ -1,10 +1,15 @@
 import time
 import sys
-from robot.utils import timestr_to_secs
+
 from java.lang import Class
+from java.net import ServerSocket
+
+from robot.utils import timestr_to_secs
+
 from org.springframework.remoting import RemoteConnectFailureException
 from org.springframework.beans.factory import BeanCreationException
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
+
 
 class RemoteLibrary:
 
@@ -37,7 +42,6 @@ class RemoteLibrary:
             self.open_connection()
             return self.remote_lib.runKeyword(name, args)
 
-from java.net import ServerSocket
 class FreePortFinder:
     def find_free_port(self, socket=ServerSocket(0)):
         try:
@@ -71,9 +75,21 @@ class LibraryDb:
         self.fileutil = fileutil
 
     def store(self, application, rmi_info):
-        file = self.fileutil.open(self.path, 'w+')
-        file.write("%s:0:%s" % (application, rmi_info))
+        app_index = self._find_app_index(application)
+        file = self.fileutil.open(self.path, 'a')
+        file.write("%s:%s:%s" % (application, app_index, rmi_info))
         file.close()
+
+    def _find_app_index(self, application_name):
+        file = self.fileutil.open(self.path, 'r')
+        index = 0
+        for line in file:
+           app_info = line.split(':')
+           if app_info[0] == application_name:
+             index += 1 + int(app_info[1])
+
+        file.close()
+        return index
 
 from org.robotframework.jvmconnector.server import LibraryImporter
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService

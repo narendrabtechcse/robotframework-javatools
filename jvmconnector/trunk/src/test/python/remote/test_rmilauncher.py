@@ -2,11 +2,15 @@ import unittest
 import os
 import sys
 from robot.utils.asserts import *
+
 from rmilauncher import *
+from org.robotframework.jvmconnector.mocks import SomeClass
+from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 
 application = "org.robotframework.jvmconnector.mocks.SomeClass"
 
 class TestRmiLauncher(unittest.TestCase):
+
     def test_is_global_library(self):
         assert_equals('GLOBAL', getattr(RmiLauncher, 'ROBOT_LIBRARY_SCOPE'))
 
@@ -18,6 +22,7 @@ class TestRmiLauncher(unittest.TestCase):
         assert_not_equals(db_path1, db_path2)
 
 class TestRmiLauncherStartingApplication(unittest.TestCase):
+
     def setUp(self):
         self.os_library = _FakeOperatingSystemLibrary()
         self.rmi_launcher = RmiLauncher(self.os_library)
@@ -36,6 +41,7 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
 
         assert_equals(expected_command, self.os_library.command)
 
+
     def _get_expected_command(self, args='', jvm_args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
@@ -50,8 +56,8 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
         return "%s/src/main/python/remote/rmilauncher.py" % base
 
-from org.robotframework.jvmconnector.mocks import SomeClass
 class TestRmiWrapper(unittest.TestCase):
+
     def setUp(self):
         self.library_importer_publisher = _FakePublisher()
         self.wrapper = RmiWrapper(self.library_importer_publisher)
@@ -72,7 +78,6 @@ class TestRmiWrapper(unittest.TestCase):
         assert_equals(application, self.library_importer_publisher.application)
         assert_equals(args, [i for i in SomeClass.args])
 
-from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 class TestMyRmiServicePublisher(unittest.TestCase):
     def setUp(self):
         self.class_loader = _FakeClassLoader()
@@ -166,19 +171,28 @@ import __builtin__
 class TestLibaryDb(unittest.TestCase):
     original_open = __builtin__.open
 
-    def setUp(self):
-        self.file = _FakeFile()
-        self.builtin = _FakeBuiltin(self.file)
-
     def test_stores_applications_rmi_info(self):
-        db = LibraryDb("path/to/db", self.builtin)
+        file = _FakeFile()
+        builtin = _FakeBuiltin(file)
+        db = LibraryDb("path/to/db", builtin)
         db.store(application, "11111/someservice")
 
-        assert_equals("path/to/db", self.builtin.path)
-        assert_equals('w+', self.builtin.mode)
-        assert_equals("%s:0:11111/someservice" % (application) , self.file.txt)
-        assert_true(self.file.closed)
-        
+        assert_equals("path/to/db", builtin.path)
+        assert_equals('a', builtin.mode)
+        assert_equals("%s:0:11111/someservice" % (application) , file.txt)
+        assert_true(file.closed)
+
+    def test_sets_index_for_rmi_info(self):
+        file = _FakeFile(['%s:0:11111/someservice' % (application)])
+        builtin = _FakeBuiltin(file)
+        db = LibraryDb("path/to/db", builtin)
+        db.store(application, "22222/otherservice")
+
+        assert_equals("path/to/db", builtin.path)
+        assert_equals('a', builtin.mode)
+        assert_equals("%s:1:22222/otherservice" % (application) , file.txt)
+        assert_true(file.closed)
+
 class _FakeBuiltin:
     def __init__(self, file):
         self.file = file
@@ -188,10 +202,16 @@ class _FakeBuiltin:
         return self.file
 
 class _FakeFile:
+    def __init__(self, lines=[]):
+        self.lines = lines
     def write(self, txt):
         self.txt = txt
     def close(self):
         self.closed = True
+    def read(self):
+        return self.lines
+    def __iter__(self):
+        return iter(self.lines)
 
 class _FakeLibraryDb:
     def __init__(self, db_path):
