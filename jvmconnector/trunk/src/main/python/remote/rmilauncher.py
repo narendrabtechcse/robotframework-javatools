@@ -1,5 +1,10 @@
+import re
 import time
 import sys
+import __builtin__
+
+from os import pathsep
+from tempfile import mktemp
 
 from java.lang import Class
 from java.net import ServerSocket
@@ -8,9 +13,13 @@ from robot.utils import timestr_to_secs
 
 from org.springframework.remoting import RemoteConnectFailureException
 from org.springframework.beans.factory import BeanCreationException
+from org.springframework.remoting.rmi import RmiServiceExporter
+
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
+from org.robotframework.jvmconnector.server import LibraryImporter
+from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 
-
+from robot.libraries.OperatingSystem import OperatingSystem
 class RemoteLibrary:
 
     def __init__(self, uri='rmi://localhost:1099/jvmConnector', 
@@ -43,14 +52,15 @@ class RemoteLibrary:
             return self.remote_lib.runKeyword(name, args)
 
 class FreePortFinder:
+
     def find_free_port(self, socket=ServerSocket(0)):
         try:
             return socket.getLocalPort()
         finally:
             socket.close()
 
-from org.springframework.remoting.rmi import RmiServiceExporter
 class MyRmiServicePublisher:
+
     def __init__(self, class_loader=Class, exporter=RmiServiceExporter(),
                  port_finder=FreePortFinder()):
         self.class_loader = class_loader
@@ -68,8 +78,8 @@ class MyRmiServicePublisher:
         self.exporter.prepare()
         self.rmi_info = "rmi://localhost:%s/%s" % (port, service_name)
 
-import __builtin__
 class LibraryDb:
+
     def __init__(self, path, fileutil=__builtin__):
         self.path = path
         self.fileutil = fileutil
@@ -91,10 +101,8 @@ class LibraryDb:
         file.close()
         return index
 
-from org.robotframework.jvmconnector.server import LibraryImporter
-from org.robotframework.jvmconnector.server import SimpleRobotRmiService
-import re
 class RemoteLibraryImporter(LibraryImporter):
+
     def __init__(self, rmi_publisher=MyRmiServicePublisher(),
                  class_loader=Class):
         self.rmi_publisher = rmi_publisher
@@ -108,6 +116,7 @@ class RemoteLibraryImporter(LibraryImporter):
         return self.rmi_publisher.rmi_info
 
 class LibraryImporterPublisher:
+
     def __init__(self, library_db,
                  rmi_publisher=MyRmiServicePublisher()):
         self.library_db = library_db
@@ -120,6 +129,7 @@ class LibraryImporterPublisher:
         self.library_db.store(application, self.rmi_publisher.rmi_info)
 
 class RmiWrapper:
+
     def __init__(self, library_importer_publisher):
         self.library_importer_publisher = library_importer_publisher
         self.class_loader = Class
@@ -128,10 +138,8 @@ class RmiWrapper:
         self.library_importer_publisher.publish(application)
         self.class_loader.forName(application).main(args)
 
-from robot.libraries.OperatingSystem import OperatingSystem
-from os import pathsep
-from tempfile import mktemp
 class RmiLauncher:
+
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self, os_library=OperatingSystem()):
