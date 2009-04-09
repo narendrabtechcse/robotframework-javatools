@@ -20,6 +20,8 @@ from org.robotframework.jvmconnector.server import LibraryImporter
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 
 from robot.libraries.OperatingSystem import OperatingSystem
+
+
 class RemoteLibrary:
 
     def __init__(self, uri='rmi://localhost:1099/jvmConnector', 
@@ -51,6 +53,7 @@ class RemoteLibrary:
             self.open_connection()
             return self.remote_lib.runKeyword(name, args)
 
+
 class FreePortFinder:
 
     def find_free_port(self, socket=ServerSocket(0)):
@@ -58,6 +61,7 @@ class FreePortFinder:
             return socket.getLocalPort()
         finally:
             socket.close()
+
 
 class MyRmiServicePublisher:
 
@@ -77,6 +81,7 @@ class MyRmiServicePublisher:
         self.exporter.setServiceInterface(service_class)
         self.exporter.prepare()
         self.rmi_info = "rmi://localhost:%s/%s" % (port, service_name)
+
 
 class LibraryDb:
 
@@ -101,6 +106,7 @@ class LibraryDb:
         file.close()
         return index
 
+
 class RemoteLibraryImporter(LibraryImporter):
 
     def __init__(self, rmi_publisher=MyRmiServicePublisher(),
@@ -115,6 +121,7 @@ class RemoteLibraryImporter(LibraryImporter):
         self.rmi_publisher.publish(service_name, service, interface_name)
         return self.rmi_publisher.rmi_info
 
+
 class LibraryImporterPublisher:
 
     def __init__(self, library_db,
@@ -128,6 +135,7 @@ class LibraryImporterPublisher:
                                    interface_name)
         self.library_db.store(application, self.rmi_publisher.rmi_info)
 
+
 class RmiWrapper:
 
     def __init__(self, library_importer_publisher):
@@ -137,6 +145,7 @@ class RmiWrapper:
     def export_rmi_service_and_launch_application(self, application, args):
         self.library_importer_publisher.publish(application)
         self.class_loader.forName(application).main(args)
+
 
 class RmiLauncher:
 
