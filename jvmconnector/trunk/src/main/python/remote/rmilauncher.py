@@ -95,6 +95,20 @@ class LibraryDb:
         file.write("%s:%s:%s" % (application, app_index, rmi_info))
         file.close()
 
+    def retrieve(self, application):
+        file = self.fileutil.open(self.path, 'r')
+
+        try:
+            return self._find_app_info(application, file)
+        finally:
+            file.close()
+
+    def _find_app_info(self, application_name, file):
+        for line in file:
+           app_info = line.split(':')
+           if app_info[0] == application_name:
+             return app_info[2]
+
     def _find_app_index(self, application_name):
         file = self.fileutil.open(self.path, 'r')
         index = 0
@@ -166,6 +180,7 @@ class RmiLauncher:
     #      - should call RemoteLibraryImporter's importLibrary with 'library_name' (not directly
     #        but with rmi), returns the remote library's rmi url
     def import_remote_library(self, library_name):
+        #RemoteLibrary('rmi://localhos)
         pass
 
 if __name__ == '__main__':

@@ -1,11 +1,14 @@
 import unittest
 import os
 import sys
-from robot.utils.asserts import *
 
-from rmilauncher import *
+from robot.utils.asserts import *
+from java.net import ServerSocket
+
 from org.robotframework.jvmconnector.mocks import SomeClass
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
+
+from rmilauncher import *
 
 application = "org.robotframework.jvmconnector.mocks.SomeClass"
 
@@ -105,7 +108,6 @@ class TestMyRmiServicePublisher(unittest.TestCase):
         assert_equals(expected_service_interface, self.class_loader.name)
         assert_true(self.spring_publisher.prepare_was_called)
     
-from java.net import ServerSocket
 class TestFreePortFinder(unittest.TestCase):
     def setUp(self):
         self.port = 5555
@@ -172,26 +174,35 @@ class TestLibaryDb(unittest.TestCase):
     original_open = __builtin__.open
 
     def test_stores_applications_rmi_info(self):
-        file = _FakeFile()
-        builtin = _FakeBuiltin(file)
-        db = LibraryDb("path/to/db", builtin)
+        self.file = _FakeFile()
+        self.builtin = _FakeBuiltin(self.file)
+        db = LibraryDb("path/to/db", self.builtin)
         db.store(application, "11111/someservice")
 
-        assert_equals("path/to/db", builtin.path)
-        assert_equals('a', builtin.mode)
-        assert_equals("%s:0:11111/someservice" % (application) , file.txt)
-        assert_true(file.closed)
+        assert_equals("%s:0:11111/someservice" % (application) , self.file.txt)
+        self._assert_file_was_correctly_used('a')
 
     def test_sets_index_for_rmi_info(self):
-        file = _FakeFile(['%s:0:11111/someservice' % (application)])
-        builtin = _FakeBuiltin(file)
-        db = LibraryDb("path/to/db", builtin)
+        self.file = _FakeFile(['%s:0:11111/someservice' % (application)])
+        self.builtin = _FakeBuiltin(self.file)
+        db = LibraryDb("path/to/db", self.builtin)
         db.store(application, "22222/otherservice")
 
-        assert_equals("path/to/db", builtin.path)
-        assert_equals('a', builtin.mode)
-        assert_equals("%s:1:22222/otherservice" % (application) , file.txt)
-        assert_true(file.closed)
+        assert_equals("%s:1:22222/otherservice" % (application) , self.file.txt)
+        self._assert_file_was_correctly_used('a')
+
+    def test_retrieves_application_rmi_info(self):
+        self.file = _FakeFile(['%s:0:11111/someservice' % (application)])
+        self.builtin = _FakeBuiltin(self.file)
+        db = LibraryDb("path/to/db", self.builtin)
+        
+        assert_equals('11111/someservice', db.retrieve(application))
+        self._assert_file_was_correctly_used('r')
+
+    def _assert_file_was_correctly_used(self, expected_mode):
+        assert_equals("path/to/db", self.builtin.path)
+        assert_equals(expected_mode, self.builtin.mode)
+        assert_true(self.file.closed)
 
 class _FakeBuiltin:
     def __init__(self, file):
