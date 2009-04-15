@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import __builtin__
 
 from robot.utils.asserts import *
 from java.net import ServerSocket
@@ -169,7 +170,6 @@ class TestLibraryImporterPublisher(unittest.TestCase):
         assert_equals(application, library_db.application)
         assert_equals(rmi_publisher.rmi_info, library_db.rmi_info)
 
-import __builtin__
 class TestLibaryDb(unittest.TestCase):
     original_open = __builtin__.open
 
