@@ -128,6 +128,8 @@ class RemoteLibraryImporter(LibraryImporter):
         self.rmi_publisher = rmi_publisher
         self.class_loader = class_loader
 
+    #TODO: should take an index in order to support parallelly running
+    #      applications
     def importLibrary(self, library_name):
         service_name = re.sub('\.', '', library_name)
         service = self.class_loader.forName(library_name)()
@@ -161,6 +163,18 @@ class RmiWrapper:
         self.class_loader.forName(application).main(args)
 
 
+from org.springframework.remoting.rmi import RmiProxyFactoryBean
+class ImporterProxy(RmiProxyFactoryBean):
+    def __init__(self, url):
+        setServiceUrl(url)
+        setServiceInterface(LibraryImporter)
+        prepare()
+        afterPropertiesSet()
+
+    def importit(self, library):
+        return getObject().importLibrary(library)
+        
+
 class RmiLauncher:
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
@@ -180,8 +194,11 @@ class RmiLauncher:
     #      - should call RemoteLibraryImporter's importLibrary with 'library_name' (not directly
     #        but with rmi), returns the remote library's rmi url
     def import_remote_library(self, library_name):
-        #RemoteLibrary('rmi://localhos)
-        pass
+        db = LibraryDb(self.db_path)
+        url = db.retrieve(library_name)
+        importer = ImporterProxy(url)
+        return importer.importit(library_name)
+
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
