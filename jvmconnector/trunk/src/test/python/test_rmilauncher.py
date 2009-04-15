@@ -1,7 +1,6 @@
 import unittest
 import os
 import sys
-import __builtin__
 
 from robot.utils.asserts import *
 from java.net import ServerSocket
@@ -19,8 +18,8 @@ class TestRmiLauncher(unittest.TestCase):
         assert_equals('GLOBAL', getattr(RmiLauncher, 'ROBOT_LIBRARY_SCOPE'))
 
     def test_has_path_to_db(self):
-        db_path1 = RmiLauncher().db_path
-        db_path2 = RmiLauncher().db_path
+        db_path1 = RmiLauncher(application).db_path
+        db_path2 = RmiLauncher(application).db_path
         os.path.exists(db_path1)
         os.path.exists(db_path2)
         assert_not_equals(db_path1, db_path2)
@@ -29,16 +28,15 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
 
     def setUp(self):
         self.os_library = _FakeOperatingSystemLibrary()
-        self.rmi_launcher = RmiLauncher(self.os_library)
+        self.rmi_launcher = RmiLauncher(application, self.os_library)
         self.rmi_launcher.db_path = '/tempfile'
 
     def test_starts_application(self):
-        self.rmi_launcher.start_application(application)
+        self.rmi_launcher.start_application()
         assert_equals(self._get_expected_command(), self.os_library.command)
 
     def tests_passes_arguments(self):
-        self.rmi_launcher.start_application(application,
-                                            'one two three',
+        self.rmi_launcher.start_application('one two three',
                                             '-Done=two -Dthree=four')
         expected_command = self._get_expected_command('one two three',
                                                       '-Done=two -Dthree=four')
@@ -58,7 +56,7 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
 
     def _get_path_to_script(self):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
-        return "%s/src/main/python/remote/rmilauncher.py" % base
+        return "%s/src/main/python/rmilauncher.py" % base
 
 class TestRmiWrapper(unittest.TestCase):
 
@@ -97,8 +95,7 @@ class TestMyRmiServicePublisher(unittest.TestCase):
         self.publisher.publish(service_name, SimpleRobotRmiService(), interface_name)
         self._assert_service_was_exported(service_name, self.free_port,
                                           SimpleRobotRmiService, interface_name)
-        assert_equals("rmi://localhost:%s/mylib" % self.free_port,
-                                                   self.publisher.rmi_info)
+        assert_equals("%s/mylib" % self.free_port, self.publisher.rmi_info)
 
     def _assert_service_was_exported(self, expected_service_name,
                                      expected_registry_port, expected_service,
@@ -133,10 +130,11 @@ class TestFreePortFinder(unittest.TestCase):
         except: pass
         assert_true(self.socket.closed)
 
+from org.robotframework.jvmconnector.mocks import MockJavaLibrary
 class TestRemoteLibraryImporter(unittest.TestCase):
     def test_imports_library(self):
         rmi_publisher = _FakeMyRmiServicePublisher()
-        classloader = _FakeClassLoader(SimpleRobotRmiService)
+        classloader = _FakeClassLoader(MockJavaLibrary)
         library_importer = RemoteLibraryImporter(rmi_publisher, classloader)
         library_name = "org.robotframework.jvmconnector.mocks.MockJavaLibrary"
         rmi_info = library_importer.importLibrary(library_name)
@@ -171,32 +169,31 @@ class TestLibraryImporterPublisher(unittest.TestCase):
         assert_equals(rmi_publisher.rmi_info, library_db.rmi_info)
 
 class TestLibaryDb(unittest.TestCase):
-    original_open = __builtin__.open
-
     def test_stores_applications_rmi_info(self):
         self.file = _FakeFile()
         self.builtin = _FakeBuiltin(self.file)
         db = LibraryDb("path/to/db", self.builtin)
         db.store(application, "11111/someservice")
 
-        assert_equals("%s:0:11111/someservice" % (application) , self.file.txt)
+        assert_equals("%s:0:11111/someservice\n" % (application) , self.file.txt)
         self._assert_file_was_correctly_used('a')
 
     def test_sets_index_for_rmi_info(self):
-        self.file = _FakeFile(['%s:0:11111/someservice' % (application)])
+        self.file = _FakeFile(['%s:0:11111/someservice\n' % (application)])
         self.builtin = _FakeBuiltin(self.file)
         db = LibraryDb("path/to/db", self.builtin)
+        db._is_new = lambda: False
         db.store(application, "22222/otherservice")
 
-        assert_equals("%s:1:22222/otherservice" % (application) , self.file.txt)
+        assert_equals("%s:1:22222/otherservice\n" % (application) , self.file.txt)
         self._assert_file_was_correctly_used('a')
 
     def test_retrieves_application_rmi_info(self):
-        self.file = _FakeFile(['%s:0:11111/someservice' % (application)])
+        self.file = _FakeFile(['%s:0:11111/someservice\n' % (application)])
         self.builtin = _FakeBuiltin(self.file)
         db = LibraryDb("path/to/db", self.builtin)
         
-        assert_equals('11111/someservice', db.retrieve(application))
+        assert_equals('rmi://localhost:11111/someservice', db.retrieve(application))
         self._assert_file_was_correctly_used('r')
 
     def _assert_file_was_correctly_used(self, expected_mode):

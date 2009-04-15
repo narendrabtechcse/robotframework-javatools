@@ -1,0 +1,11 @@
+* Setting *	* Value *
+library	rmilauncher.RmiLauncher	${app}	WITH NAME	myApp
+
+*Variable*	*Value*
+${app}	org.robotframework.jvmconnector.mocks.MyApplication
+
+* Test Case *	* Action *	* Argument *
+Lol
+	myApp.startApplication
+	${rmiUrl}=	myApp.importRemoteLibrary	org.robotframework.jvmconnector.mocks.MockJavaLibrary
+	log	${rmiUrl}

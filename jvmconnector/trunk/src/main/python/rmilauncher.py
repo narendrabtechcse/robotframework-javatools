@@ -3,7 +3,7 @@ import time
 import sys
 import __builtin__
 
-from os import pathsep
+from os import pathsep,path
 from tempfile import mktemp
 
 from java.lang import Class
@@ -21,6 +21,12 @@ from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 
 from robot.libraries.OperatingSystem import OperatingSystem
 
+
+def log(msg):
+    logfile = '/tmp/remote.log'
+    file = open(logfile, 'a')
+    file.write('%s\n' % msg)
+    file.close()
 
 class RemoteLibrary:
 
@@ -80,7 +86,7 @@ class MyRmiServicePublisher:
         self.exporter.setService(service)
         self.exporter.setServiceInterface(service_class)
         self.exporter.prepare()
-        self.rmi_info = "rmi://localhost:%s/%s" % (port, service_name)
+        self.rmi_info = "%s/%s" % (port, service_name)
 
 
 class LibraryDb:
@@ -90,26 +96,43 @@ class LibraryDb:
         self.fileutil = fileutil
 
     def store(self, application, rmi_info):
+        log('first, we find the app index')
         app_index = self._find_app_index(application)
+        log('app index is %s' % app_index)
+        log('opening file %s' % self.path)
         file = self.fileutil.open(self.path, 'a')
-        file.write("%s:%s:%s" % (application, app_index, rmi_info))
+        log('starting store')
+        file.write('%s:%s:%s\n' % (application, app_index, rmi_info))
+        log("%s:%s:%s" % (application, app_index, rmi_info))
+        log('stored')
         file.close()
 
     def retrieve(self, application):
+        log('retrieve START')
         file = self.fileutil.open(self.path, 'r')
+        log('retrieve file is open')
 
         try:
-            return self._find_app_info(application, file)
+            app_info = self._find_app_info(application, file).rstrip()
+            return 'rmi://localhost:%s' % app_info
         finally:
             file.close()
 
     def _find_app_info(self, application_name, file):
+        log('_find_app_info START')
         for line in file:
-           app_info = line.split(':')
-           if app_info[0] == application_name:
-             return app_info[2]
+            log(line)
+            app_info = line.split(':')
+            log('%s == %s = %s' % (app_info[0], application_name, app_info[0] == application_name))
+            if app_info[0] == application_name:
+                return app_info[2]
 
     def _find_app_index(self, application_name):
+        log('_find_app_index START')
+        if self._is_new():
+            log('this is a new db, returning 0 as the app index')
+            return 0
+
         file = self.fileutil.open(self.path, 'r')
         index = 0
         for line in file:
@@ -119,6 +142,9 @@ class LibraryDb:
 
         file.close()
         return index
+
+    def _is_new(self):
+        return not path.exists(self.path)
 
 
 class RemoteLibraryImporter(LibraryImporter):
@@ -132,7 +158,8 @@ class RemoteLibraryImporter(LibraryImporter):
     #      applications
     def importLibrary(self, library_name):
         service_name = re.sub('\.', '', library_name)
-        service = self.class_loader.forName(library_name)()
+        lib = self.class_loader.forName(library_name)()
+        service = SimpleRobotRmiService(library=lib)
         interface_name = 'org.robotframework.jvmconnector.server.RobotRmiService'
         self.rmi_publisher.publish(service_name, service, interface_name)
         return self.rmi_publisher.rmi_info
@@ -149,7 +176,11 @@ class LibraryImporterPublisher:
         interface_name = 'org.robotframework.jvmconnector.server.LibraryImporter'
         self.rmi_publisher.publish("robotrmiservice", RemoteLibraryImporter(),
                                    interface_name)
+        log('******************************************')
+        log('storing rmi info (%s) for application %s into %s' % (application, self.rmi_publisher.rmi_info, self.library_db))
+        log('******************************************')
         self.library_db.store(application, self.rmi_publisher.rmi_info)
+        log('STORED')
 
 
 class RmiWrapper:
@@ -164,29 +195,19 @@ class RmiWrapper:
 
 
 from org.springframework.remoting.rmi import RmiProxyFactoryBean
-class ImporterProxy(RmiProxyFactoryBean):
-    def __init__(self, url):
-        setServiceUrl(url)
-        setServiceInterface(LibraryImporter)
-        prepare()
-        afterPropertiesSet()
-
-    def importit(self, library):
-        return getObject().importLibrary(library)
-        
-
 class RmiLauncher:
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
-    def __init__(self, os_library=OperatingSystem()):
+    def __init__(self, application, os_library=OperatingSystem()):
+        self.application = application
         self.os_library = os_library
         self.db_path = mktemp('.robot-rmi-launcher')
 
-    def start_application(self, application, args='', jvm_args=''):
+    def start_application(self, args='', jvm_args=''):
         pythonpath = pathsep.join(sys.path)
         command = "jython -Dpython.path=%s %s %s %s %s %s" % (pythonpath,
-                  jvm_args, __file__, self.db_path, application, args)
+                  jvm_args, __file__, self.db_path, self.application, args)
         self.os_library.start_process(command)
     
     #todo: - use something like RemoteLibrary's open_connection and the rmi url
@@ -194,15 +215,41 @@ class RmiLauncher:
     #      - should call RemoteLibraryImporter's importLibrary with 'library_name' (not directly
     #        but with rmi), returns the remote library's rmi url
     def import_remote_library(self, library_name):
-        db = LibraryDb(self.db_path)
-        url = db.retrieve(library_name)
-        importer = ImporterProxy(url)
-        return importer.importit(library_name)
+        return self._import(library_name)
 
+    def _retrieve_rmi_url(self):
+        while not path.exists(self.db_path):
+            log("%s doesn't exist, waiting." % self.db_path)
+            time.sleep(2)
+
+        return LibraryDb(self.db_path).retrieve(self.application)
+
+    def _import(self, library_name): 
+        url = self._retrieve_rmi_url()
+        rmi_client = self._create_rmi_client(url)
+        return rmi_client.getObject().importLibrary(library_name)
+
+    def _create_rmi_client(self, url):
+        rmi_client = self._prepare_rmi_client(url)
+        while True:
+            try:
+                rmi_client.prepare()
+                rmi_client.afterPropertiesSet()
+                return rmi_client
+            except Exception, (nro, msg):
+                log(msg)
+
+    def _prepare_rmi_client(self, url):
+        rmi_client = RmiProxyFactoryBean()
+        rmi_client.setServiceUrl(url)
+        rmi_client.setServiceInterface(LibraryImporter)
+        return rmi_client
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
         db = LibraryDb(sys.argv[1])
+        log('%s is the library path' % db.path)
         wrapper = RmiWrapper(LibraryImporterPublisher(db))
         wrapper.export_rmi_service_and_launch_application(sys.argv[2],
                                                           sys.argv[2:])
+
