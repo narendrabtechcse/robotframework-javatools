@@ -21,6 +21,7 @@ from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
 from robot.libraries.OperatingSystem import OperatingSystem
+from robot.libraries.BuiltIn import BuiltIn
 
 
 class RemoteLibrary:
@@ -164,9 +165,11 @@ class RmiLauncher:
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
-    def __init__(self, application, os_library=OperatingSystem()):
+    def __init__(self, application, os_library=OperatingSystem(),
+                 builtin=BuiltIn()):
         self.application = application
         self.os_library = os_library
+        self.builtin = builtin
         self.db_path = mktemp('.robot-rmi-launcher')
 
     def start_application(self, args='', jvm_args=''):
@@ -178,7 +181,7 @@ class RmiLauncher:
     #TODO: implement timeout
     def import_remote_library(self, library_name):
         library_url = self._run_remote_import(library_name)
-        NAMESPACES.current.import_library('rmilauncher.RemoteLibrary', [library_url])
+        self.builtin.import_library('rmilauncher.RemoteLibrary', library_url)
 
     def _run_remote_import(self, library_name): 
         url = self._retrieve_rmi_url()

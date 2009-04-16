@@ -58,6 +58,21 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
         return '%s/src/main/python/rmilauncher.py' % base
 
+class TestRmiLauncherImportingLibrary(unittest.TestCase):
+	def _fake_remote_import(self, library_name):
+		self.library_name = library_name
+		return 'rmi://someservice'
+
+	def test_imports(self):
+		builtin_library = _FakeBuiltInLibrary()
+		rmi_launcher = RmiLauncher(application, _FakeOperatingSystemLibrary(), builtin_library)
+		rmi_launcher._run_remote_import = self._fake_remote_import
+
+		rmi_launcher.import_remote_library('SomeLibrary')
+		assert_equals('SomeLibrary', self.library_name)
+		assert_equals('rmilauncher.RemoteLibrary', builtin_library.library)
+		assert_equals('rmi://someservice', builtin_library.arguments)
+
 class TestRmiWrapper(unittest.TestCase):
 
     def setUp(self):
@@ -236,6 +251,11 @@ class _FakeServerSocket:
     def close(self):
         self.closed = True
 
+class _FakeBuiltInLibrary:
+	def import_library(self, library, arguments):
+		self.library = library
+		self.arguments = arguments
+		
 class _FakeOperatingSystemLibrary:
     def start_process(self, command):
         self.command = command
