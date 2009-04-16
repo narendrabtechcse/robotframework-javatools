@@ -1,11 +1,27 @@
 * Setting *	* Value *
-library	rmilauncher.RmiLauncher	${app}	WITH NAME	myApp
+library	rmilauncher.RmiLauncher	${app}
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
+${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 
 * Test Case *	* Action *	* Argument *
-Lol
-	myApp.startApplication
-	${rmiUrl}=	myApp.importRemoteLibrary	org.robotframework.jvmconnector.mocks.MockJavaLibrary
-	log	${rmiUrl}
+Starts Application And Imports Remote Library
+	startApplication
+	importRemoteLibrary	${remoteLib}
+	applicationShouldBeRunning
+	stopApplication
+	applicationShouldNotBeRunning
+
+#TODO: parallel testing:
+#- use WITH NAMEs
+#- assert JVMs are different?
+
+*Keyword*	*Action*	*Argument*	*Argument*
+applicationShouldBeRunning
+	${appIsRunning}=	applicationIsRunning
+	shouldBeTrue	${appIsRunning}
+
+applicationShouldNotBeRunning
+	${appIsRunning}=	applicationIsRunning
+	shouldNotBeTrue	${appIsRunning}

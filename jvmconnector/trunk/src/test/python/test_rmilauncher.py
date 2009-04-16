@@ -10,7 +10,7 @@ from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 
 from rmilauncher import *
 
-application = "org.robotframework.jvmconnector.mocks.SomeClass"
+application = 'org.robotframework.jvmconnector.mocks.SomeClass'
 
 class TestRmiLauncher(unittest.TestCase):
 
@@ -47,7 +47,7 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
     def _get_expected_command(self, args='', jvm_args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
-        template = "jython -Dpython.path=%s %s %s /tempfile %s %s"
+        template = 'jython -Dpython.path=%s %s %s /tempfile %s %s'
         return template % (current_pythonpath, jvm_args, script_path,
                            application, args)
 
@@ -56,7 +56,7 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
 
     def _get_path_to_script(self):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
-        return "%s/src/main/python/rmilauncher.py" % base
+        return '%s/src/main/python/rmilauncher.py' % base
 
 class TestRmiWrapper(unittest.TestCase):
 
@@ -67,7 +67,7 @@ class TestRmiWrapper(unittest.TestCase):
     def test_exports_rmi_service_and_launches_application(self):
         class_loader = _FakeClassLoader()
         self.wrapper.class_loader = class_loader
-        args = ["one", "two"]
+        args = ['one', 'two']
         self.wrapper.export_rmi_service_and_launch_application(application, args)
         
         assert_equals(application, self.library_importer_publisher.application)
@@ -75,7 +75,7 @@ class TestRmiWrapper(unittest.TestCase):
         assert_equals(args, class_loader.main_args)
 
     def test_application_is_launched_by_invoking_java_classes_main_method(self):
-        args = ["one", "two"]
+        args = ['one', 'two']
         self.wrapper.export_rmi_service_and_launch_application(application, args)
         assert_equals(application, self.library_importer_publisher.application)
         assert_equals(args, [i for i in SomeClass.args])
@@ -90,12 +90,12 @@ class TestMyRmiServicePublisher(unittest.TestCase):
                              self.spring_publisher, self.port_finder)
 
     def test_exports_services(self):
-        interface_name = "org.robotframework.jvmconnector.server.RobotRmiService"
-        service_name = "mylib"
+        interface_name = 'org.robotframework.jvmconnector.server.RobotRmiService'
+        service_name = 'mylib'
         self.publisher.publish(service_name, SimpleRobotRmiService(), interface_name)
         self._assert_service_was_exported(service_name, self.free_port,
                                           SimpleRobotRmiService, interface_name)
-        assert_equals("%s/mylib" % self.free_port, self.publisher.rmi_info)
+        assert_equals('rmi://localhost:%s/mylib' % self.free_port, self.publisher.rmi_info)
 
     def _assert_service_was_exported(self, expected_service_name,
                                      expected_registry_port, expected_service,
@@ -136,12 +136,12 @@ class TestRemoteLibraryImporter(unittest.TestCase):
         rmi_publisher = _FakeMyRmiServicePublisher()
         classloader = _FakeClassLoader(MockJavaLibrary)
         library_importer = RemoteLibraryImporter(rmi_publisher, classloader)
-        library_name = "org.robotframework.jvmconnector.mocks.MockJavaLibrary"
+        library_name = 'org.robotframework.jvmconnector.mocks.MockJavaLibrary'
         rmi_info = library_importer.importLibrary(library_name)
 
-        expected_service_name = "orgrobotframeworkjvmconnectormocksMockJavaLibrary"
-        expected_interface_name = "org.robotframework.jvmconnector.server.RobotRmiService"
-        expected_rmi_info = "11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary"
+        expected_service_name = 'orgrobotframeworkjvmconnectormocksMockJavaLibrary'
+        expected_interface_name = 'org.robotframework.jvmconnector.server.RobotRmiService'
+        expected_rmi_info = '11099/orgrobotframeworkjvmconnectormocksMockJavaLibrary'
 
         assert_true(rmi_publisher.publish_was_invoked)
         assert_equals(expected_service_name, rmi_publisher.service_name)
@@ -152,52 +152,51 @@ class TestRemoteLibraryImporter(unittest.TestCase):
 class TestLibraryImporterPublisher(unittest.TestCase):
     def test_exports_remote_library_publisher(self):
         rmi_publisher = _FakeMyRmiServicePublisher()
-        library_db = _FakeLibraryDb("path/to/db")
+        library_db = _FakeLibraryDb('path/to/db')
         library_importer_publisher = LibraryImporterPublisher(library_db,
                                                               rmi_publisher)
         library_importer_publisher.publish(application)
 
-        expected_interface_name = "org.robotframework.jvmconnector.server.LibraryImporter"
-        expected_service_name = "robotrmiservice"
+        expected_interface_name = 'org.robotframework.jvmconnector.server.LibraryImporter'
+        expected_service_name = 'robotrmiservice'
         assert_true(rmi_publisher.publish_was_invoked)
         assert_equals(expected_service_name, rmi_publisher.service_name)
         assert_true(isinstance(rmi_publisher.service, RemoteLibraryImporter))
         assert_equals(expected_interface_name,
                       rmi_publisher.service_interface_name)
-        assert_equals("path/to/db", library_db.db_path)
+        assert_equals('path/to/db', library_db.db_path)
         assert_equals(application, library_db.application)
         assert_equals(rmi_publisher.rmi_info, library_db.rmi_info)
 
 class TestLibaryDb(unittest.TestCase):
-    def test_stores_applications_rmi_info(self):
+    def setUp(self):
+        self.filecontents = ['%s%%0%%rmi://someservice\n' % (application)]
+        self.file = _FakeFile(self.filecontents)
+        self.builtin = _FakeBuiltin(self.file)
+        self.db = LibraryDb('path/to/db', self.builtin)
+
+    def test_stores(self):
         self.file = _FakeFile()
         self.builtin = _FakeBuiltin(self.file)
-        db = LibraryDb("path/to/db", self.builtin)
-        db.store(application, "11111/someservice")
+        db = LibraryDb('path/to/db', self.builtin)
+        db.store(application, 'rmi://someservice')
 
-        assert_equals("%s:0:11111/someservice\n" % (application) , self.file.txt)
+        assert_equals('%s%%0%%rmi://someservice\n' % (application) , self.file.txt)
         self._assert_file_was_correctly_used('a')
 
-    def test_sets_index_for_rmi_info(self):
-        self.file = _FakeFile(['%s:0:11111/someservice\n' % (application)])
-        self.builtin = _FakeBuiltin(self.file)
-        db = LibraryDb("path/to/db", self.builtin)
-        db._is_new = lambda: False
-        db.store(application, "22222/otherservice")
+    def test_stores_more_than_one(self):
+        self.db._is_new = lambda: False
+        self.db.store(application, 'rmi://someservice')
 
-        assert_equals("%s:1:22222/otherservice\n" % (application) , self.file.txt)
+        assert_equals('%s%%1%%rmi://someservice\n' % (application) , self.file.txt)
         self._assert_file_was_correctly_used('a')
 
     def test_retrieves_application_rmi_info(self):
-        self.file = _FakeFile(['%s:0:11111/someservice\n' % (application)])
-        self.builtin = _FakeBuiltin(self.file)
-        db = LibraryDb("path/to/db", self.builtin)
-        
-        assert_equals('rmi://localhost:11111/someservice', db.retrieve(application))
+        assert_equals('rmi://someservice', self.db.retrieve(application))
         self._assert_file_was_correctly_used('r')
 
     def _assert_file_was_correctly_used(self, expected_mode):
-        assert_equals("path/to/db", self.builtin.path)
+        assert_equals('path/to/db', self.builtin.path)
         assert_equals(expected_mode, self.builtin.mode)
         assert_true(self.file.closed)
 
@@ -246,12 +245,12 @@ class _FakePublisher:
         self.application = application
 
 class _FakeMyRmiServicePublisher:
-    def publish(self, service_name="", service=None, service_interface_name=""):
+    def publish(self, service_name='', service=None, service_interface_name=''):
         self.publish_was_invoked = True
         self.service_name = service_name
         self.service = service
         self.service_interface_name = service_interface_name
-        self.rmi_info = "11099/%s" % service_name
+        self.rmi_info = '11099/%s' % service_name
 
 class _FakeClassLoader:
     def __init__(self, class_=None):
