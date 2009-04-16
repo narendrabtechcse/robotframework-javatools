@@ -1,5 +1,6 @@
 * Setting *	* Value *
-library	rmilauncher.RmiLauncher	${app}
+library	rmilauncher.RmiLauncher	${app}	WITH NAME	myAppLauncher
+library	rmilauncher.RmiLauncher	${app}	1sec	WITH NAME	launcherWithTimeout
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
@@ -7,11 +8,15 @@ ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 
 * Test Case *	* Action *	* Argument *
 Starts Application And Imports Remote Library
-	startApplication
-	importRemoteLibrary	${remoteLib}
+	myAppLauncher.startApplication
+	myAppLauncher.importRemoteLibrary	${remoteLib}	WITH NAME	myApp
 	applicationShouldBeRunning
 	stopApplication
 	applicationShouldNotBeRunning
+
+#Importing Remote Library Uses Timeouts
+	#${expectedErrorMessage}=	Importing ${remoteLib} timed out.
+	#shouldFailInOneSecond	${expectedErrorMessage}	importRemoteLibrary ${remoteLib}	1sec	WITH NAME	myLib
 
 #TODO: parallel testing:
 #- use WITH NAMEs
@@ -19,9 +24,16 @@ Starts Application And Imports Remote Library
 
 *Keyword*	*Action*	*Argument*	*Argument*
 applicationShouldBeRunning
-	${appIsRunning}=	applicationIsRunning
+	${appIsRunning}=	myApp.applicationIsRunning
 	shouldBeTrue	${appIsRunning}
 
 applicationShouldNotBeRunning
-	${appIsRunning}=	applicationIsRunning
+	${appIsRunning}=	myApp.applicationIsRunning
 	shouldNotBeTrue	${appIsRunning}
+
+shouldFailInOneSecond	[arguments]	${expectedErrorMsg}	${keyword}	@{arguments}
+	${startTime}=	getTime	epoch
+	runKeywordAndExpectError	${expectedErrorMsg}	${keyword}	@{arguments}
+	${endTime}=	getTime	epoch
+	${runTime}=	evaluate	${endTime} - ${startTime}
+	shouldBeEqualAsIntegers	1	${runTime}

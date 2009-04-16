@@ -161,6 +161,7 @@ class RmiWrapper:
         self.class_loader.forName(application).main(args)
 
 
+# TODO: implement restarting of an application: doesn't reimport library but
 class RmiLauncher:
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
@@ -179,9 +180,10 @@ class RmiLauncher:
         self.os_library.start_process(command)
     
     #TODO: implement timeout
-    def import_remote_library(self, library_name):
+    def import_remote_library(self, library_name, *args):
         library_url = self._run_remote_import(library_name)
-        self.builtin.import_library('rmilauncher.RemoteLibrary', library_url)
+        self.builtin.import_library('rmilauncher.RemoteLibrary', library_url, *args)
+
 
     def _run_remote_import(self, library_name): 
         url = self._retrieve_rmi_url()
