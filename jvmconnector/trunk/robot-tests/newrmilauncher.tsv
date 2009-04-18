@@ -2,6 +2,7 @@
 library	rmilauncher.RmiLauncher	${app}	WITH NAME	myAppLauncher
 library	rmilauncher.RmiLauncher	${app}	1sec	WITH NAME	oneSec
 library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	tenSec
+library	rmilauncher.RmiLauncher	${app}	WITH NAME	reused
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
@@ -23,6 +24,15 @@ Importing Remote Library Times Outs If Application Is Stopped
 	runKeywordAndIgnoreError	stoppedApp.stopJvm
 	shouldFailInApproximatelyTenSeconds	${timeoutMsg}	tenSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
 
+Reimports After Restart
+	reused.startApplication
+	reused.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
+	applicationShouldBeRunning	someApp
+	runKeywordAndIgnoreError	someApp.stopJvm
+	reused.startApplication
+	reused.importRemoteLibrary	${remoteLib}
+	applicationShouldBeRunning	someApp
+
 #TODO: parallel testing:
 #- use WITH NAMEs
 #- assert JVMs are different?
@@ -33,8 +43,8 @@ remoteLibraryShouldBeImported
 	myApp.stopApplication
 	applicationShouldNotBeRunning
 
-applicationShouldBeRunning
-	${appIsRunning}=	myApp.applicationIsRunning
+applicationShouldBeRunning	[arguments]	${library}=myApp
+	${appIsRunning}=	runKeyword	${library}.applicationIsRunning
 	shouldBeTrue	${appIsRunning}
 
 applicationShouldNotBeRunning

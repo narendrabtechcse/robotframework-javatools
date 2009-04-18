@@ -24,12 +24,6 @@ from org.springframework.remoting.rmi import RmiProxyFactoryBean
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
 
-
-def log(msg):
-    file = open('/tmp/remote.log', 'a')
-    file.write('%s\n' % msg)
-    file.close()
-
 class RemoteLibrary:
 
     def __init__(self, uri):
@@ -92,7 +86,7 @@ class LibraryDb:
         file.write(application + '%' + app_index + '%' + rmi_info + '\n')
         file.close()
 
-    def retrieve(self, application):
+    def retrieve_library_url(self, application):
         if self._is_new():
             return ''
 
@@ -116,9 +110,9 @@ class LibraryDb:
         file = self.fileutil.open(self.path, 'r')
         index = 0
         for line in file:
-           app_info = line.split('%')
-           if app_info[0] == application_name:
-             index += 1 + int(app_info[1])
+            app_info = line.split('%')
+            if app_info[0] == application_name:
+                index += 1 + int(app_info[1])
 
         file.close()
         return str(index)
@@ -193,14 +187,10 @@ class RmiLauncher:
         library_url = self._run_remote_import(library_name)
         self.builtin.import_library('rmilauncher.RemoteLibrary', library_url, *args)
 
-    #timeoutable action!
     def _run_remote_import(self, library_name): 
         start_time = time.time()
         while time.time() - start_time < self.timeout:
             url = self._retrieve_rmi_url()
-            log('**************************')
-            log(url)
-            log('**************************')
             try:
                 rmi_client = self._create_rmi_client(url)
                 return rmi_client.getObject().importLibrary(library_name)
@@ -209,7 +199,7 @@ class RmiLauncher:
         raise RuntimeError('Importing %s timed out.' % library_name)
 
     def _retrieve_rmi_url(self):
-        return LibraryDb(self.db_path).retrieve(self.application)
+        return LibraryDb(self.db_path).retrieve_library_url(self.application)
 
     def _create_rmi_client(self, url):
         rmi_client = RmiProxyFactoryBean(serviceUrl=url,
