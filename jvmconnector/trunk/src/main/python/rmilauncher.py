@@ -92,11 +92,11 @@ class LibraryDb:
         file = self.fileutil.open(self.path, 'r')
 
         try:
-            return self._find_app_info(key, file).rstrip()
+            return self._find_app_info(file, key).rstrip()
         finally:
             file.close()
 
-    def _find_app_info(self, key, file):
+    def _find_app_info(self, file, key):
         for line in file:
             app_info = line.split('%')
             if app_info[0] == key:
