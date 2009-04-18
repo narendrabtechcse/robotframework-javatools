@@ -80,42 +80,27 @@ class LibraryDb:
         self.path = path
         self.fileutil = fileutil
 
-    def store(self, application, rmi_info):
-        app_index = self._find_app_index(application)
+    def store(self, key, rmi_info):
         file = self.fileutil.open(self.path, 'a')
-        file.write(application + '%' + app_index + '%' + rmi_info + '\n')
+        file.write(key + '%' + rmi_info + '\n')
         file.close()
 
-    def retrieve_library_url(self, application):
+    def retrieve_library_url(self, key):
         if self._is_new():
             return ''
 
         file = self.fileutil.open(self.path, 'r')
 
         try:
-            return self._find_app_info(application, file).rstrip()
+            return self._find_app_info(key, file).rstrip()
         finally:
             file.close()
 
-    def _find_app_info(self, application_name, file):
+    def _find_app_info(self, key, file):
         for line in file:
             app_info = line.split('%')
-            if app_info[0] == application_name:
-                return app_info[2]
-
-    def _find_app_index(self, application_name):
-        if self._is_new():
-            return '0'
-
-        file = self.fileutil.open(self.path, 'r')
-        index = 0
-        for line in file:
-            app_info = line.split('%')
-            if app_info[0] == application_name:
-                index += 1 + int(app_info[1])
-
-        file.close()
-        return str(index)
+            if app_info[0] == key:
+                return app_info[1]
 
     def _is_new(self):
         return not path.exists(self.path)

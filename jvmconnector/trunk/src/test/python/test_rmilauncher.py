@@ -191,7 +191,8 @@ class TestLibraryImporterPublisher(unittest.TestCase):
 
 class TestLibaryDb(unittest.TestCase):
     def setUp(self):
-        self.filecontents = ['%s%%0%%rmi://someservice\n' % (application)]
+        self.key = application
+        self.filecontents = ['%s%%rmi://someservice\n' % (application)]
         self.file = _FakeFile(self.filecontents)
         self.builtin = _FakeBuiltin(self.file)
         self.db = LibraryDb('path/to/db', self.builtin)
@@ -201,19 +202,13 @@ class TestLibaryDb(unittest.TestCase):
         self.file = _FakeFile()
         self.builtin = _FakeBuiltin(self.file)
         db = LibraryDb('path/to/db', self.builtin)
-        db.store(application, 'rmi://someservice')
+        db.store(self.key, 'rmi://someservice')
 
-        assert_equals('%s%%0%%rmi://someservice\n' % (application) , self.file.txt)
-        self._assert_file_was_correctly_used('a')
-
-    def test_stores_more_than_one(self):
-        self.db.store(application, 'rmi://someservice')
-
-        assert_equals('%s%%1%%rmi://someservice\n' % (application) , self.file.txt)
+        assert_equals('%s%%rmi://someservice\n' % (self.key) , self.file.txt)
         self._assert_file_was_correctly_used('a')
 
     def test_retrieves_application_rmi_info(self):
-        assert_equals('rmi://someservice', self.db.retrieve_library_url(application))
+        assert_equals('rmi://someservice', self.db.retrieve_library_url(self.key))
         self._assert_file_was_correctly_used('r')
 
     def test_retrieves_nothing_if_file_doesnt_exist(self):

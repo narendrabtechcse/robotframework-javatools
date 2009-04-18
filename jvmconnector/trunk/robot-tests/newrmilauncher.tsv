@@ -24,7 +24,7 @@ Importing Remote Library Times Outs If Application Is Stopped
 	runKeywordAndIgnoreError	stoppedApp.stopJvm
 	shouldFailInApproximatelyTenSeconds	${timeoutMsg}	tenSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
 
-Reimports After Restart
+Reimports After Restart	[tags]	development
 	reused.startApplication
 	reused.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	applicationShouldBeRunning	someApp
