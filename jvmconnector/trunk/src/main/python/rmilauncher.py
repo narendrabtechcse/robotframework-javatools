@@ -12,7 +12,8 @@ from java.net import ServerSocket
 from robot.utils import timestr_to_secs
 from robot.running import NAMESPACES
 
-from org.springframework.remoting import RemoteConnectFailureException
+from org.springframework.remoting import RemoteAccessException
+from org.springframework.beans.factory import BeanCreationException
 from org.springframework.remoting.rmi import RmiServiceExporter
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
@@ -23,6 +24,11 @@ from org.springframework.remoting.rmi import RmiProxyFactoryBean
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
 
+
+def log(msg):
+    file = open('/tmp/remote.log', 'a')
+    file.write('%s\n' % msg)
+    file.close()
 
 class RemoteLibrary:
 
@@ -39,7 +45,7 @@ class RemoteLibrary:
     def run_keyword(self, name, args):
         try:
             return self.remote_lib.runKeyword(name, args)
-        except RemoteConnectFailureException:
+        except RemoteAccessException:
             print '*DEBUG* Reconnecting to remote library.' 
             self._open_connection()
             return self.remote_lib.runKeyword(name, args)
@@ -87,6 +93,9 @@ class LibraryDb:
         file.close()
 
     def retrieve(self, application):
+        if self._is_new():
+            return ''
+
         file = self.fileutil.open(self.path, 'r')
 
         try:
@@ -180,20 +189,26 @@ class RmiLauncher:
                   jvm_args, __file__, self.db_path, self.application, args)
         self.os_library.start_process(command)
     
-    #TODO: implement timeout
     def import_remote_library(self, library_name, *args):
         library_url = self._run_remote_import(library_name)
         self.builtin.import_library('rmilauncher.RemoteLibrary', library_url, *args)
 
+    #timeoutable action!
     def _run_remote_import(self, library_name): 
-        url = self._retrieve_rmi_url()
-        rmi_client = self._create_rmi_client(url)
-        return rmi_client.getObject().importLibrary(library_name)
+        start_time = time.time()
+        while time.time() - start_time < self.timeout:
+            url = self._retrieve_rmi_url()
+            log('**************************')
+            log(url)
+            log('**************************')
+            try:
+                rmi_client = self._create_rmi_client(url)
+                return rmi_client.getObject().importLibrary(library_name)
+            except (BeanCreationException, RemoteAccessException):
+                time.sleep(2)
+        raise RuntimeError('Importing %s timed out.' % library_name)
 
     def _retrieve_rmi_url(self):
-        while not path.exists(self.db_path):
-            time.sleep(2)
-
         return LibraryDb(self.db_path).retrieve(self.application)
 
     def _create_rmi_client(self, url):

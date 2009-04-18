@@ -195,6 +195,7 @@ class TestLibaryDb(unittest.TestCase):
         self.file = _FakeFile(self.filecontents)
         self.builtin = _FakeBuiltin(self.file)
         self.db = LibraryDb('path/to/db', self.builtin)
+        self.db._is_new = lambda: False
 
     def test_stores(self):
         self.file = _FakeFile()
@@ -206,7 +207,6 @@ class TestLibaryDb(unittest.TestCase):
         self._assert_file_was_correctly_used('a')
 
     def test_stores_more_than_one(self):
-        self.db._is_new = lambda: False
         self.db.store(application, 'rmi://someservice')
 
         assert_equals('%s%%1%%rmi://someservice\n' % (application) , self.file.txt)
@@ -215,6 +215,10 @@ class TestLibaryDb(unittest.TestCase):
     def test_retrieves_application_rmi_info(self):
         assert_equals('rmi://someservice', self.db.retrieve(application))
         self._assert_file_was_correctly_used('r')
+
+    def test_retrieves_nothing_if_file_doesnt_exist(self):
+        self.db._is_new = lambda: True
+        assert_equals('', self.db.retrieve(application))
 
     def _assert_file_was_correctly_used(self, expected_mode):
         assert_equals('path/to/db', self.builtin.path)
