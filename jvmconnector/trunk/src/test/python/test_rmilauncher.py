@@ -28,7 +28,7 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
 
     def setUp(self):
         self.os_library = _FakeOperatingSystemLibrary()
-        self.rmi_launcher = RmiLauncher(application, self.os_library)
+        self.rmi_launcher = RmiLauncher(application, '1', self.os_library)
         self.rmi_launcher.db_path = '/tempfile'
 
     def test_starts_application(self):
@@ -59,13 +59,9 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         return '%s/src/main/python/rmilauncher.py' % base
 
 class TestRmiLauncherImportingLibrary(unittest.TestCase):
-    def _fake_remote_import(self, library_name):
-        self.library_name = library_name
-        return 'rmi://someservice'
-
     def test_imports(self):
         builtin_library = _FakeBuiltInLibrary()
-        rmi_launcher = RmiLauncher(application, _FakeOperatingSystemLibrary(),
+        rmi_launcher = RmiLauncher(application, '1', _FakeOperatingSystemLibrary(),
                                    builtin_library)
         rmi_launcher._run_remote_import = self._fake_remote_import
 
@@ -74,6 +70,14 @@ class TestRmiLauncherImportingLibrary(unittest.TestCase):
         assert_equals('rmilauncher.RemoteLibrary', builtin_library.library)
         expected_args = ('rmi://someservice', 'WITH NAME', 'someLib')
         assert_equals(expected_args, builtin_library.arguments)
+
+    def test_parses_timestring(self):
+        rmi_launcher = RmiLauncher(application, '1 second')
+        assert_equals(1, rmi_launcher.timeout)
+
+    def _fake_remote_import(self, library_name):
+        self.library_name = library_name
+        return 'rmi://someservice'
 
 class TestRmiWrapper(unittest.TestCase):
 

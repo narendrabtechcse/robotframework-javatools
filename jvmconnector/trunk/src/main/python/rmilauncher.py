@@ -166,9 +166,10 @@ class RmiLauncher:
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
-    def __init__(self, application, os_library=OperatingSystem(),
-                 builtin=BuiltIn()):
+    def __init__(self, application, timeoutstr='60 seconds',
+                 os_library=OperatingSystem(), builtin=BuiltIn()):
         self.application = application
+        self.timeout = timestr_to_secs(timeoutstr)
         self.os_library = os_library
         self.builtin = builtin
         self.db_path = mktemp('.robot-rmi-launcher')
@@ -183,7 +184,6 @@ class RmiLauncher:
     def import_remote_library(self, library_name, *args):
         library_url = self._run_remote_import(library_name)
         self.builtin.import_library('rmilauncher.RemoteLibrary', library_url, *args)
-
 
     def _run_remote_import(self, library_name): 
         url = self._retrieve_rmi_url()
