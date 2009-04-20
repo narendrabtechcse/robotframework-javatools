@@ -11,6 +11,7 @@ from java.net import ServerSocket
 
 from robot.utils import timestr_to_secs
 from robot.running import NAMESPACES
+from robot.running.importer import Importer
 
 from org.springframework.remoting import RemoteAccessException
 from org.springframework.beans.factory import BeanCreationException
@@ -81,7 +82,7 @@ class LibraryDb:
         self.fileutil = fileutil
 
     def store(self, key, rmi_info):
-        file = self.fileutil.open(self.path, 'a')
+        file = self.fileutil.open(self.path, 'w')
         file.write(key + '%' + rmi_info + '\n')
         file.close()
 
@@ -149,10 +150,7 @@ class RmiWrapper:
         self.class_loader.forName(application).main(args)
 
 
-# TODO: implement restarting of an application: doesn't reimport library but
 class RmiLauncher:
-
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self, application, timeoutstr='60 seconds',
                  os_library=OperatingSystem(), builtin=BuiltIn()):
@@ -170,12 +168,19 @@ class RmiLauncher:
     
     def import_remote_library(self, library_name, *args):
         library_url = self._run_remote_import(library_name)
+        self._prepare_for_reimport_if_necessary(library_url, *args) 
         self.builtin.import_library('rmilauncher.RemoteLibrary', library_url, *args)
+
+    def _prepare_for_reimport_if_necessary(self, library_url, *args):
+        lib = Importer().import_library('rmilauncher.RemoteLibrary', sum((args,), (library_url,)))
+        testlibs = NAMESPACES.current._testlibs
+        if testlibs.has_key(lib.name):
+            testlibs.pop(lib.name)
 
     def _run_remote_import(self, library_name): 
         start_time = time.time()
         while time.time() - start_time < self.timeout:
-            url = self._retrieve_rmi_url()
+            url = self._retrieve_base_rmi_url()
             try:
                 rmi_client = self._create_rmi_client(url)
                 return rmi_client.getObject().importLibrary(library_name)
@@ -183,7 +188,7 @@ class RmiLauncher:
                 time.sleep(2)
         raise RuntimeError('Importing %s timed out.' % library_name)
 
-    def _retrieve_rmi_url(self):
+    def _retrieve_base_rmi_url(self):
         return LibraryDb(self.db_path).retrieve_library_url(self.application)
 
     def _create_rmi_client(self, url):

@@ -3,6 +3,7 @@ import os
 import sys
 
 from robot.utils.asserts import *
+from robot.running import NAMESPACES
 from java.net import ServerSocket
 
 from org.robotframework.jvmconnector.mocks import SomeClass
@@ -13,10 +14,6 @@ from rmilauncher import *
 application = 'org.robotframework.jvmconnector.mocks.SomeClass'
 
 class TestRmiLauncher(unittest.TestCase):
-
-    def test_is_global_library(self):
-        assert_equals('GLOBAL', getattr(RmiLauncher, 'ROBOT_LIBRARY_SCOPE'))
-
     def test_has_path_to_db(self):
         db_path1 = RmiLauncher(application).db_path
         db_path2 = RmiLauncher(application).db_path
@@ -43,7 +40,6 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
 
         assert_equals(expected_command, self.os_library.command)
 
-
     def _get_expected_command(self, args='', jvm_args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
@@ -59,17 +55,25 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         return '%s/src/main/python/rmilauncher.py' % base
 
 class TestRmiLauncherImportingLibrary(unittest.TestCase):
-    def test_imports(self):
-        builtin_library = _FakeBuiltInLibrary()
-        rmi_launcher = RmiLauncher(application, '1', _FakeOperatingSystemLibrary(),
-                                   builtin_library)
-        rmi_launcher._run_remote_import = self._fake_remote_import
+    def setUp(self):
+        class _FakeNamespace:
+            _testlibs = {}
+        NAMESPACES.current = _FakeNamespace()
+        self.builtin_library = _FakeBuiltInLibrary()
+        self.rmi_launcher = RmiLauncher(application, '1',
+                                        _FakeOperatingSystemLibrary(),
+                                        self.builtin_library)
+        self.rmi_launcher._run_remote_import = self._fake_remote_import
+        self.rmi_launcher._prepare_for_reimport_if_necessary = lambda x,y,z: None
+        self.library = None
 
-        rmi_launcher.import_remote_library('SomeLibrary', 'WITH NAME', 'someLib')
+    def test_imports(self):
+        self.rmi_launcher.import_remote_library('SomeLibrary', 'WITH NAME', 'someLib')
+
         assert_equals('SomeLibrary', self.library_name)
-        assert_equals('rmilauncher.RemoteLibrary', builtin_library.library)
+        assert_equals('rmilauncher.RemoteLibrary', self.builtin_library.library)
         expected_args = ('rmi://someservice', 'WITH NAME', 'someLib')
-        assert_equals(expected_args, builtin_library.arguments)
+        assert_equals(expected_args, self.builtin_library.arguments)
 
     def test_parses_timestring(self):
         rmi_launcher = RmiLauncher(application, '1 second')
@@ -205,7 +209,7 @@ class TestLibaryDb(unittest.TestCase):
         db.store(self.key, 'rmi://someservice')
 
         assert_equals('%s%%rmi://someservice\n' % (self.key) , self.file.txt)
-        self._assert_file_was_correctly_used('a')
+        self._assert_file_was_correctly_used('w')
 
     def test_retrieves_application_rmi_info(self):
         assert_equals('rmi://someservice', self.db.retrieve_library_url(self.key))
@@ -213,7 +217,7 @@ class TestLibaryDb(unittest.TestCase):
 
     def test_retrieves_nothing_if_file_doesnt_exist(self):
         self.db._is_new = lambda: True
-        assert_equals('', self.db.retrieve_library_url(application))
+        assert_equals('', self.db.retrieve_library_url(self.key))
 
     def _assert_file_was_correctly_used(self, expected_mode):
         assert_equals('path/to/db', self.builtin.path)
