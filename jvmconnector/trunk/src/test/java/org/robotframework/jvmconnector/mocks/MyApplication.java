@@ -16,9 +16,6 @@
 
 package org.robotframework.jvmconnector.mocks;
 
-import java.io.FileWriter;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 
 public class MyApplication {
@@ -26,9 +23,6 @@ public class MyApplication {
     public static String[] args;
     
     public static void main(String[] args) throws Exception {
-        FileWriter fileWriter = new FileWriter("/tmp/lol.txt");
-        fileWriter.write(Arrays.asList(args).toString() + "\n");
-        fileWriter.close();
         MyApplication.args = args;
         isRunning = true;
         Thread.sleep(500);
