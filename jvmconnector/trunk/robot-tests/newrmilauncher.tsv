@@ -1,8 +1,9 @@
 * Setting *	* Value *
-library	rmilauncher.RmiLauncher	${app}	WITH NAME	myAppLauncher
+library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	myAppLauncher
 library	rmilauncher.RmiLauncher	${app}	1sec	WITH NAME	oneSec
 library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	tenSec
-library	rmilauncher.RmiLauncher	${app}	WITH NAME	reused
+library	rmilauncher.RmiLauncher	${app}	WITH NAME	reimport
+library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	passingArguments
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
@@ -25,17 +26,22 @@ Importing Remote Library Times Outs If Application Is Stopped
 	shouldFailInApproximatelyTenSeconds	${timeoutMsg}	tenSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
 
 Reimports After Restart
-	reused.startApplication
-	reused.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
+	reimport.startApplication
+	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
 	runKeywordAndIgnoreError	someApp.stopJvm
-	reused.startApplication
-	reused.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
+	reimport.startApplication
+	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
 
-#TODO: parallel testing:
-#- use WITH NAMEs
-#- assert JVMs are different?
+Passes Arguments
+	passingArguments.startApplication	-Dfoo=bar	baz
+	passingArguments.importRemoteLibrary	org.robotframework.javalib.library.JavaTools
+	passingArguments.importRemoteLibrary	${remoteLib}	WITH NAME	myApp2
+	${property}=	getSystemProperty	foo
+	@{args}=	myApp2.getArguments
+	shouldBeEqualAsStrings	bar	${property}
+	shouldBeEqualAsStrings	baz	@{args}
 
 *Keyword*	*Action*	*Argument*	*Argument*
 remoteLibraryShouldBeImported	[arguments]	${library}=myApp

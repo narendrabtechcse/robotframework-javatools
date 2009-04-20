@@ -24,6 +24,11 @@ public class JvmconnectorKeywords extends AnnotationLibrary {
     }
     
     @RobotKeyword
+    public String[] getArguments() {
+        return MyApplication.args;
+    }
+    
+    @RobotKeyword
     public void stopJvm() {
         System.exit(0);
     }

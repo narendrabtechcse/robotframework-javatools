@@ -33,14 +33,13 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         assert_equals(self._get_expected_command(), self.os_library.command)
 
     def tests_passes_arguments(self):
-        self.rmi_launcher.start_application('one two three',
-                                            '-Done=two -Dthree=four')
-        expected_command = self._get_expected_command('one two three',
-                                                      '-Done=two -Dthree=four')
-
+        self.rmi_launcher.start_application('-Done=two -Dthree=four',
+                                            'one two three')
+        expected_command = self._get_expected_command('-Done=two -Dthree=four',
+                                                      'one two three')
         assert_equals(expected_command, self.os_library.command)
 
-    def _get_expected_command(self, args='', jvm_args=''):
+    def _get_expected_command(self, jvm_args='', args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
         template = 'jython -Dpython.path=%s %s %s /tempfile %s %s'
@@ -64,7 +63,7 @@ class TestRmiLauncherImportingLibrary(unittest.TestCase):
                                         _FakeOperatingSystemLibrary(),
                                         self.builtin_library)
         self.rmi_launcher._run_remote_import = self._fake_remote_import
-        self.rmi_launcher._prepare_for_reimport_if_necessary = lambda x,y,z: None
+        self.rmi_launcher._prepare_for_reimport_if_necessary = lambda x,*args: None
         self.library = None
 
     def test_imports(self):
@@ -73,6 +72,14 @@ class TestRmiLauncherImportingLibrary(unittest.TestCase):
         assert_equals('SomeLibrary', self.library_name)
         assert_equals('rmilauncher.RemoteLibrary', self.builtin_library.library)
         expected_args = ('rmi://someservice', 'WITH NAME', 'someLib')
+        assert_equals(expected_args, self.builtin_library.arguments)
+
+    def test_adds_name_when_with_name_is_not_used(self):
+        self.rmi_launcher.import_remote_library('SomeLibrary')
+
+        assert_equals('SomeLibrary', self.library_name)
+        assert_equals('rmilauncher.RemoteLibrary', self.builtin_library.library)
+        expected_args = ('rmi://someservice', 'WITH NAME', 'SomeLibrary')
         assert_equals(expected_args, self.builtin_library.arguments)
 
     def test_parses_timestring(self):
@@ -190,34 +197,30 @@ class TestLibraryImporterPublisher(unittest.TestCase):
         assert_equals(expected_interface_name,
                       rmi_publisher.service_interface_name)
         assert_equals('path/to/db', library_db.db_path)
-        assert_equals(application, library_db.application)
         assert_equals(rmi_publisher.rmi_info, library_db.rmi_info)
 
 class TestLibaryDb(unittest.TestCase):
     def setUp(self):
-        self.key = application
-        self.filecontents = ['%s%%rmi://someservice\n' % (application)]
-        self.file = _FakeFile(self.filecontents)
-        self.builtin = _FakeBuiltin(self.file)
-        self.db = LibraryDb('path/to/db', self.builtin)
-        self.db._is_new = lambda: False
-
-    def test_stores(self):
         self.file = _FakeFile()
         self.builtin = _FakeBuiltin(self.file)
-        db = LibraryDb('path/to/db', self.builtin)
-        db.store(self.key, 'rmi://someservice')
+        self.db = LibraryDb('path/to/db', self.builtin)
 
-        assert_equals('%s%%rmi://someservice\n' % (self.key) , self.file.txt)
+    def test_stores(self):
+        self.db.store('rmi://someservice')
+
+        assert_equals('rmi://someservice\n', self.file.txt)
         self._assert_file_was_correctly_used('w')
 
     def test_retrieves_application_rmi_info(self):
-        assert_equals('rmi://someservice', self.db.retrieve_library_url(self.key))
+        self.file.txt = 'rmi://someservice\n'
+        self.db._is_new = lambda: False
+
+        assert_equals('rmi://someservice', self.db.retrieve_library_url())
         self._assert_file_was_correctly_used('r')
 
     def test_retrieves_nothing_if_file_doesnt_exist(self):
-        self.db._is_new = lambda: True
-        assert_equals('', self.db.retrieve_library_url(self.key))
+        db = LibraryDb('/tmp/doesnt/exist')
+        assert_equals('', db.retrieve_library_url())
 
     def _assert_file_was_correctly_used(self, expected_mode):
         assert_equals('path/to/db', self.builtin.path)
@@ -233,23 +236,18 @@ class _FakeBuiltin:
         return self.file
 
 class _FakeFile:
-    def __init__(self, lines=[]):
-        self.lines = lines
     def write(self, txt):
         self.txt = txt
     def close(self):
         self.closed = True
     def read(self):
-        return self.lines
-    def __iter__(self):
-        return iter(self.lines)
+        return self.txt
 
 class _FakeLibraryDb:
     def __init__(self, db_path):
         self.db_path = db_path
 
-    def store(self, application, rmi_info):
-        self.application = application
+    def store(self, rmi_info):
         self.rmi_info = rmi_info
 
 class _FakeServerSocket:
