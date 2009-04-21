@@ -215,12 +215,12 @@ class TestLibaryDb(unittest.TestCase):
         self.file.txt = 'rmi://someservice\n'
         self.db._is_new = lambda: False
 
-        assert_equals('rmi://someservice', self.db.retrieve_library_url())
+        assert_equals('rmi://someservice', self.db.retrieve_base_rmi_url())
         self._assert_file_was_correctly_used('r')
 
     def test_retrieves_nothing_if_file_doesnt_exist(self):
         db = LibraryDb('/tmp/doesnt/exist')
-        assert_equals('', db.retrieve_library_url())
+        assert_equals('', db.retrieve_base_rmi_url())
 
     def _assert_file_was_correctly_used(self, expected_mode):
         assert_equals('path/to/db', self.builtin.path)

@@ -108,8 +108,6 @@ class RemoteLibraryImporter(LibraryImporter):
         self.rmi_publisher = rmi_publisher
         self.class_loader = class_loader
 
-    #TODO: should take an index in order to support parallelly running
-    #      applications
     def importLibrary(self, library_name):
         service_name = re.sub('\.', '', library_name)
         lib = self.class_loader.forName(library_name)()
