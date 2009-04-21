@@ -55,6 +55,32 @@ class FreePortFinder:
             socket.close()
 
 
+class LibraryDb:
+
+    def __init__(self, path, fileutil=__builtin__):
+        self.path = path
+        self.fileutil = fileutil
+
+    def store(self, rmi_info):
+        file = self.fileutil.open(self.path, 'w')
+        file.write(rmi_info + '\n')
+        file.close()
+
+    def retrieve_base_rmi_url(self):
+        if self._is_new():
+            return ''
+
+        file = self.fileutil.open(self.path, 'r')
+
+        try:
+            return file.read().rstrip()
+        finally:
+            file.close()
+
+    def _is_new(self):
+        return not path.exists(self.path)
+
+
 class MyRmiServicePublisher:
 
     def __init__(self, class_loader=Class, exporter=RmiServiceExporter(),
@@ -73,32 +99,6 @@ class MyRmiServicePublisher:
         self.exporter.setServiceInterface(service_class)
         self.exporter.prepare()
         self.rmi_info = 'rmi://localhost:%s/%s' % (port, service_name)
-
-
-class LibraryDb:
-
-    def __init__(self, path, fileutil=__builtin__):
-        self.path = path
-        self.fileutil = fileutil
-
-    def store(self, rmi_info):
-        file = self.fileutil.open(self.path, 'w')
-        file.write(rmi_info + '\n')
-        file.close()
-
-    def retrieve_library_url(self):
-        if self._is_new():
-            return ''
-
-        file = self.fileutil.open(self.path, 'r')
-
-        try:
-            return file.read().rstrip()
-        finally:
-            file.close()
-
-    def _is_new(self):
-        return not path.exists(self.path)
 
 
 class RemoteLibraryImporter(LibraryImporter):
@@ -124,7 +124,7 @@ class LibraryImporterPublisher:
         self.library_db = library_db
         self.rmi_publisher = rmi_publisher
 
-    def publish(self, application):
+    def publish(self):
         interface_name = 'org.robotframework.jvmconnector.server.LibraryImporter'
         self.rmi_publisher.publish('robotrmiservice', RemoteLibraryImporter(),
                                    interface_name)
@@ -138,31 +138,55 @@ class RmiWrapper:
         self.class_loader = Class
 
     def export_rmi_service_and_launch_application(self, application, args):
-        self.library_importer_publisher.publish(application)
+        self.library_importer_publisher.publish()
         self.class_loader.forName(application).main(args)
 
 
-class RmiLauncher:
+class ApplicationLauncher:
+    """A library for starting java applications in separate JVMs and importing
+    remote libraries for accessing them.
+    """
 
-    def __init__(self, application, timeoutstr='60 seconds',
+    def __init__(self, application, timeout='60 seconds',
                  os_library=OperatingSystem(), builtin=BuiltIn()):
+        """ApplicationLauncher takes one mandatory and one optional argument.
+
+        `application` is a required argument, it is the name of the main
+        class or the class that has the main method.
+
+        `timeout` is the timeout used to wait for importing a remote library.
+        """
         self.application = application
-        self.timeout = timestr_to_secs(timeoutstr)
+        self.timeout = timestr_to_secs(timeout)
         self.os_library = os_library
         self.builtin = builtin
         self.db_path = mktemp('.robot-rmi-launcher')
 
     def start_application(self, jvm_args='', args=''):
+        """Starts the application with given arguments.
+
+        `jvm_args` optional jvm arguments.
+        `args` optional application arguments..
+
+        Example:
+        | Start Application | -Dproperty=value | one two three | 
+        """
         pythonpath = pathsep.join(sys.path)
         command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.db_path, self.application, args)
         self.os_library.start_process(command)
     
     def import_remote_library(self, library_name, *args):
+        """Imports a library.
+
+        Example:
+        | Import Remote Library | SwingLibrary |
+        """
         library_url = self._run_remote_import(library_name)
         newargs = self._add_name_to_args_if_necessary(library_name, args)
         self._prepare_for_reimport_if_necessary(library_url, *newargs) 
-        self.builtin.import_library('rmilauncher.RemoteLibrary', library_url,
+        self.builtin.import_library('rmilauncher.RemoteLibrary',
+                                    library_url,
                                     *newargs)
 
     def _add_name_to_args_if_necessary(self, library_name, args):
@@ -172,7 +196,8 @@ class RmiLauncher:
         return sum((args,), ('WITH NAME', library_name))
 
     def _prepare_for_reimport_if_necessary(self, library_url, *args):
-        lib = Importer().import_library('rmilauncher.RemoteLibrary', sum((args,), (library_url,)))
+        lib = Importer().import_library('rmilauncher.RemoteLibrary',
+                                        sum((args,), (library_url,)))
         testlibs = NAMESPACES.current._testlibs
         if testlibs.has_key(lib.name):
             testlibs.pop(lib.name)
@@ -189,7 +214,7 @@ class RmiLauncher:
         raise RuntimeError('Importing %s timed out.' % library_name)
 
     def _retrieve_base_rmi_url(self):
-        return LibraryDb(self.db_path).retrieve_library_url()
+        return LibraryDb(self.db_path).retrieve_base_rmi_url()
 
     def _create_rmi_client(self, url):
         rmi_client = RmiProxyFactoryBean(serviceUrl=url,

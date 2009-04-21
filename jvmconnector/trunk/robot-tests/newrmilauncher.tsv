@@ -1,9 +1,10 @@
 * Setting *	* Value *
-library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	myAppLauncher
-library	rmilauncher.RmiLauncher	${app}	1sec	WITH NAME	oneSec
-library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	tenSec
-library	rmilauncher.RmiLauncher	${app}	WITH NAME	reimport
-library	rmilauncher.RmiLauncher	${app}	10sec	WITH NAME	passingArguments
+library	rmilauncher.ApplicationLauncher	${app}	WITH NAME	myAppLauncher
+library	rmilauncher.ApplicationLauncher	${app}	1sec	WITH NAME	oneSec
+library	rmilauncher.ApplicationLauncher	${app}	10sec	WITH NAME	tenSec
+library	rmilauncher.ApplicationLauncher	${app}	WITH NAME	reimport
+library	rmilauncher.ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
+library	rmilauncher.ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
@@ -36,7 +37,7 @@ Reimports After Restart
 
 Passes Arguments
 	passingArguments.startApplication	-Dfoo=bar	baz
-	passingArguments.importRemoteLibrary	org.robotframework.javalib.library.JavaTools
+	passingArguments.importRemoteLibrary	JavaTools
 	passingArguments.importRemoteLibrary	${remoteLib}	WITH NAME	myApp2
 	${property}=	getSystemProperty	foo
 	@{args}=	myApp2.getArguments

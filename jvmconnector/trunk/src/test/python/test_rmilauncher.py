@@ -13,19 +13,19 @@ from rmilauncher import *
 
 application = 'org.robotframework.jvmconnector.mocks.SomeClass'
 
-class TestRmiLauncher(unittest.TestCase):
+class TestApplicationLauncher(unittest.TestCase):
     def test_has_path_to_db(self):
-        db_path1 = RmiLauncher(application).db_path
-        db_path2 = RmiLauncher(application).db_path
+        db_path1 = ApplicationLauncher(application).db_path
+        db_path2 = ApplicationLauncher(application).db_path
         os.path.exists(db_path1)
         os.path.exists(db_path2)
         assert_not_equals(db_path1, db_path2)
 
-class TestRmiLauncherStartingApplication(unittest.TestCase):
+class TestApplicationLauncherStartingApplication(unittest.TestCase):
 
     def setUp(self):
         self.os_library = _FakeOperatingSystemLibrary()
-        self.rmi_launcher = RmiLauncher(application, '1', self.os_library)
+        self.rmi_launcher = ApplicationLauncher(application, '1', self.os_library)
         self.rmi_launcher.db_path = '/tempfile'
 
     def test_starts_application(self):
@@ -53,13 +53,13 @@ class TestRmiLauncherStartingApplication(unittest.TestCase):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
         return '%s/src/main/python/rmilauncher.py' % base
 
-class TestRmiLauncherImportingLibrary(unittest.TestCase):
+class TestApplicationLauncherImportingLibrary(unittest.TestCase):
     def setUp(self):
         class _FakeNamespace:
             _testlibs = {}
         NAMESPACES.current = _FakeNamespace()
         self.builtin_library = _FakeBuiltInLibrary()
-        self.rmi_launcher = RmiLauncher(application, '1',
+        self.rmi_launcher = ApplicationLauncher(application, '1',
                                         _FakeOperatingSystemLibrary(),
                                         self.builtin_library)
         self.rmi_launcher._run_remote_import = self._fake_remote_import
@@ -83,7 +83,7 @@ class TestRmiLauncherImportingLibrary(unittest.TestCase):
         assert_equals(expected_args, self.builtin_library.arguments)
 
     def test_parses_timestring(self):
-        rmi_launcher = RmiLauncher(application, '1 second')
+        rmi_launcher = ApplicationLauncher(application, '1 second')
         assert_equals(1, rmi_launcher.timeout)
 
     def _fake_remote_import(self, library_name):
@@ -102,14 +102,14 @@ class TestRmiWrapper(unittest.TestCase):
         args = ['one', 'two']
         self.wrapper.export_rmi_service_and_launch_application(application, args)
         
-        assert_equals(application, self.library_importer_publisher.application)
+        assert_true(self.library_importer_publisher.published)
         assert_equals(application, class_loader.name)
         assert_equals(args, class_loader.main_args)
 
     def test_application_is_launched_by_invoking_java_classes_main_method(self):
         args = ['one', 'two']
         self.wrapper.export_rmi_service_and_launch_application(application, args)
-        assert_equals(application, self.library_importer_publisher.application)
+        assert_true(self.library_importer_publisher.published)
         assert_equals(args, [i for i in SomeClass.args])
 
 class TestMyRmiServicePublisher(unittest.TestCase):
@@ -187,7 +187,7 @@ class TestLibraryImporterPublisher(unittest.TestCase):
         library_db = _FakeLibraryDb('path/to/db')
         library_importer_publisher = LibraryImporterPublisher(library_db,
                                                               rmi_publisher)
-        library_importer_publisher.publish(application)
+        library_importer_publisher.publish()
 
         expected_interface_name = 'org.robotframework.jvmconnector.server.LibraryImporter'
         expected_service_name = 'robotrmiservice'
@@ -268,8 +268,8 @@ class _FakeOperatingSystemLibrary:
         self.command = command
 
 class _FakePublisher:
-    def publish(self, application):
-        self.application = application
+    def publish(self):
+        self.published = True
 
 class _FakeMyRmiServicePublisher:
     def publish(self, service_name='', service=None, service_interface_name=''):
