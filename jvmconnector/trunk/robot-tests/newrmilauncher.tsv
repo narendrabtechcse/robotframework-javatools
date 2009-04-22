@@ -15,7 +15,8 @@ ${timeoutMsg}=	Importing ${remoteLib} timed out.
 Starts Application And Imports Remote Library
 	myAppLauncher.startApplication
 	myAppLauncher.importRemoteLibrary	${remoteLib}	WITH NAME	myApp
-	remoteLibraryShouldBeImported
+	remoteLibraryShouldBeImported	myApp
+	[teardown]	runKeywordAndIgnoreError	myApp.stopJvm
 
 Importing Remote Library Times Outs If Application Is Not Started
 	shouldFailInApproximatelyOneSecond	${timeoutMsg}	oneSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
@@ -30,7 +31,7 @@ Reimports After Restart
 	reimport.startApplication
 	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
-	runKeywordAndIgnoreError	someApp.stopJvm
+	runKeywordAndIgnoreError	someApp.stopJvm		#verify it has really stopped!
 	reimport.startApplication
 	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
@@ -44,8 +45,10 @@ Passes Arguments
 	shouldBeEqualAsStrings	bar	${property}
 	shouldBeEqualAsStrings	baz	@{args}
 
+Close Application
+
 *Keyword*	*Action*	*Argument*	*Argument*
-remoteLibraryShouldBeImported	[arguments]	${library}=myApp
+remoteLibraryShouldBeImported	[arguments]	${library}
 	applicationShouldBeRunning	${library}
 	runKeyword	${library}.stopApplication
 	applicationShouldNotBeRunning	${library}

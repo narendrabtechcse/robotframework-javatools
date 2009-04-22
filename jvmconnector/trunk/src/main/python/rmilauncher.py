@@ -19,6 +19,7 @@ from org.springframework.remoting.rmi import RmiServiceExporter
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 from org.robotframework.jvmconnector.server import LibraryImporter
+from org.robotframework.jvmconnector.server import CloseableRobotRmiService
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
@@ -111,7 +112,7 @@ class RemoteLibraryImporter(LibraryImporter):
     def importLibrary(self, library_name):
         service_name = re.sub('\.', '', library_name)
         lib = self.class_loader.forName(library_name)()
-        service = SimpleRobotRmiService(library=lib)
+        service = CloseableRobotRmiService(SimpleRobotRmiService(library=lib))
         interface_name = 'org.robotframework.jvmconnector.server.RobotRmiService'
         self.rmi_publisher.publish(service_name, service, interface_name)
         return self.rmi_publisher.rmi_info
@@ -189,6 +190,7 @@ class ApplicationLauncher:
                                     library_url,
                                     *newargs)
 
+    #todo: close app using CloseableRobotRmiService
     def _add_name_to_args_if_necessary(self, library_name, args):
         if len(args) >= 2 and args[-2].upper() == 'WITH NAME':
             return args

@@ -7,8 +7,9 @@ from robot.running import NAMESPACES
 from java.net import ServerSocket
 
 from org.robotframework.jvmconnector.mocks import SomeClass
-from org.robotframework.jvmconnector.server import SimpleRobotRmiService
+from org.robotframework.jvmconnector.server import CloseableRobotRmiService
 
+import rmilauncher
 from rmilauncher import *
 
 application = 'org.robotframework.jvmconnector.mocks.SomeClass'
@@ -124,9 +125,11 @@ class TestMyRmiServicePublisher(unittest.TestCase):
     def test_exports_services(self):
         interface_name = 'org.robotframework.jvmconnector.server.RobotRmiService'
         service_name = 'mylib'
-        self.publisher.publish(service_name, SimpleRobotRmiService(), interface_name)
+        self.publisher.publish(service_name,
+                               CloseableRobotRmiService(SimpleRobotRmiService()),
+                               interface_name)
         self._assert_service_was_exported(service_name, self.free_port,
-                                          SimpleRobotRmiService, interface_name)
+                                          CloseableRobotRmiService, interface_name)
         assert_equals('rmi://localhost:%s/mylib' % self.free_port, self.publisher.rmi_info)
 
     def _assert_service_was_exported(self, expected_service_name,
@@ -177,7 +180,7 @@ class TestRemoteLibraryImporter(unittest.TestCase):
 
         assert_true(rmi_publisher.publish_was_invoked)
         assert_equals(expected_service_name, rmi_publisher.service_name)
-        assert_true(isinstance(rmi_publisher.service, SimpleRobotRmiService))
+        assert_true(isinstance(rmi_publisher.service, CloseableRobotRmiService))
         assert_equals(expected_interface_name, rmi_publisher.service_interface_name)
         assert_equals(expected_rmi_info, rmi_info)
 
