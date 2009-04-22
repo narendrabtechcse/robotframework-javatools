@@ -1,7 +1,7 @@
 * Setting *	* Value *
 library	ApplicationLauncher	${app}	WITH NAME	myAppLauncher
 library	ApplicationLauncher	${app}	1sec	WITH NAME	oneSec
-library	ApplicationLauncher	${app}	10sec	WITH NAME	tenSec
+library	ApplicationLauncher	${app}	60sec	WITH NAME	tenSec
 library	ApplicationLauncher	${app}	WITH NAME	reimport
 library	ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
 library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
@@ -9,7 +9,7 @@ library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
-${timeoutMsg}=	Importing ${remoteLib} timed out.
+${timeoutMsg}=	Could not connect to application ${app}
 
 * Test Case *	* Action *	* Argument *
 Starts Application And Imports Remote Library

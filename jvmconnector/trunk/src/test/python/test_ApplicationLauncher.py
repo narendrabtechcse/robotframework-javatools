@@ -13,14 +13,6 @@ from ApplicationLauncher import *
 
 application = 'org.robotframework.jvmconnector.mocks.SomeClass'
 
-class TestApplicationLauncher(unittest.TestCase):
-    def test_has_path_to_db(self):
-        db_path1 = ApplicationLauncher(application).db_path
-        db_path2 = ApplicationLauncher(application).db_path
-        os.path.exists(db_path1)
-        os.path.exists(db_path2)
-        assert_not_equals(db_path1, db_path2)
-
 class TestApplicationLauncherStartingApplication(unittest.TestCase):
 
     def setUp(self):

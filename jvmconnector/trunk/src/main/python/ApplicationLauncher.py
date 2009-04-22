@@ -4,7 +4,7 @@ import sys
 import __builtin__
 
 from os import pathsep,path
-from tempfile import mktemp
+from tempfile import gettempdir
 
 from java.lang import Class
 from java.net import ServerSocket
@@ -157,7 +157,7 @@ class ApplicationLauncher:
         """
         self.application = application
         self.timeout = timestr_to_secs(timeout)
-        self.db_path = mktemp('.robot-rmi-launcher')
+        self.db_path = path.join(gettempdir(), 'launcher.txt')
         self.builtin = BuiltIn()
         self.operating_system = OperatingSystem()
 
@@ -174,6 +174,7 @@ class ApplicationLauncher:
         command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.db_path, self.application, args)
         self.operating_system.start_process(command)
+        self._initialize_rmi_client()
     
     def import_remote_library(self, library_name, *args):
         """Imports a library.
@@ -202,16 +203,26 @@ class ApplicationLauncher:
         if testlibs.has_key(lib.name):
             testlibs.pop(lib.name)
 
+    def _initialize_rmi_client(self): 
+        start_time = time.time()
+        while time.time() - start_time < self.timeout:
+            url = self._retrieve_base_rmi_url()
+            try:
+                return self._create_rmi_client(url)
+            except (BeanCreationException, RemoteAccessException):
+                time.sleep(2)
+        raise RuntimeError('Could not connect to application %s' % self.application)
+
     def _run_remote_import(self, library_name): 
         start_time = time.time()
         while time.time() - start_time < self.timeout:
             url = self._retrieve_base_rmi_url()
             try:
-                rmi_client = self._create_rmi_client(url)
+                rmi_client = self._initialize_rmi_client()
                 return rmi_client.getObject().importLibrary(library_name)
             except (BeanCreationException, RemoteAccessException):
                 time.sleep(2)
-        raise RuntimeError('Importing %s timed out.' % library_name)
+        raise RuntimeError('Could not connect to application %s' % self.application)
 
     def _retrieve_base_rmi_url(self):
         return LibraryDb(self.db_path).retrieve_base_rmi_url()
