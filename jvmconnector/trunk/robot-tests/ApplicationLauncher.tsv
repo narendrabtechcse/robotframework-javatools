@@ -1,10 +1,10 @@
 * Setting *	* Value *
-library	rmilauncher.ApplicationLauncher	${app}	WITH NAME	myAppLauncher
-library	rmilauncher.ApplicationLauncher	${app}	1sec	WITH NAME	oneSec
-library	rmilauncher.ApplicationLauncher	${app}	10sec	WITH NAME	tenSec
-library	rmilauncher.ApplicationLauncher	${app}	WITH NAME	reimport
-library	rmilauncher.ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
-library	rmilauncher.ApplicationLauncher	${app}	WITH NAME	multipleLauncher
+library	ApplicationLauncher	${app}	WITH NAME	myAppLauncher
+library	ApplicationLauncher	${app}	1sec	WITH NAME	oneSec
+library	ApplicationLauncher	${app}	10sec	WITH NAME	tenSec
+library	ApplicationLauncher	${app}	WITH NAME	reimport
+library	ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
+library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
