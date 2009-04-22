@@ -174,7 +174,7 @@ class ApplicationLauncher:
         command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.db_path, self.application, args)
         self.operating_system.start_process(command)
-        self._initialize_rmi_client()
+        self._connect_to_base_rmi_service()
     
     def import_remote_library(self, library_name, *args):
         """Imports a library.
@@ -203,7 +203,7 @@ class ApplicationLauncher:
         if testlibs.has_key(lib.name):
             testlibs.pop(lib.name)
 
-    def _initialize_rmi_client(self): 
+    def _connect_to_base_rmi_service(self): 
         start_time = time.time()
         while time.time() - start_time < self.timeout:
             url = self._retrieve_base_rmi_url()
@@ -214,14 +214,8 @@ class ApplicationLauncher:
         raise RuntimeError('Could not connect to application %s' % self.application)
 
     def _run_remote_import(self, library_name): 
-        start_time = time.time()
-        while time.time() - start_time < self.timeout:
-            try:
-                rmi_client = self._initialize_rmi_client()
-                return rmi_client.getObject().importLibrary(library_name)
-            except (BeanCreationException, RemoteAccessException):
-                time.sleep(2)
-        raise RuntimeError('Could not connect to application %s' % self.application)
+        rmi_client = self._connect_to_base_rmi_service()
+        return rmi_client.getObject().importLibrary(library_name)
 
     def _retrieve_base_rmi_url(self):
         return LibraryDb(self.db_path).retrieve_base_rmi_url()
