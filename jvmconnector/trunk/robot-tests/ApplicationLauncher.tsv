@@ -35,6 +35,7 @@ Reimports After Restart
 	reimport.startApplication
 	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
+	[teardown]	runKeywordAndIgnoreError	someApp.stopJvm
 
 Passes Arguments
 	passingArguments.startApplication	-Dfoo=bar	baz
@@ -44,6 +45,7 @@ Passes Arguments
 	@{args}=	myApp2.getArguments
 	shouldBeEqualAsStrings	bar	${property}
 	shouldBeEqualAsStrings	baz	@{args}
+	[teardown]	runKeywordAndIgnoreError	myApp2.stopJvm
 
 Close Application
 

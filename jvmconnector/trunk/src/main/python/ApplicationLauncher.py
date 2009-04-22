@@ -142,14 +142,12 @@ class RmiWrapper:
         self.library_importer_publisher.publish()
         self.class_loader.forName(application).main(args)
 
-
 class ApplicationLauncher:
     """A library for starting java applications in separate JVMs and importing
     remote libraries for accessing them.
     """
 
-    def __init__(self, application, timeout='60 seconds',
-                 os_library=OperatingSystem(), builtin=BuiltIn()):
+    def __init__(self, application, timeout='60 seconds'):
         """ApplicationLauncher takes one mandatory and one optional argument.
 
         `application` is a required argument, it is the name of the main
@@ -159,9 +157,9 @@ class ApplicationLauncher:
         """
         self.application = application
         self.timeout = timestr_to_secs(timeout)
-        self.os_library = os_library
-        self.builtin = builtin
         self.db_path = mktemp('.robot-rmi-launcher')
+        self.builtin = BuiltIn()
+        self.operating_system = OperatingSystem()
 
     def start_application(self, jvm_args='', args=''):
         """Starts the application with given arguments.
@@ -175,7 +173,7 @@ class ApplicationLauncher:
         pythonpath = pathsep.join(sys.path)
         command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.db_path, self.application, args)
-        self.os_library.start_process(command)
+        self.operating_system.start_process(command)
     
     def import_remote_library(self, library_name, *args):
         """Imports a library.
@@ -186,7 +184,7 @@ class ApplicationLauncher:
         library_url = self._run_remote_import(library_name)
         newargs = self._add_name_to_args_if_necessary(library_name, args)
         self._prepare_for_reimport_if_necessary(library_url, *newargs) 
-        self.builtin.import_library('rmilauncher.RemoteLibrary',
+        self.builtin.import_library('ApplicationLauncher.RemoteLibrary',
                                     library_url,
                                     *newargs)
 
@@ -198,7 +196,7 @@ class ApplicationLauncher:
         return sum((args,), ('WITH NAME', library_name))
 
     def _prepare_for_reimport_if_necessary(self, library_url, *args):
-        lib = Importer().import_library('rmilauncher.RemoteLibrary',
+        lib = Importer().import_library('ApplicationLauncher.RemoteLibrary',
                                         sum((args,), (library_url,)))
         testlibs = NAMESPACES.current._testlibs
         if testlibs.has_key(lib.name):

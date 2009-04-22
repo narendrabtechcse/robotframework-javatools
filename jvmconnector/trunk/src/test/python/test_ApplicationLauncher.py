@@ -9,8 +9,8 @@ from java.net import ServerSocket
 from org.robotframework.jvmconnector.mocks import SomeClass
 from org.robotframework.jvmconnector.server import CloseableRobotRmiService
 
-import rmilauncher
-from rmilauncher import *
+import ApplicationLauncher
+from ApplicationLauncher import *
 
 application = 'org.robotframework.jvmconnector.mocks.SomeClass'
 
@@ -25,9 +25,10 @@ class TestApplicationLauncher(unittest.TestCase):
 class TestApplicationLauncherStartingApplication(unittest.TestCase):
 
     def setUp(self):
-        self.os_library = _FakeOperatingSystemLibrary()
-        self.rmi_launcher = ApplicationLauncher(application, '1', self.os_library)
+        self.rmi_launcher = ApplicationLauncher(application)
         self.rmi_launcher.db_path = '/tempfile'
+        self.os_library = _FakeOperatingSystemLibrary()
+        self.rmi_launcher.operating_system = self.os_library
 
     def test_starts_application(self):
         self.rmi_launcher.start_application()
@@ -52,17 +53,16 @@ class TestApplicationLauncherStartingApplication(unittest.TestCase):
 
     def _get_path_to_script(self):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
-        return '%s/src/main/python/rmilauncher.py' % base
+        return '%s/src/main/python/ApplicationLauncher.py' % base
 
 class TestApplicationLauncherImportingLibrary(unittest.TestCase):
     def setUp(self):
         class _FakeNamespace:
             _testlibs = {}
         NAMESPACES.current = _FakeNamespace()
+        self.rmi_launcher = ApplicationLauncher(application)
         self.builtin_library = _FakeBuiltInLibrary()
-        self.rmi_launcher = ApplicationLauncher(application, '1',
-                                        _FakeOperatingSystemLibrary(),
-                                        self.builtin_library)
+        self.rmi_launcher.builtin = self.builtin_library
         self.rmi_launcher._run_remote_import = self._fake_remote_import
         self.rmi_launcher._prepare_for_reimport_if_necessary = lambda x,*args: None
         self.library = None
@@ -71,7 +71,7 @@ class TestApplicationLauncherImportingLibrary(unittest.TestCase):
         self.rmi_launcher.import_remote_library('SomeLibrary', 'WITH NAME', 'someLib')
 
         assert_equals('SomeLibrary', self.library_name)
-        assert_equals('rmilauncher.RemoteLibrary', self.builtin_library.library)
+        assert_equals('ApplicationLauncher.RemoteLibrary', self.builtin_library.library)
         expected_args = ('rmi://someservice', 'WITH NAME', 'someLib')
         assert_equals(expected_args, self.builtin_library.arguments)
 
@@ -79,7 +79,7 @@ class TestApplicationLauncherImportingLibrary(unittest.TestCase):
         self.rmi_launcher.import_remote_library('SomeLibrary')
 
         assert_equals('SomeLibrary', self.library_name)
-        assert_equals('rmilauncher.RemoteLibrary', self.builtin_library.library)
+        assert_equals('ApplicationLauncher.RemoteLibrary', self.builtin_library.library)
         expected_args = ('rmi://someservice', 'WITH NAME', 'SomeLibrary')
         assert_equals(expected_args, self.builtin_library.arguments)
 
