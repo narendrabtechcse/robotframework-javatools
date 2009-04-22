@@ -7,6 +7,7 @@ from os import pathsep,path
 from tempfile import gettempdir
 
 from java.lang import Class
+from java.lang import System
 from java.net import ServerSocket
 
 from robot.utils import timestr_to_secs
@@ -117,6 +118,9 @@ class RemoteLibraryImporter(LibraryImporter):
         self.rmi_publisher.publish(service_name, service, interface_name)
         return self.rmi_publisher.rmi_info
 
+    def closeService(self):
+        System.exit(0);
+
 
 class LibraryImporterPublisher:
 
@@ -189,6 +193,14 @@ class ApplicationLauncher:
                                     library_url,
                                     *newargs)
 
+    def close_application(self):
+        rmi_client = self._connect_to_base_rmi_service()
+        try:
+            rmi_client.getObject().closeService()
+        except RemoteAccessException:
+            return
+        raise RuntimeError('Could not close application.')
+            
     #todo: close app using CloseableRobotRmiService
     def _add_name_to_args_if_necessary(self, library_name, args):
         if len(args) >= 2 and args[-2].upper() == 'WITH NAME':

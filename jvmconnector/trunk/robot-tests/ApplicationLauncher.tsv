@@ -5,6 +5,7 @@ library	ApplicationLauncher	${app}	60sec	WITH NAME	tenSec
 library	ApplicationLauncher	${app}	WITH NAME	reimport
 library	ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
 library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
+library	ApplicationLauncher	${app}	WITH NAME	closeable
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
@@ -16,7 +17,7 @@ Starts Application And Imports Remote Library
 	myAppLauncher.startApplication
 	myAppLauncher.importRemoteLibrary	${remoteLib}	WITH NAME	myApp
 	remoteLibraryShouldBeImported	myApp
-	[teardown]	runKeywordAndIgnoreError	myApp.stopJvm
+	[teardown]	myAppLauncher.closeApplication
 
 Importing Remote Library Times Outs If Application Is Not Started
 	shouldFailInApproximatelyOneSecond	${timeoutMsg}	oneSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
@@ -35,7 +36,7 @@ Reimports After Restart
 	reimport.startApplication
 	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
-	[teardown]	runKeywordAndIgnoreError	someApp.stopJvm
+	[teardown]	reimport.closeApplication
 
 Passes Arguments
 	passingArguments.startApplication	-Dfoo=bar	baz
@@ -45,9 +46,14 @@ Passes Arguments
 	@{args}=	myApp2.getArguments
 	shouldBeEqualAsStrings	bar	${property}
 	shouldBeEqualAsStrings	baz	@{args}
-	[teardown]	runKeywordAndIgnoreError	myApp2.stopJvm
+	[teardown]	passingArguments.closeApplication
 
 Close Application
+	closeable.startApplication
+	closeable.importRemoteLibrary	${remoteLib}	WITH NAME	closeableApp
+	remoteLibraryShouldBeImported	closeableApp
+	closeable.closeApplication
+	runKeywordAndExpectError	*	closeableApp.applicationIsRunning
 
 *Keyword*	*Action*	*Argument*	*Argument*
 remoteLibraryShouldBeImported	[arguments]	${library}
@@ -55,11 +61,11 @@ remoteLibraryShouldBeImported	[arguments]	${library}
 	runKeyword	${library}.stopApplication
 	applicationShouldNotBeRunning	${library}
 
-applicationShouldBeRunning	[arguments]	${library}=myApp
+applicationShouldBeRunning	[arguments]	${library}
 	${appIsRunning}=	runKeyword	${library}.applicationIsRunning
 	shouldBeTrue	${appIsRunning}
 
-applicationShouldNotBeRunning	[arguments]	${library}=myApp
+applicationShouldNotBeRunning	[arguments]	${library}
 	${appIsRunning}=	runKeyword	${library}.applicationIsRunning
 	shouldNotBeTrue	${appIsRunning}
 
