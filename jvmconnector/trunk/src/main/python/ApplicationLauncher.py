@@ -216,7 +216,6 @@ class ApplicationLauncher:
     def _run_remote_import(self, library_name): 
         start_time = time.time()
         while time.time() - start_time < self.timeout:
-            url = self._retrieve_base_rmi_url()
             try:
                 rmi_client = self._initialize_rmi_client()
                 return rmi_client.getObject().importLibrary(library_name)
