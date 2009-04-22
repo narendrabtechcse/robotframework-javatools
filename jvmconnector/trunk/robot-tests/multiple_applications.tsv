@@ -1,0 +1,50 @@
+* Setting *	* Value *
+
+*Variable*	*Value*
+${app}	org.robotframework.jvmconnector.mocks.MyApplication
+${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
+
+* Test Case *	* Action *	* Argument *
+Using Multiple Applications
+	startApplicationX
+	startApplicationY
+	startApplicationZ
+	selectApplication	x
+	correctApplicationShouldBeInUse
+	selectApplication	y
+	correctApplicationShouldBeInUse
+	selectApplication	z
+	correctApplicationShouldBeInUse
+	selectApplication	y
+	correctApplicationShouldBeInUse
+	[teardown]	closeApplications	x	y	z
+
+*Keyword*	*Action*	*Argument*	*Argument*
+startApplicationX
+	startApplicationAndImportLibraries	x	${app}		x
+
+startApplicationY
+	startApplicationAndImportLibraries	y	${app}		y
+
+startApplicationZ
+	startApplicationAndImportLibraries	z	${app}		z
+
+correctApplicationShouldBeInUse
+	@{arguments}=	getArguments	
+	shouldBeEqual	${currentName}	@{arguments}
+
+selectApplication	[arguments]	${name}
+	setLibrarySearchOrder	${remoteLib}${name}	JavaTools${name}
+	setTestVariable	${currentName}	${name}
+
+closeApplications	[arguments]	@{names}
+	:FOR	${name}	IN	@{names}
+		setLibrarySearchOrder	${name}Launcher
+		closeApplication
+
+startApplicationAndImportLibraries	[arguments]	${name}	${className}	${jvmArguments}	${arguments}
+	importLibrary	ApplicationLauncher	${className}	WITH NAME	${name}Launcher
+	setLibrarySearchOrder	${name}Launcher
+	startApplication	${jvmArguments}	${arguments}
+	importRemoteLibrary	${remoteLib}	WITH NAME	${remoteLib}${name}
+	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
