@@ -9,7 +9,6 @@ from java.net import ServerSocket
 from org.robotframework.jvmconnector.mocks import SomeClass
 from org.robotframework.jvmconnector.server import CloseableRobotRmiService
 
-import ApplicationLauncher
 from ApplicationLauncher import *
 
 application = 'org.robotframework.jvmconnector.mocks.SomeClass'
