@@ -153,8 +153,10 @@ class InvalidURLException(Exception):
 DATABASE = path.join(gettempdir(), 'launcher.txt')
 
 class ApplicationLauncher:
-    """A library for starting java applications in separate JVMs and importing
-    remote libraries for accessing them.
+    """A library for starting java application in separate JVM and importing
+    remote libraries for operating it.
+
+    
     """
 
     def __init__(self, application, timeout='60 seconds'):
@@ -174,11 +176,11 @@ class ApplicationLauncher:
     def start_application(self, args='', jvm_args=''):
         """Starts the application with given arguments.
 
-        `jvm_args` optional jvm arguments.
         `args` optional application arguments..
+        `jvm_args` optional jvm arguments.
 
         Example:
-        | Start Application | -Dproperty=value | one two three | 
+        | Start Application | one two three | -Dproperty=value |
         """
         pythonpath = pathsep.join(sys.path)
         command = 'jython -Dpython.path=%s %s %s %s %s' % (pythonpath,
@@ -187,9 +189,24 @@ class ApplicationLauncher:
         self.application_started()
     
     def import_remote_library(self, library_name, *args):
-        """Imports a library.
+        """Imports a library with given arguments for the application.
+        
+        Application needs to be started before using this keyword. In case the
+        application is started externally, `Application Started` keyword has
+        to be used beforehand. In case there is multiple applications, there
+        is need to have one ApplicationLauncher per application. In that case,
+        starting application and library imports needs to be in sequence. It is 
+        not possible to start multiple applications and then import libraries
+        to those.
 
-        Example:
+        Examples:
+
+        | Start Application | arg1 |  
+        | Import Remote Library | SwingLibrary |
+        
+        or
+
+        | Application Started | 
         | Import Remote Library | SwingLibrary |
         """
         library_url = self._run_remote_import(library_name)
@@ -200,6 +217,11 @@ class ApplicationLauncher:
                                     *newargs)
 
     def close_application(self):
+        """Closes the active application.
+        
+        If same application is opened multiple times, only the latest one is
+        closed. Therefore you should close the application before starting it
+        again."""
         rmi_client = self._connect_to_base_rmi_service()
         self.rmi_url = None
         try:
@@ -210,6 +232,12 @@ class ApplicationLauncher:
             
 
     def application_started(self):
+        """Notifies ApplicationLauncher that application is launched
+        externally.
+        
+        Required before taking libraries into use with `Import Remote Library` 
+        when application is started with ApplicationLauncher.py script.
+        """
         self.rmi_url = None
         self._connect_to_base_rmi_service()
         
@@ -259,10 +287,10 @@ class ApplicationLauncher:
         rmi_client.prepare()
         rmi_client.afterPropertiesSet()
     
-        self.save_base_url_and_clean_db(url)
+        self._save_base_url_and_clean_db(url)
         return rmi_client
     
-    def save_base_url_and_clean_db(self, url):
+    def _save_base_url_and_clean_db(self, url):
         self.rmi_url = url
         if path.exists(DATABASE):
             remove(DATABASE)
