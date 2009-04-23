@@ -146,10 +146,10 @@ class RmiWrapper:
         self.library_importer_publisher.publish()
         self.class_loader.forName(application).main(args)
 
-def log(msg):
-    f = open('/tmp/remote.log', 'a')
-    f.write('%s\n' % msg)
-    f.close()
+
+class InvalidURLException(Exception):
+    pass
+
 
 class ApplicationLauncher:
     """A library for starting java applications in separate JVMs and importing
@@ -185,9 +185,7 @@ class ApplicationLauncher:
         command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.db_path, self.application, args)
         self.operating_system.start_process(command)
-        log('starting to wait')
         self._connect_to_base_rmi_service()
-        log('stopped waiting')
     
     def import_remote_library(self, library_name, *args):
         """Imports a library.
@@ -228,14 +226,11 @@ class ApplicationLauncher:
         start_time = time.time()
         while time.time() - start_time < self.timeout:
             url = self._retrieve_base_rmi_url()
-            log('retrieved base url %s' % url)
-            if not url:
+            try:
+                return self._create_rmi_client(url)
+            except (BeanCreationException, RemoteAccessException,
+                    InvalidURLException):
                 time.sleep(2)
-            else:
-                try:
-                    return self._create_rmi_client(url)
-                except (BeanCreationException, RemoteAccessException):
-                   time.sleep(2)
         raise RuntimeError('Could not connect to application %s' % self.application)
 
     def _run_remote_import(self, library_name): 
@@ -252,18 +247,18 @@ class ApplicationLauncher:
         return LibraryDb(self.db_path).retrieve_base_rmi_url()
 
     def _create_rmi_client(self, url):
+        if not re.match('rmi://[^:]+:\d{1,5}/.*', url):
+            raise InvalidURLException()
+
         rmi_client = RmiProxyFactoryBean(serviceUrl=url,
                                          serviceInterface=LibraryImporter)
         rmi_client.prepare()
         rmi_client.afterPropertiesSet()
-        rmi_client.getObject().toString()
-        log('object type: %s' % rmi_client.getObjectType())
     
         self.save_base_url_and_clean_db(url)
         return rmi_client
     
     def save_base_url_and_clean_db(self, url):
-        log('saving base url %s' % url)
         self.rmi_url = url
         if path.exists(self.db_path):
             remove(self.db_path)
