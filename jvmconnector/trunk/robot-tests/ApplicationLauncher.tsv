@@ -32,14 +32,14 @@ Reimports After Restart
 	reimport.startApplication
 	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
-	runKeywordAndIgnoreError	someApp.stopJvm		#verify it has really stopped!
+	runKeywordAndIgnoreError	someApp.stopJvm
 	reimport.startApplication
 	reimport.importRemoteLibrary	${remoteLib}	WITH NAME	someApp
 	remoteLibraryShouldBeImported	someApp
 	[teardown]	reimport.closeApplication
 
 Passes Arguments
-	passingArguments.startApplication	-Dfoo=bar	baz
+	passingArguments.startApplication	baz	-Dfoo=bar
 	passingArguments.importRemoteLibrary	JavaTools
 	passingArguments.importRemoteLibrary	${remoteLib}	WITH NAME	myApp2
 	${property}=	getSystemProperty	foo

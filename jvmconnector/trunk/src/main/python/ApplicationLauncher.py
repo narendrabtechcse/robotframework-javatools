@@ -150,6 +150,7 @@ class RmiWrapper:
 class InvalidURLException(Exception):
     pass
 
+DATABASE = path.join(gettempdir(), 'launcher.txt')
 
 class ApplicationLauncher:
     """A library for starting java applications in separate JVMs and importing
@@ -166,12 +167,11 @@ class ApplicationLauncher:
         """
         self.application = application
         self.timeout = timestr_to_secs(timeout)
-        self.db_path = path.join(gettempdir(), 'launcher.txt')
         self.builtin = BuiltIn()
         self.operating_system = OperatingSystem()
         self.rmi_url = None
 
-    def start_application(self, jvm_args='', args=''):
+    def start_application(self, args='', jvm_args=''):
         """Starts the application with given arguments.
 
         `jvm_args` optional jvm arguments.
@@ -180,12 +180,11 @@ class ApplicationLauncher:
         Example:
         | Start Application | -Dproperty=value | one two three | 
         """
-        self.rmi_url = None
         pythonpath = pathsep.join(sys.path)
-        command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
-                  jvm_args, __file__, self.db_path, self.application, args)
+        command = 'jython -Dpython.path=%s %s %s %s %s' % (pythonpath,
+                  jvm_args, __file__, self.application, args)
         self.operating_system.start_process(command)
-        self._connect_to_base_rmi_service()
+        self.application_started()
     
     def import_remote_library(self, library_name, *args):
         """Imports a library.
@@ -209,6 +208,11 @@ class ApplicationLauncher:
             return
         raise RuntimeError('Could not close application.')
             
+
+    def application_started(self):
+        self.rmi_url = None
+        self._connect_to_base_rmi_service()
+        
     def _add_name_to_args_if_necessary(self, library_name, args):
         if len(args) >= 2 and args[-2].upper() == 'WITH NAME':
             return args
@@ -244,7 +248,7 @@ class ApplicationLauncher:
         if self.rmi_url:
             return self.rmi_url
 
-        return LibraryDb(self.db_path).retrieve_base_rmi_url()
+        return LibraryDb(DATABASE).retrieve_base_rmi_url()
 
     def _create_rmi_client(self, url):
         if not re.match('rmi://[^:]+:\d{1,5}/.*', url):
@@ -260,13 +264,13 @@ class ApplicationLauncher:
     
     def save_base_url_and_clean_db(self, url):
         self.rmi_url = url
-        if path.exists(self.db_path):
-            remove(self.db_path)
+        if path.exists(DATABASE):
+            remove(DATABASE)
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
-        db = LibraryDb(sys.argv[1])
+        db = LibraryDb(DATABASE)
         wrapper = RmiWrapper(LibraryImporterPublisher(db))
-        wrapper.export_rmi_service_and_launch_application(sys.argv[2],
-                                                          sys.argv[3:])
+        wrapper.export_rmi_service_and_launch_application(sys.argv[1],
+                                                          sys.argv[2:])
 

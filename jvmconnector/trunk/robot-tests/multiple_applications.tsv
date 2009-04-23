@@ -1,8 +1,11 @@
 * Setting *	* Value *
+library	OperatingSystem
+library	PythonpathHelper.py
 
 *Variable*	*Value*
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
+${appLauncherScript}	${CURDIR}${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
 
 * Test Case *	* Action *	* Argument *
 Using Multiple Applications
@@ -19,15 +22,24 @@ Using Multiple Applications
 	correctApplicationShouldBeInUse
 	[teardown]	closeApplications	x	y	z
 
+External Startup
+	startExternalApplicationX
+	selectApplication	externalX
+	correctApplicationShouldBeInUse
+	[teardown]	closeApplications	externalX
+
 *Keyword*	*Action*	*Argument*	*Argument*
+startExternalApplicationX
+	startExternalApplicationAndImportLibraries	externalX	${app}	externalX
+
 startApplicationX
-	startApplicationAndImportLibraries	x	${app}		x
+	startApplicationAndImportLibraries	x	${app}	x
 
 startApplicationY
-	startApplicationAndImportLibraries	y	${app}		y
+	startApplicationAndImportLibraries	y	${app}	y
 
 startApplicationZ
-	startApplicationAndImportLibraries	z	${app}		z
+	startApplicationAndImportLibraries	z	${app}	z
 
 correctApplicationShouldBeInUse
 	@{arguments}=	getArguments	
@@ -42,9 +54,18 @@ closeApplications	[arguments]	@{names}
 		setLibrarySearchOrder	${name}Launcher
 		closeApplication
 
-startApplicationAndImportLibraries	[arguments]	${name}	${className}	${jvmArguments}	${arguments}
+startApplicationAndImportLibraries	[arguments]	${name}	${className}	${arguments}	${jvmArguments}=
 	importLibrary	ApplicationLauncher	${className}	WITH NAME	${name}Launcher
 	setLibrarySearchOrder	${name}Launcher
-	startApplication	${jvmArguments}	${arguments}
+	startApplication	${arguments}	${jvmArguments}
+	importRemoteLibrary	${remoteLib}	WITH NAME	${remoteLib}${name}
+	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
+
+startExternalApplicationAndImportLibraries	[arguments]	${name}	${className}	${arguments}	${jvmArguments}=
+	importLibrary	ApplicationLauncher	${className}	WITH NAME	${name}Launcher
+	setLibrarySearchOrder	${name}Launcher
+	${pythonPath}=	getPythonPath
+	startProcess	jython -Dpython.path=${pythonPath} ${jvmArguments} ${appLauncherScript} ${className} ${arguments}
+	applicationStarted
 	importRemoteLibrary	${remoteLib}	WITH NAME	${remoteLib}${name}
 	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
