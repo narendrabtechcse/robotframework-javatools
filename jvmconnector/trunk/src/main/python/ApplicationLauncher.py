@@ -3,7 +3,7 @@ import time
 import sys
 import __builtin__
 
-from os import pathsep,path
+from os import pathsep, path, remove
 from tempfile import gettempdir
 
 from java.lang import Class
@@ -146,6 +146,11 @@ class RmiWrapper:
         self.library_importer_publisher.publish()
         self.class_loader.forName(application).main(args)
 
+def log(msg):
+    f = open('/tmp/remote.log', 'a')
+    f.write('%s\n' % msg)
+    f.close()
+
 class ApplicationLauncher:
     """A library for starting java applications in separate JVMs and importing
     remote libraries for accessing them.
@@ -164,6 +169,7 @@ class ApplicationLauncher:
         self.db_path = path.join(gettempdir(), 'launcher.txt')
         self.builtin = BuiltIn()
         self.operating_system = OperatingSystem()
+        self.rmi_url = None
 
     def start_application(self, jvm_args='', args=''):
         """Starts the application with given arguments.
@@ -174,11 +180,14 @@ class ApplicationLauncher:
         Example:
         | Start Application | -Dproperty=value | one two three | 
         """
+        self.rmi_url = None
         pythonpath = pathsep.join(sys.path)
         command = 'jython -Dpython.path=%s %s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.db_path, self.application, args)
         self.operating_system.start_process(command)
+        log('starting to wait')
         self._connect_to_base_rmi_service()
+        log('stopped waiting')
     
     def import_remote_library(self, library_name, *args):
         """Imports a library.
@@ -195,13 +204,13 @@ class ApplicationLauncher:
 
     def close_application(self):
         rmi_client = self._connect_to_base_rmi_service()
+        self.rmi_url = None
         try:
             rmi_client.getObject().closeService()
         except RemoteAccessException:
             return
         raise RuntimeError('Could not close application.')
             
-    #todo: close app using CloseableRobotRmiService
     def _add_name_to_args_if_necessary(self, library_name, args):
         if len(args) >= 2 and args[-2].upper() == 'WITH NAME':
             return args
@@ -219,17 +228,27 @@ class ApplicationLauncher:
         start_time = time.time()
         while time.time() - start_time < self.timeout:
             url = self._retrieve_base_rmi_url()
-            try:
-                return self._create_rmi_client(url)
-            except (BeanCreationException, RemoteAccessException):
+            log('retrieved base url %s' % url)
+            if not url:
                 time.sleep(2)
+            else:
+                try:
+                    return self._create_rmi_client(url)
+                except (BeanCreationException, RemoteAccessException):
+                   time.sleep(2)
         raise RuntimeError('Could not connect to application %s' % self.application)
 
     def _run_remote_import(self, library_name): 
-        rmi_client = self._connect_to_base_rmi_service()
-        return rmi_client.getObject().importLibrary(library_name)
+        try:
+            rmi_client = self._connect_to_base_rmi_service()
+            return rmi_client.getObject().importLibrary(library_name)
+        except (BeanCreationException, RemoteAccessException):
+            raise RuntimeError('Could not connect to application %s' % self.application)
 
     def _retrieve_base_rmi_url(self):
+        if self.rmi_url:
+            return self.rmi_url
+
         return LibraryDb(self.db_path).retrieve_base_rmi_url()
 
     def _create_rmi_client(self, url):
@@ -237,7 +256,17 @@ class ApplicationLauncher:
                                          serviceInterface=LibraryImporter)
         rmi_client.prepare()
         rmi_client.afterPropertiesSet()
+        rmi_client.getObject().toString()
+        log('object type: %s' % rmi_client.getObjectType())
+    
+        self.save_base_url_and_clean_db(url)
         return rmi_client
+    
+    def save_base_url_and_clean_db(self, url):
+        log('saving base url %s' % url)
+        self.rmi_url = url
+        if path.exists(self.db_path):
+            remove(self.db_path)
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
