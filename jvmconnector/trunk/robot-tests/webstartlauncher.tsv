@@ -20,8 +20,8 @@ WebstartLauncher Launches Java Webstart Application
 WebstartLauncher Launches Java Webstart Application When No Main Class Attribute In Jnlp
 	webstartLauncherLaunchesJavaWebstartApplication	${jnlpWithoutMainClassUrl}	Other App
 
-#WebstartLauncher Works With Main Attribute	[tags]	development
-	#webstartLauncherLaunchesJavaWebstartApplication	${codeBase}/test-application-with-main-attribute.jnlp	Other App
+WebstartLauncher Works With Main Attribute	[tags]	development
+	webstartLauncherLaunchesJavaWebstartApplication	${codeBase}/test-application-with-main-attribute.jnlp	Other App
 
 WebstartLauncher Works With Https
 	setTrustStore

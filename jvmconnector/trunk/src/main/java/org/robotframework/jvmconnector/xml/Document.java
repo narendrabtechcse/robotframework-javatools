@@ -17,6 +17,8 @@
 package org.robotframework.jvmconnector.xml;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -37,6 +39,15 @@ public class Document {
         return element(doc, name); 
     }
     
+    private List<MyElement> elements(MyElement parent, String name) {
+        List<MyElement> results = new ArrayList<MyElement>();
+        NodeList elements = getElements(parent, name);
+        for (int i = 0; i < elements.getLength(); i++) {
+            results.add(new MyElement((Element) elements.item(i)));
+        }
+        return results;
+    }
+    
     private MyElement element(Node parent, String name) {
         Element element = getFirstChild(parent, name); 
         if (element == null) {
@@ -47,10 +58,14 @@ public class Document {
     }
 
     private Element getFirstChild(Node parent, String name) {
-        Queryable queryableParent = (Queryable) Retrofit.partial(parent, Queryable.class);
-        NodeList results = queryableParent.getElementsByTagName(name);
+        NodeList results = getElements(parent, name);
         if (results == null) return null;
         return (Element) results.item(0);
+    }
+
+    private NodeList getElements(Node parent, String name) {
+        Queryable queryableParent = (Queryable) Retrofit.partial(parent, Queryable.class);
+        return queryableParent.getElementsByTagName(name);
     }
     
     private interface Queryable {
@@ -88,6 +103,10 @@ public class Document {
 
         public MyElement(Element elem) {
             this.elem = elem;
+        }
+        
+        public List<MyElement> elements(String name) {
+            return Document.this.elements(this, name);
         }
         
         public MyElement element(String name) {

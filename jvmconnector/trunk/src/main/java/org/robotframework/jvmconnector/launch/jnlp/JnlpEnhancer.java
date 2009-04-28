@@ -70,14 +70,26 @@ public class JnlpEnhancer {
         appDesc.insertElement("argument").insertText(mainClass);
         appDesc.insertElement("argument").insertText(rmiConfigFilePath);
         
-        addLibraryResources(jnlp);
+        modifyResourcesElement(jnlp);
         return doc;
     }
 
-    private void addLibraryResources(MyElement jnlp) {
+    private void modifyResourcesElement(MyElement jnlp) {
+        MyElement resourcesElement = jnlp.element("resources");
+        removeMainAttributes(resourcesElement);
+        addLibraryResources(resourcesElement);
+    }
+
+    private void removeMainAttributes(MyElement resourcesElement) {
+        List<MyElement> elements = resourcesElement.elements("jar");
+        for (MyElement myElement : elements) {
+            myElement.removeAttribute("main");
+        }
+    }
+
+    private void addLibraryResources(MyElement resourcesElement) {
         List<String> jars = listJars();
         
-        MyElement resourcesElement = jnlp.element("resources");
         for (String jar : jars) {
             resourcesElement.addElement("jar").setAttribute("href", jar);
         }
