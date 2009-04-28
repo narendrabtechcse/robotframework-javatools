@@ -4,16 +4,15 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 ===Library documentation===
 
-|| Library || !WebstartLauncher || _path_to_testing_resources_directory_ ||
+*Importing*
+|| *Arguments* || *Documentation* ||
+|| _path_to_testing_resources_directory_ || _path_to_testing_resources_directory_: should point to a directory that contains at least the jvmconnector jar (which you can get from here http://code.google.com/p/robotframework-javatools/downloads/list) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application. ||
 
-_path_to_testing_resources_directory_: should point to a directory that contains at least the jvmconnector jar (which you can get from the [http://code.google.com/p/robotframework-javatools/downloads/list download page]) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application.
+*Keywords*
 
-|| Start Webstart Application And Rmi Service || _path_to_rmi_configuration_file_ || _jnlp_url_ ||
+|| Start Webstart Application And Rmi Service || _path_to_rmi_configuration_file_, _jnlp_url_ || Launches the webstart application and the rmi service. _path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example. _jnlp_url_: your application's url. ||
+|| Create Rmi Enhanced Jnlp || _path_to_rmi_configuration_file_, _jnlp_url_ || Returns the path to the local copy of the modified JNLP ||
 
-Launches the webstart application and the rmi service. 
-
-_path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example. <br/>
-_jnlp_url_: your application's url. <br/>
 
 Example: 
 
