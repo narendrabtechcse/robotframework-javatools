@@ -14,7 +14,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 || Create Rmi Enhanced Jnlp (as of 0.7.4) || _path_to_rmi_configuration_file_, _jnlp_url_ || Returns the path to the local copy of the modified JNLP. <br> This is useful if you need to do some postprocessing to the jnlp and/or want to launch the application in a custom fashion. ||
 
 
-Example: 
+*Examples* 
 
 || *Setting* || *Value* || *Value* ||
 || Library || !WebstartLauncher || _$CURDIR${/}test-lib$_ ||
