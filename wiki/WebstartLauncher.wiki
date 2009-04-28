@@ -23,7 +23,8 @@ service inside that application's JVM so that keyword invocations can reach it.
 || *Test Case* || *Action* || *Argument* || *Argument* ||
 || _Start Application_ || Start Webstart Application And Rmi Service || _${CURDIR}${/}test-lib${/}rmiConfig.xml_ || _http://acme.com/myapp.jnlp_ ||
 
-===Example===
+
+===!WebstartLauncher Example===
 *Prerequisites:*
  * You'll need javaws and jybot in the path.
  * Configure your proxy settings to Java Web Start if necessary.
