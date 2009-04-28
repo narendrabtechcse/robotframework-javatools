@@ -2,6 +2,8 @@
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
 library	WebstartLauncher	${testAppDir}${/}test-lib
 library	JavaTools
+library	OperatingSystem
+library	JvmconnectorKeywords
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
 
@@ -20,12 +22,18 @@ WebstartLauncher Launches Java Webstart Application
 WebstartLauncher Launches Java Webstart Application When No Main Class Attribute In Jnlp
 	webstartLauncherLaunchesJavaWebstartApplication	${jnlpWithoutMainClassUrl}	Other App
 
-WebstartLauncher Works With Main Attribute	[tags]	development
+WebstartLauncher Works With Main Attribute
 	webstartLauncherLaunchesJavaWebstartApplication	${codeBase}/test-application-with-main-attribute.jnlp	Other App
 
 WebstartLauncher Works With Https
 	setTrustStore
 	webstartLauncherLaunchesJavaWebstartApplication	${jnlpWithSsl}	Test App
+
+Create RMI Enhanced JNLP	[tags]	devel
+	${pathToJnlp}=	createRmiEnhancedJnlp	${rmiConfigFile}	${jnlpWithMainClassUrl}
+	${expectedJnlpContents}=	getEnhancedJnlp	${testAppDir}${/}test-lib	${rmiConfigFile}	${jnlpWithMainClassUrl}
+	${jnlpContents}=	getFile	${pathToJnlp}
+	shouldBeEqual	${expectedJnlpContents}	${jnlpContents}
 
 * Keyword *	* Action *	* Argument *
 startWebstartService

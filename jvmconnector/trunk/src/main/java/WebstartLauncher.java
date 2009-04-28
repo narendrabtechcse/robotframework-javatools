@@ -48,6 +48,10 @@ public class WebstartLauncher {
         String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
         launchRmiEnhancedJnlp(pathToJnlp);
     }
+    
+    public String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception {
+        return jnlpRunner.createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+    }
 
     private Process launchRmiEnhancedJnlp(String jnlpFile) throws IOException {
         Logger.log("Path to jnlp: " + jnlpFile);

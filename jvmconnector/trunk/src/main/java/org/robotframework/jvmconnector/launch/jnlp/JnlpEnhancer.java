@@ -39,7 +39,7 @@ public class JnlpEnhancer {
     public String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception, FileNotFoundException {
         Document modifiedJnlp = createEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
         String localName = getLocalName(jnlpUrl);
-        modifiedJnlp.printTo(new PrintStream(new FileOutputStream(localName)));
+        modifiedJnlp.printTo(new PrintStream(new FileOutputStream(localName), false, "UTF-8"));
         return localName;
     }
 
