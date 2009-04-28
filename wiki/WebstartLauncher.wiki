@@ -6,7 +6,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 
 *Importing*
 || *Arguments* || *Documentation* ||
-|| _path_to_testing_resources_directory_ || _path_to_testing_resources_directory_: should point to a directory that contains at least the jvmconnector jar (which you can get from here http://code.google.com/p/robotframework-javatools/downloads/list) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application. ||
+|| _path_to_testing_resources_directory_ || _path_to_testing_resources_directory_: should point to a directory that contains at least the jvmconnector jar (which you can get from [http://code.google.com/p/robotframework-javatools/downloads/list here]) and the jar that contains the library you want to test your application with eg. [http://code.google.com/p/robotframework-swinglibrary/ SwingLibrary]. All these jars should be signed with the same key as your application. ||
 
 *Keywords*
 
