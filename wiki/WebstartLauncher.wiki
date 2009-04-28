@@ -11,7 +11,7 @@ service inside that application's JVM so that keyword invocations can reach it.
 *Keywords*
 
 || Start Webstart Application And Rmi Service || _path_to_rmi_configuration_file_, _jnlp_url_ || Launches the webstart application and the rmi service. _path_to_rmi_configuration_file_: should point to the rmi configuration file. See [WebstartLauncher#Usage usage] for an example. _jnlp_url_: your application's url. ||
-|| Create Rmi Enhanced Jnlp || _path_to_rmi_configuration_file_, _jnlp_url_ || Returns the path to the local copy of the modified JNLP ||
+|| Create Rmi Enhanced Jnlp (ad of 0.7.4) || _path_to_rmi_configuration_file_, _jnlp_url_ || Returns the path to the local copy of the modified JNLP ||
 
 
 Example: 
