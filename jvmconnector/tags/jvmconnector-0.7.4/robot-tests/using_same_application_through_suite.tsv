@@ -1,0 +1,16 @@
+* Setting *	* Value *
+resource	applauncher_resource.tsv
+suiteSetup	startAndSelectApplication
+suiteTeardown	closeApplications	z
+
+* Test Case *	* Action *	* Argument *
+Using It
+	correctApplicationShouldBeInUse	z
+
+Using It Again
+	correctApplicationShouldBeInUse	z
+
+*Keyword*	*Action*	*Argument*	*Argument*
+startAndSelectApplication
+	startApplicationZ
+	selectApplication	z
