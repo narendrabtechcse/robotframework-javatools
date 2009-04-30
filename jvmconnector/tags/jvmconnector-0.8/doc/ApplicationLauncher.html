@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>ApplicationLauncher - Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+  body {
+    background: white;
+    color: black;
+  }
+
+  /* Generic Table Styles */
+  table {
+    background: white;
+    border: 1px solid black;
+    border-collapse: collapse;
+    empty-cells: show;
+    margin: 0.3em 0em;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 0.2em;
+  }
+  th {
+    background: #C6C6C6;
+  }
+  td {
+    vertical-align: top;
+  }    
+
+  /* Columns */
+  td.kw {
+    font-weight: bold;
+  }
+  td.arg {
+    width: 300px;
+    font-style: italic;
+  }
+  td.doc {
+  }
+
+  /* Tables in documentation */
+  table.doc {
+    border: 1px solid gray;
+    background: transparent;
+    border-collapse: collapse;
+    empty-cells: show;
+    font-size: 0.85em;
+    font-family: arial,helvetica,sans-serif;
+  }
+  table.doc td {
+    border: 1px solid gray;
+    padding: 0.1em 0.3em;
+    height: 1.2em;
+  }
+
+  /* Paragraphs */
+  .libdoc, .links {
+    width: 800px;
+  }
+
+  /* Misc */
+  a.name, span.name {  
+    font-style: italic;
+    background: #f4f4f4;
+    text-decoration: none;
+  }
+  a:link, a:visited {
+    color: blue;
+  }
+  a:hover, a:active {
+    text-decoration: underline;
+    color: purple;
+  }
+  .footer {
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+<h1>ApplicationLauncher - Documentation</h1>
+
+<h2 id="introduction">Introduction</h2>
+<p class='libdoc'>A library for starting java application in separate JVM and importing remote libraries for operating it.</p>
+
+<h2 id="importing">Importing</h2>
+<table class="keywords">
+<tr>
+  <th class="arg">Arguments</th>
+  <th class="doc">Documentation</th>
+</tr>
+<tr>
+  <td class="arg">application, timeout=60 seconds</td>
+  <td class="doc">ApplicationLauncher takes one mandatory and one optional argument.<br />
+<br />
+<span class="name">application</span> is a required argument, it is the name of the main class or the class that has the main method.<br />
+<br />
+<span class="name">timeout</span> is the timeout used to wait for importing a remote library.</td>
+</tr>
+</table>
+
+<h2>Shortcuts</h2>
+<div class='links'>
+<a href="#Application Started" title="Notifies ApplicationLauncher that application is launched">Application&nbsp;Started</a>&nbsp;
+<a href="#Close Application" title="Closes the active application.">Close&nbsp;Application</a>&nbsp;
+<a href="#Import Remote Library" title="Imports a library with given arguments for the application.">Import&nbsp;Remote&nbsp;Library</a>&nbsp;
+<a href="#Start Application" title="Starts the application with given arguments.">Start&nbsp;Application</a>&nbsp;
+</div>
+
+<h2>Keywords</h2>
+<table class="keywords">
+<tr>
+  <th class="kw">Keyword</th>
+  <th class="arg">Arguments</th>
+  <th class="doc">Documentation</th>
+</tr>
+<tr>
+  <td class="kw"><a name="Application Started"></a>Application Started</td>
+  <td class="arg"></td>
+  <td class="doc">Notifies ApplicationLauncher that application is launched externally.<br />
+<br />
+Required before taking libraries into use with <a href="#Import Remote Library" class="name">Import Remote Library</a> when application is started with ApplicationLauncher.py script.</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Close Application"></a>Close Application</td>
+  <td class="arg"></td>
+  <td class="doc">Closes the active application.<br />
+<br />
+If same application is opened multiple times, only the latest one is closed. Therefore you should close the application before starting it again.</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Import Remote Library"></a>Import Remote Library</td>
+  <td class="arg">library_name, *args</td>
+  <td class="doc">Imports a library with given arguments for the application.<br />
+<br />
+Application needs to be started before using this keyword. In case the application is started externally, <a href="#Application Started" class="name">Application Started</a> keyword has to be used beforehand. In case there is multiple applications, there is need to have one ApplicationLauncher per application. In that case, starting application and library imports needs to be in sequence. It is not possible to start multiple applications and then import libraries to those.<br />
+<br />
+Examples:<br />
+<br />
+<table border="1" class="doc">
+<tr>
+<td>Start Application</td>
+<td>arg1</td>
+</tr>
+<tr>
+<td>Import Remote Library</td>
+<td>SwingLibrary</td>
+</tr>
+</table>
+<br />
+or<br />
+<br />
+<table border="1" class="doc">
+<tr>
+<td>Application Started</td>
+<td></td>
+</tr>
+<tr>
+<td>Import Remote Library</td>
+<td>SwingLibrary</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Start Application"></a>Start Application</td>
+  <td class="arg">args=, jvm_args=</td>
+  <td class="doc">Starts the application with given arguments.<br />
+<br />
+<span class="name">args</span> optional application arguments.. <span class="name">jvm_args</span> optional jvm arguments.<br />
+<br />
+Example:<br />
+<table border="1" class="doc">
+<tr>
+<td>Start Application</td>
+<td>one two three</td>
+<td>-Dproperty=value</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<p class="footer">
+Altogether 4 keywords.<br />
+Generated by <a href="http://code.google.com/p/robotframework/wiki/LibraryDocumentationTool">libdoc.py</a>
+on 2009-04-30 13:28:35.
+</p>
+</body>
+</html>
