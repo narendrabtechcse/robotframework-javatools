@@ -1,0 +1,30 @@
+﻿!ApplicationLauncher is used for launching java applications in a separate process and importing Robot Framework libraries to operate on them. This is useful when application does something that cannot be tested with Robot when running inside the same JVM such as calls System.exit or when multiple applications each running inside their own JVMs need to be tested in parallel.
+
+===Library documentation===
+
+ * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.8/doc/ApplicationLauncher.html Version 0.8]
+
+===Usage===
+
+!ApplicationLauncher depends on jvmconnector. Download the jvmconnector package from [http://code.google.com/p/robotframework-javatools/downloads/list the download page] and add it into the CLASSPATH before running the tests that use it.
+
+===Example===
+
+|| *Setting* || *Value* || *Value* || *Value* || *Value* ||
+|| Library || ApplicationLauncher || com.acme.MyApplication || WITH NAME || myAppLauncher ||
+|| Library || ApplicationLauncher || com.acme.OtherApplication || WITH NAME || otherAppLauncher ||
+|| || ||  ||  || ||
+|| *Test Case* || *Action* || *Argument* || *Argument* || *Argument* ||
+|| || ||  ||  || ||
+|| *Keyword* || *Action* || *Argument* || *Argument* || *Argument* ||
+|| startApplicationAndImportLibraries || [arguments] || ${name} || ${arguments} || ${jvmArguments}= ||
+|| || setLibrarySearchOrder || ${name}Launcher ||
+|| || startApplication || ${arguments} || ${jvmArguments} ||
+|| || importRemoteLibrary || ${remoteLib} || WITH NAME || ${remoteLib}${name} ||
+|| || importRemoteLibrary || JavaTools || WITH NAME || JavaTools${name} ||
+|| || ||  ||  || ||
+|| closeApplications || [arguments] || @{names} || || ||
+||  || :FOR || ${name} || IN || @{names} || || ||
+||  ||  || setLibrarySearchOrder || ${name}Launcher || || ||
+||  ||  || closeApplication || || ||
+
