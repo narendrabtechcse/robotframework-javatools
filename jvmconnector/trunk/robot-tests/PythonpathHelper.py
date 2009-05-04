@@ -4,4 +4,6 @@ import os
 
 class PythonpathHelper:
     def get_python_path(self):
-        return os.pathsep.join(sys.path)
+        for path_entry in sys.path:
+            if os.path.exists(os.path.join(path_entry, 'robot')):
+                return path_entry
