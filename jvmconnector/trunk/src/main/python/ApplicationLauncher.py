@@ -182,7 +182,7 @@ class ApplicationLauncher:
         Example:
         | Start Application | one two three | -Dproperty=value |
         """
-        pythonpath = pathsep.join(sys.path)
+        pythonpath = self._get_python_path()
         command = 'jython -Dpython.path=%s %s %s %s %s' % (pythonpath,
                   jvm_args, __file__, self.application, args)
         self.operating_system.start_process(command)
@@ -241,6 +241,11 @@ class ApplicationLauncher:
         self.rmi_url = None
         self._connect_to_base_rmi_service()
         
+    def _get_python_path(self):
+        for path_entry in sys.path:
+            if path.exists(path.join(path_entry, 'robot')):
+                return path_entry
+
     def _add_name_to_args_if_necessary(self, library_name, args):
         if len(args) >= 2 and args[-2].upper() == 'WITH NAME':
             return args
