@@ -29,7 +29,7 @@ WebstartLauncher Works With Https
 	setTrustStore
 	webstartLauncherLaunchesJavaWebstartApplication	${jnlpWithSsl}	Test App
 
-Create RMI Enhanced JNLP	[tags]	devel
+Create RMI Enhanced JNLP
 	${pathToJnlp}=	createRmiEnhancedJnlp	${rmiConfigFile}	${jnlpWithMainClassUrl}
 	${expectedJnlpContents}=	getEnhancedJnlp	${testAppDir}${/}test-lib	${rmiConfigFile}	${jnlpWithMainClassUrl}
 	${jnlpContents}=	getFile	${pathToJnlp}
