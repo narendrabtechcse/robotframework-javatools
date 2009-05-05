@@ -11,6 +11,7 @@ Download !ApplicationLauncher.py from [http://code.google.com/p/robotframework-j
 ===Example===
 Application launching and remote library imports are wrapped in a user keyword _!StartApplicationAndImportLibraries_. The idea is to have one !ApplicationLauncher per application and switch between the applications using the [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/libraries/BuiltIn.html#Set%20Library%20Search%20Order SetLibrarySearchOrder] keyword introduced in RF 2.1 in _!SelectApplication_ user keyword.
 
+In this example every application has a unique name. Every application has a launcher with name unique name + Launcher ie. myAppLauncher. In case you need to open multiple instances of the same application you need to have unique names for each instance ie. myApp1, myApp2, etc.
 
 || *Setting* || *Value* || *Value* || *Value* || *Value* ||
 || Library || !ApplicationLauncher.py || com.acme.!MyApplication || WITH NAME || myAppLauncher ||
