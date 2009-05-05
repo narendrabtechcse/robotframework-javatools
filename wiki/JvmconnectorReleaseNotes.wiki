@@ -1,6 +1,7 @@
 ﻿== Jvmconnector 0.8 ==
 
 In WebstartLauncher we added one new keyword and fixed one bug.
+
 Jvmconnector dependent library ApplicationLauncher is introduced.
 
 || *ID* || *Type* || *Priority* || *Summary* ||
