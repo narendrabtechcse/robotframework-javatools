@@ -17,7 +17,7 @@
 || || ||  ||  || ||
 || *Test Case* || *Action* || *Argument* || *Argument* || *Argument* ||
 || Start Applications And Do Something With Them || startApplicationAndImportLibraries || myApp || foo bar || ||
-|| || startApplicationAndImportLibraries || otherApp || baz || -DsomeProperty=someValue ||
+|| || startApplicationAndImportLibraries || otherApp || baz || -!DsomeProperty=someValue ||
 || || selectApplication || myApp || || ||
 || || selectMainWindow || || || ||
 || || # do something with myApp || || || ||
