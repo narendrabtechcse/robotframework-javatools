@@ -11,19 +11,19 @@
 ===Example===
 
 || *Setting* || *Value* || *Value* || *Value* || *Value* ||
-|| Library || ApplicationLauncher || com.acme.MyApplication || WITH NAME || myAppLauncher ||
-|| Library || ApplicationLauncher || com.acme.OtherApplication || WITH NAME || otherAppLauncher ||
+|| Library || !ApplicationLauncher || com.acme.!MyApplication || WITH NAME || myAppLauncher ||
+|| Library || !ApplicationLauncher || com.acme.!OtherApplication || WITH NAME || otherAppLauncher ||
 || || ||  ||  || ||
 || *Test Case* || *Action* || *Argument* || *Argument* || *Argument* ||
 || || ||  ||  || ||
 || *Keyword* || *Action* || *Argument* || *Argument* || *Argument* ||
-|| startApplicationAndImportLibraries || [arguments] || ${name} || ${arguments} || ${jvmArguments}= ||
+|| startApplicationAndImportLibraries || `[`arguments`]` || ${name} || ${arguments} || ${jvmArguments}= ||
 || || setLibrarySearchOrder || ${name}Launcher || || ||
 || || startApplication || ${arguments} || ${jvmArguments} || ||
-|| || importRemoteLibrary || ${remoteLib} || WITH NAME || ${remoteLib}${name} ||
-|| || importRemoteLibrary || JavaTools || WITH NAME || JavaTools${name} ||
+|| || importRemoteLibrary || !SwingLibrary || WITH NAME || !SwingLibrary${name} ||
+|| || importRemoteLibrary || !JavaTools || WITH NAME || !JavaTools${name} ||
 || || ||  ||  || ||
-|| closeApplications || [arguments] || @{names} || || ||
+|| closeApplications || `[`arguments`]` || @{names} || || ||
 ||  || :FOR || ${name} || IN || @{names} ||
 ||  ||  || setLibrarySearchOrder || ${name}Launcher || ||
 ||  ||  || closeApplication || || ||
