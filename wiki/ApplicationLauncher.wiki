@@ -1,4 +1,4 @@
-﻿!ApplicationLauncher is used for launching java applications in a separate process and importing Robot Framework libraries to operate on them. This is useful when application does something that cannot be tested with Robot when running inside the same JVM such as calls System.exit or when multiple applications each running inside their own JVMs need to be tested in parallel.
+﻿!ApplicationLauncher is used for launching java applications in a separate process and importing Robot Framework (RF) libraries to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT or when multiple applications running in separate JVMs need to be tested in parallel.
 
 ===Library documentation===
 
@@ -6,10 +6,11 @@
 
 ===Usage===
 
-!ApplicationLauncher depends on jvmconnector. Download the jvmconnector package from [http://code.google.com/p/robotframework-javatools/downloads/list the download page] and add it into the CLASSPATH.
+Download !ApplicationLauncher.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF Userguide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
 
 ===Example===
-One way to use !ApplicationLauncher. Application launching and remote library imports are wrapped in a user keyword _!StartApplicationAndImportLibraries_. Notice how we use the new _!SetLibrarySearchOrder_ keyword introduced in Robot Framework 2.1 in _!SelectApplication_ user keyword.
+Application launching and remote library imports are wrapped in a user keyword _!StartApplicationAndImportLibraries_. The idea is to have one !ApplicationLauncher per application and switch between the applications using the _!SetLibrarySearchOrder_ keyword introduced in RF 2.1 in _!SelectApplication_ user keyword.
+
 
 || *Setting* || *Value* || *Value* || *Value* || *Value* ||
 || Library || !ApplicationLauncher.py || com.acme.!MyApplication || WITH NAME || myAppLauncher ||
