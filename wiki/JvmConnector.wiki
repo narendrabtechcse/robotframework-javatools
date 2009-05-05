@@ -29,6 +29,10 @@ WebstartLauncher is a convenience library that comes with !JvmConnector.
 It is used for launching a Java Web Start application and for starting a RMI
 service inside that application's JVM so that keyword invocations can reach it.
 
+===!ApplicationLauncher===
+
+ApplicationLauncher is used for launching java applications in a separate process.
+
 ===Maven2===
 
 To use jvmconnector in your maven2 project add the following sections in your _pom.xml_:
