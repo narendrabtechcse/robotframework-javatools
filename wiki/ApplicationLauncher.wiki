@@ -13,8 +13,18 @@
 || *Setting* || *Value* || *Value* || *Value* || *Value* ||
 || Library || !ApplicationLauncher || com.acme.!MyApplication || WITH NAME || myAppLauncher ||
 || Library || !ApplicationLauncher || com.acme.!OtherApplication || WITH NAME || otherAppLauncher ||
+|| Test Teardown || closeApplications || myApp || otherApp || ||
 || || ||  ||  || ||
 || *Test Case* || *Action* || *Argument* || *Argument* || *Argument* ||
+|| Start Applications And Do Something With Them || ||  ||  || ||
+|| || startApplicationAndImportLibraries || myApp || foo bar || ||
+|| || startApplicationAndImportLibraries || otherApp || baz || -DsomeProperty=someValue ||
+|| || selectApplication || myApp || || ||
+|| || selectMainWindow || || || ||
+|| || # do something with myApp || || || ||
+|| || selectApplication || otherApp || || ||
+|| || selectMainWindow || || || ||
+|| || # do something with otherApp || || || ||
 || || ||  ||  || ||
 || *Keyword* || *Action* || *Argument* || *Argument* || *Argument* ||
 || startApplicationAndImportLibraries || `[`arguments`]` || ${name} || ${arguments} || ${jvmArguments}= ||
@@ -23,8 +33,10 @@
 || || importRemoteLibrary || !SwingLibrary || WITH NAME || !SwingLibrary${name} ||
 || || importRemoteLibrary || !JavaTools || WITH NAME || !JavaTools${name} ||
 || || ||  ||  || ||
+|| selectApplication || `[`arguments`]` || ${name} || || ||
+||  || setLibrarySearchOrder || !SwingLibrary${name} || !JavaTools${name} || ||
+|| || ||  ||  || ||
 || closeApplications || `[`arguments`]` || @{names} || || ||
 ||  || :FOR || ${name} || IN || @{names} ||
 ||  ||  || setLibrarySearchOrder || ${name}Launcher || ||
 ||  ||  || closeApplication || || ||
-
