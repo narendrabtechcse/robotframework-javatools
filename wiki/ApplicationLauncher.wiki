@@ -16,8 +16,7 @@
 || Test Teardown || closeApplications || myApp || otherApp || ||
 || || ||  ||  || ||
 || *Test Case* || *Action* || *Argument* || *Argument* || *Argument* ||
-|| Start Applications And Do Something With Them || ||  ||  || ||
-|| || startApplicationAndImportLibraries || myApp || foo bar || ||
+|| Start Applications And Do Something With Them || startApplicationAndImportLibraries || myApp || foo bar || ||
 || || startApplicationAndImportLibraries || otherApp || baz || -DsomeProperty=someValue ||
 || || selectApplication || myApp || || ||
 || || selectMainWindow || || || ||
