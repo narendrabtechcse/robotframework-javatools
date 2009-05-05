@@ -1,4 +1,14 @@
-﻿== Jvmconnector 0.7.3 ==
+﻿== Jvmconnector 0.8 ==
+
+In WebstartLauncher we added one new keyword and fixed one bug.
+Jvmconnector dependent library ApplicationLauncher is introduced.
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 14 || Enhancement || Medium || Create a keyword that only fetches the jnlp and enhances it with the RMI service ||
+|| Issue 17 || Defect || Medium || !WebstartLauncher should work even if jars have main attribute set to "true" ||
+|| Issue 18 || Enhancement || Medium || !ApplicationLauncher library ||
+
+== Jvmconnector 0.7.3 ==
 
 This release contains a small fix that enables the usage of !WebstartLauncher with https. Please see [WebstartLauncher#Troubleshooting WebstartLauncher] for more details.
 
