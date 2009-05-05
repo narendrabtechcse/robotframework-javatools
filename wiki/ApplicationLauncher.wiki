@@ -6,7 +6,7 @@
 
 ===Usage===
 
-Download !ApplicationLauncher.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF Userguide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
+Download !ApplicationLauncher.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF UserGuide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
 
 ===Example===
 Application launching and remote library imports are wrapped in a user keyword _!StartApplicationAndImportLibraries_. The idea is to have one !ApplicationLauncher per application and switch between the applications using the [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/libraries/BuiltIn.html#Set%20Library%20Search%20Order SetLibrarySearchOrder] keyword introduced in RF 2.1 in _!SelectApplication_ user keyword.
