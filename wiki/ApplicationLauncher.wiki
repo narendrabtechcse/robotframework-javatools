@@ -9,7 +9,7 @@
 !ApplicationLauncher depends on jvmconnector. Download the jvmconnector package from [http://code.google.com/p/robotframework-javatools/downloads/list the download page] and add it into the CLASSPATH before running the tests that use it.
 
 ===Example===
-One way to use !ApplicationLauncher. Application launching and remote library imports are wrapped in a user keyword "StartApplicationAndImportLibraries". Notice how we use the new "SetLibrarySearchOrder" keyword introduced in Robot Framework 2.1 in "SelectApplication" user keyword.
+One way to use !ApplicationLauncher. Application launching and remote library imports are wrapped in a user keyword "!StartApplicationAndImportLibraries". Notice how we use the new "!SetLibrarySearchOrder" keyword introduced in Robot Framework 2.1 in "!SelectApplication" user keyword.
 
 || *Setting* || *Value* || *Value* || *Value* || *Value* ||
 || Library || !ApplicationLauncher || com.acme.!MyApplication || WITH NAME || myAppLauncher ||
