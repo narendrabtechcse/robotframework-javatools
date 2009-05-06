@@ -16,6 +16,8 @@
 
 package org.robotframework.jvmconnector.mocks;
 
+import java.io.IOException;
+
 
 
 public class MyApplication {
@@ -26,5 +28,21 @@ public class MyApplication {
         MyApplication.args = args;
         isRunning = true;
         Thread.sleep(500);
+    }
+    
+    public static void startAnotherInstance(String[] arguments) {
+        try {
+            Runtime.getRuntime().exec("java " + MyApplication.class.getName() + " " + toString(arguments));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String toString(String[] arguments) {
+        StringBuilder sb = new StringBuilder();
+        for (String arg : arguments) {
+            sb.append(arg + " ");
+        }
+        return sb.toString();
     }
 }

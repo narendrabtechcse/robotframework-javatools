@@ -65,6 +65,14 @@ def get_python_path():
         if os.path.exists(os.path.join(path, 'robot')):
             return path
     
+def add_fake_java_to_path():
+    dir = os.path.dirname(__file__)
+    bindir = 'bin'
+    if os.name == 'nt':
+        bindir += '_nt'
+
+    lib = os.path.join(dir, 'robot-tests', bindir)
+    os.environ['PATH'] = lib + os.pathsep + os.environ['PATH']
 
 if __name__ == '__main__':
     rc = 0
@@ -78,6 +86,7 @@ if __name__ == '__main__':
     else:
         python_path = get_python_path()
         add_dependencies_to_path()
+        add_fake_java_to_path()
         if len(sys.argv[1:]) > 0:
             runner = os.path.join(python_path, 'robot', 'runner.py')
             args_as_string = ' '.join(sys.argv[1:])

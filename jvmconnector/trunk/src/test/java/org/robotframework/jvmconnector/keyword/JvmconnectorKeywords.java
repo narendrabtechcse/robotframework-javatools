@@ -43,4 +43,9 @@ public class JvmconnectorKeywords extends AnnotationLibrary {
         String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
         return FileUtils.readFileToString(new File(pathToJnlp), "UTF-8");
     }
+    
+    @RobotKeyword
+    public void startAnotherInstance(String[] args) {
+        MyApplication.startAnotherInstance(args);
+    }
 }

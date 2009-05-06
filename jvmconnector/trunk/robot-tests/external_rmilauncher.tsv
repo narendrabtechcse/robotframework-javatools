@@ -1,0 +1,30 @@
+*Setting*	*Value*
+library	${CURDIR}${/}lib${/}ApplicationLauncher.py	org.robotframework.swing.testapp.TestApplication
+library	OperatingSystem
+
+*Variable*
+${remoteLib}	${CURDIR}${/}lib${/}RemoteLibrary.py
+${portInfo}	${CURDIR}${/}lib${/}port.txt
+
+*TestCase*	*Action*	*Argument*
+My Test
+	startMyApplication
+	selectMainWindow
+	pushButton	Start new application
+	startUsingApplication	app2
+	app2.SelectMainWindow
+	runKeywordAndIgnoreError	app2.PushButton	systemExitButton		
+	runKeywordAndIgnoreError	SwingLibrary.PushButton	systemExitButton		
+
+*Keyword*	*Action*	*Argument*
+startMyApplication
+	startApplication
+	importRemoteLibrary	SwingLibrary
+
+closeApplication
+	runKeywordAndIgnoreError	pushButton	systemExitButton
+	
+startUsingApplication	[arguments]	${name}
+	sleep	5
+	${port} =	getFile	${portInfo}
+	importLibrary	 ${remoteLib}	rmi://localhost:${port}/SwingLibrary	WITH NAME	${name}
