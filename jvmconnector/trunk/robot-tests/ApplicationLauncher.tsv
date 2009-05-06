@@ -1,4 +1,5 @@
-* Setting *	* Value *
+*** Setting ***
+
 library	ApplicationLauncher	${app}	WITH NAME	myAppLauncher
 library	ApplicationLauncher	${app}	1sec	WITH NAME	oneSec
 library	ApplicationLauncher	${app}	10sec	WITH NAME	tenSec
@@ -7,12 +8,14 @@ library	ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
 library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 library	ApplicationLauncher	${app}	WITH NAME	closeable
 
-*Variable*	*Value*
+*** Variable ***
+
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 ${timeoutMsg}=	Could not connect to application ${app}
 
-* Test Case *	* Action *	* Argument *
+*** Test Case ***
+
 Starts Application And Imports Remote Library
 	myAppLauncher.startApplication
 	myAppLauncher.importRemoteLibrary	${remoteLib}	WITH NAME	myApp
@@ -55,7 +58,8 @@ Close Application
 	closeable.closeApplication
 	runKeywordAndExpectError	*	closeableApp.applicationIsRunning
 
-*Keyword*	*Action*	*Argument*	*Argument*
+*** Keyword ***	
+
 remoteLibraryShouldBeImported	[arguments]	${library}
 	applicationShouldBeRunning	${library}
 	runKeyword	${library}.stopApplication
