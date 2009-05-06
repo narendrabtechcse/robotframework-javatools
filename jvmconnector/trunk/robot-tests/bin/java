@@ -1,3 +1,4 @@
 #!/bin/bash
 
-python `dirname $0`/rmi_launcher.py $@
+python `dirname $0`/../../src/main/python/ExternalApplicationLauncher.py $@
+
