@@ -21,7 +21,7 @@ class ExternalApplicationLauncher:
 
     def launch_java_with_rmi(self, args):
         command = self._get_command(args)
-        os.popen2(command)
+        os.system(command)
 
     def _get_command(self, args):
         if 'ApplicationLauncher.py' in args:
