@@ -18,33 +18,38 @@ class TestApplicationLauncherStartingApplication(unittest.TestCase):
     def setUp(self):
         self.rmi_launcher = ApplicationLauncher(application)
         self.rmi_launcher.db_path = '/tempfile'
+        self.rmi_launcher.application_started = self._fake_application_started
         self.os_library = _FakeOperatingSystemLibrary()
         self.rmi_launcher.operating_system = self.os_library
 
     def test_starts_application(self):
         self.rmi_launcher.start_application()
         assert_equals(self._get_expected_command(), self.os_library.command)
+        assert_true(self.application_started)
 
     def tests_passes_arguments(self):
-        self.rmi_launcher.start_application('-Done=two -Dthree=four',
-                                            'one two three')
-        expected_command = self._get_expected_command('-Done=two -Dthree=four',
-                                                      'one two three')
+        self.rmi_launcher.start_application('one two three', '-Done=two -Dthree=four')
+        expected_command = self._get_expected_command('one two three', '-Done=two -Dthree=four')
         assert_equals(expected_command, self.os_library.command)
 
-    def _get_expected_command(self, jvm_args='', args=''):
+    def _get_expected_command(self, args='', jvm_args=''):
         current_pythonpath = self._get_current_pythonpath()
         script_path = self._get_path_to_script()
-        template = 'jython -Dpython.path=%s %s %s /tempfile %s %s'
+        template = 'jython -Dpython.path=%s %s %s %s %s'
         return template % (current_pythonpath, jvm_args, script_path,
                            application, args)
 
     def _get_current_pythonpath(self):
-        return os.pathsep.join(sys.path)
+        for path_entry in sys.path:
+            if os.path.exists(os.path.join(path_entry, 'robot')):
+                return path_entry
 
     def _get_path_to_script(self):
         base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
         return '%s/src/main/python/ApplicationLauncher.py' % base
+
+    def _fake_application_started(self):
+        self.application_started = True
 
 class TestApplicationLauncherImportingLibrary(unittest.TestCase):
     def setUp(self):
