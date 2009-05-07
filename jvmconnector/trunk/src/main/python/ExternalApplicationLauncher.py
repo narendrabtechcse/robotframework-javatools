@@ -11,9 +11,7 @@ class ArgumentResolver:
 class ExternalApplicationLauncher:
 
     def launch_java_with_rmi(self, args):
-        print args
         command = self._get_command(args)
-        print command
         os.popen2(command)
 
     def _get_command(self, args):
