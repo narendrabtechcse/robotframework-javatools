@@ -3,10 +3,12 @@
 import os
 from os.path import abspath, dirname, exists, join, normpath
 import sys
+import re
 
 class ArgumentResolver:
     def resolve_arguments(self, raw_args):
-        pass        
+        return re.search(r'((?:\s*(?:-classpath|-cp)\s+\S+|\s*-\S+)*)\s*(\S+)\s*(.*)',
+                         raw_args).groups()
 
 class ExternalApplicationLauncher:
 
