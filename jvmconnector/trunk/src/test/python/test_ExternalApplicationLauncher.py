@@ -11,7 +11,7 @@ class TestArgumentResolver(unittest.TestCase):
         self.app_args = 'foo bar baz'
         self.app = 'org.robotframework.mock.MyApp'
                   
-    def test_java_in_arguments(self):
+    def test_resolves_arguments(self):
         args = '%s %s %s' % (self.jvm_args, self.app, self.app_args)
         jvm_args, app, app_args = ArgumentResolver().resolve_arguments(args)
         self.assertEquls(self.jvm_args, jvm_args)
