@@ -18,10 +18,10 @@ class ExternalApplicationLauncher:
         if 'ApplicationLauncher.py' in args:
             return self._get_java(args)
         else:
-            return self._wrap_java()
+            return self._wrap_java(args)
 
     def _get_java(self, args):
-        return self._find_real_java_path() + ' '.join(args)
+        return '%s %s' % (self._find_real_java_path(), ' '.join(args))
 
     def _find_real_java_path(self):
         fake_java_dir = normpath(abspath(dirname(__file__)))
