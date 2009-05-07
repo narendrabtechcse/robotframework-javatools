@@ -7,8 +7,15 @@ import re
 
 class ArgumentResolver:
     def resolve_arguments(self, raw_args):
-        return re.search(r'((?:\s*(?:-classpath|-cp)\s+\S+|\s*-\S+)*)\s*(\S+)\s*(.*)',
-                         raw_args).groups()
+        pattern = '''
+        ((?:\s*                         # group 0: jvm args
+        (?:-classpath|-cp)\s+\S+        # classpath option and value
+        |
+        \s*-\S+)*)\s*                   # other jvm options
+        (\S+)                           # group 1: main class of application
+        \s*
+        (.*)                            # group 2: application arguments'''
+        return re.search(pattern, raw_args, re.VERBOSE).groups()
 
 class ExternalApplicationLauncher:
 
