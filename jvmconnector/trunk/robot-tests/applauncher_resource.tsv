@@ -1,4 +1,4 @@
-* Setting *	* Value *
+*** Setting ***
 library	OperatingSystem
 library	PythonpathHelper.py
 library	ApplicationLauncher	${app}	WITH NAME	xLauncher
@@ -6,12 +6,12 @@ library	ApplicationLauncher	${app}	WITH NAME	yLauncher
 library	ApplicationLauncher	${app}	WITH NAME	zLauncher
 library	ApplicationLauncher	${app}	WITH NAME	externalXLauncher
 
-*Variable*	*Value*
+*** Variable ***
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 ${appLauncherScript}	${CURDIR}${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
 
-*Keyword*	*Action*	*Argument*	*Argument*
+*** Keyword ***
 startExternalApplicationX
 	startExternalApplicationAndImportLibraries	externalX	externalX
 
@@ -32,7 +32,7 @@ correctApplicationShouldBeInUse	[arguments]	${expectedName}
 	shouldBeEqual	${expectedName}	@{arguments}
 
 selectApplication	[arguments]	${name}
-	setLibrarySearchOrder	${remoteLib}${name}	JavaTools${name}
+	setLibrarySearchOrder	${remoteLib}${name}	JavaTools${name}	${name}Launcher
 
 closeApplications	[arguments]	@{names}
 	:FOR	${name}	IN	@{names}
@@ -42,13 +42,15 @@ closeApplications	[arguments]	@{names}
 startApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jvmArguments}=
 	setLibrarySearchOrder	${name}Launcher
 	startApplication	${arguments}	${jvmArguments}
-	importRemoteLibrary	${remoteLib}	WITH NAME	${remoteLib}${name}
-	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
+	importRemoteLibraries	${name}
 
 startExternalApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jvmArguments}=
 	setLibrarySearchOrder	${name}Launcher
 	${pythonPath}=	getPythonPath
 	startProcess	jython -Dpython.path=${pythonPath} ${jvmArguments} ${appLauncherScript} ${app} ${arguments}
 	applicationStarted
+	importRemoteLibraries	${name}
+
+importRemoteLibraries	[arguments]	${name}
 	importRemoteLibrary	${remoteLib}	WITH NAME	${remoteLib}${name}
 	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}

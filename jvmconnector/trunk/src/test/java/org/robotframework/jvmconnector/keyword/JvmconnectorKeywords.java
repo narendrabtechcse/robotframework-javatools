@@ -45,7 +45,7 @@ public class JvmconnectorKeywords extends AnnotationLibrary {
     }
     
     @RobotKeyword
-    public void startAnotherInstance(String[] args) {
-        MyApplication.startAnotherInstance(args);
+    public void startAnotherInstance(String applicationArgs, String jvmArgs) {
+        MyApplication.startAnotherInstance(applicationArgs, jvmArgs);
     }
 }

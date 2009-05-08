@@ -1,2 +1,2 @@
-$command = "python " & @ScriptDir & "\rmi_launcher.py " & $CmdLineRaw
+$command = "python " & @ScriptDir & "\..\..\src\main\python\ExternalApplicationLauncher.py" & $CmdLineRaw
 Run($command, "", @SW_HIDE)

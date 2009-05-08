@@ -43,11 +43,12 @@ class ExternalApplicationLauncher:
     def _wrap_java(self, args):
         script = join(dirname(__file__), 'ApplicationLauncher.py')
         jvm_args, application, app_args = self._resolve_arguments(args)
-        command = 'jython -Dpython.path=%s %s %s %s %s' % (self._get_python_path(),
-                  jvm_args, script, self.application, args)
+        return 'jython -Dpython.path=%s %s %s %s %s' % (self._get_python_path(),
+                                                        jvm_args, script,
+                                                        application, app_args)
 
     def _resolve_arguments(self, args):
-        return ArgumentResolver().resolve_arguments(args)
+        return ArgumentResolver().resolve_arguments(' '.join(args))
         
     def _get_python_path(self):
         for path_entry in sys.path:
