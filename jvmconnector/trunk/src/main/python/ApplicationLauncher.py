@@ -4,7 +4,7 @@ import sys
 import __builtin__
 
 from os import pathsep, path, remove
-from tempfile import gettempdir
+from tempfile import gettempdir, mktemp
 
 from java.lang import Class
 from java.lang import System
@@ -183,8 +183,10 @@ class ApplicationLauncher:
         | Start Application | one two three | -Dproperty=value |
         """
         pythonpath = self._get_python_path()
-        command = 'jython -Dpython.path="%s" %s "%s" %s %s' % (pythonpath,
-                  jvm_args, __file__, self.application, args)
+        err_file = mktemp('%s.err' % self.application)
+        out_file = mktemp('%s.out' % self.application)
+        command = 'jython -Dpython.path="%s" %s "%s" %s %s 1>%s 2>%s' % (pythonpath,
+                  jvm_args, __file__, self.application, args, out_file, err_file)
         self.operating_system.start_process(command)
         self.application_started()
     
