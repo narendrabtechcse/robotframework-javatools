@@ -183,7 +183,7 @@ class ApplicationLauncher:
         | Start Application | one two three | -Dproperty=value |
         """
         pythonpath = self._get_python_path()
-        command = 'jython -Dpython.path=%s %s %s %s %s' % (pythonpath,
+        command = 'jython -Dpython.path="%s" %s "%s" %s %s' % (pythonpath,
                   jvm_args, __file__, self.application, args)
         self.operating_system.start_process(command)
         self.application_started()
