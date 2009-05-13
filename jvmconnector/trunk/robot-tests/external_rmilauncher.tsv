@@ -1,7 +1,7 @@
 *** Setting ***
-library	ApplicationLauncher	${testApp}	WITH NAME	myApp1Launcher
-library	ApplicationLauncher	${testApp}	WITH NAME	myApp2Launcher
-library	ApplicationLauncher	${testApp}	WITH NAME	myApp3Launcher
+library	ApplicationLauncher	${testApp}	10sec	WITH NAME	myApp1Launcher
+library	ApplicationLauncher	${testApp}	10sec	WITH NAME	myApp2Launcher
+library	ApplicationLauncher	${testApp}	10sec	WITH NAME	myApp3Launcher
 resource	applauncher_resource.tsv
 
 *Variable*
