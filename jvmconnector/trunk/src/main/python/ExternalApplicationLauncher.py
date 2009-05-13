@@ -5,6 +5,7 @@ from os.path import abspath, dirname, exists, join, normpath
 import sys
 import re
 
+
 class ArgumentResolver:
     def resolve_arguments(self, raw_args):
         pattern = '''
@@ -43,7 +44,7 @@ class ExternalApplicationLauncher:
     def _wrap_java(self, args):
         script = join(dirname(__file__), 'ApplicationLauncher.py')
         jvm_args, application, app_args = self._resolve_arguments(args)
-        return 'jython -Dpython.path=%s %s %s %s %s' % (self._get_python_path(),
+        return 'jython -Dpython.path="%s" %s "%s" %s %s' % (self._get_python_path(),
                                                         jvm_args, script,
                                                         application, app_args)
 
