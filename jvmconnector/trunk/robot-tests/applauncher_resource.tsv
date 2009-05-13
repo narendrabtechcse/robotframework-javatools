@@ -8,7 +8,7 @@ library	ApplicationLauncher	${app}	WITH NAME	externalXLauncher
 
 *** Variable ***
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
-${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
+${testingLibrary}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 ${appLauncherScript}	${CURDIR}${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
 
 *** Keyword ***
@@ -32,7 +32,7 @@ correctApplicationShouldBeInUse	[arguments]	${expectedName}
 	shouldBeEqual	${expectedName}	@{arguments}
 
 selectApplication	[arguments]	${name}
-	setLibrarySearchOrder	${remoteLib}${name}	JavaTools${name}	${name}Launcher
+	setLibrarySearchOrder	${name}Launcher	${testingLibrary}${name}	JavaTools${name}
 
 closeApplications	[arguments]	@{names}
 	:FOR	${name}	IN	@{names}
@@ -52,5 +52,5 @@ startExternalApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jv
 	importRemoteLibraries	${name}
 
 importRemoteLibraries	[arguments]	${name}
-	importRemoteLibrary	${remoteLib}	WITH NAME	${remoteLib}${name}
+	importRemoteLibrary	${testingLibrary}	WITH NAME	${testingLibrary}${name}
 	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
