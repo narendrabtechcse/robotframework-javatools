@@ -2,6 +2,10 @@
 It is used for launching a Java Web Start application and for starting a RMI
 service inside that application's JVM so that keyword invocations can reach it.
 
+===Disclaimer===
+
+Don't use this library unless absolutely necessary. !WebstartLauncher is not really very user friendly and it involves setting up rmi services in xml configuration files and creating custom truststores for your self signed certificates. It will both complicate and slow down your tests. We recommend to create your application in such a way that it can be tested as a standalone application too so that Java Web Start can be left out of the equation.
+
 ===Library documentation===
 
 *Importing*
