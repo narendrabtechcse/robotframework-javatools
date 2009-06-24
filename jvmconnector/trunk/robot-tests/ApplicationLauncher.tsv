@@ -61,11 +61,7 @@ Close Application
 	closeable.closeApplication
 	runKeywordAndExpectError	*	closeableApp.applicationIsRunning
 
-Lol
-	logging.startApplication	log
-	logging.importRemoteLibrary	${remoteLib}	WITH NAME	logApp
-	remoteLibraryShouldBeImported	logApp
-	logging.closeApplication
+Starting Webstart Application	[tags]	not_ready
 
 *** Keyword ***	
 

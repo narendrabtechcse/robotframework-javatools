@@ -173,6 +173,13 @@ class ApplicationLauncher:
         self.operating_system = OperatingSystem()
         self.rmi_url = None
 
+    def start_webstart_application(self, libdir, jvm_args=''):
+        free_port = FreePortFinder().find_free_port()
+        command = 'javaws %s %s'  % (pythonpath,
+                  jvm_args, __file__, self.application, args, out_file, err_file)
+
+        
+
     def start_application(self, args='', jvm_args=''):
         """Starts the application with given arguments.
 

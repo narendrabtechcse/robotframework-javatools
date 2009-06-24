@@ -26,6 +26,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FilenameUtils;
+import org.robotframework.jvmconnector.launch.RMILauncher;
 import org.robotframework.jvmconnector.xml.Document;
 import org.robotframework.jvmconnector.xml.Document.MyElement;
 
@@ -36,8 +37,8 @@ public class JnlpEnhancer {
         this.resourceDir = resourceDir;
     }
     
-    public String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception, FileNotFoundException {
-        Document modifiedJnlp = createEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+    public String createRmiEnhancedJnlp(String rmiPort, String jnlpUrl) throws Exception, FileNotFoundException {
+        Document modifiedJnlp = createEnhancedJnlp(rmiPort, jnlpUrl);
         String localName = getLocalName(jnlpUrl);
         modifiedJnlp.printTo(new PrintStream(new FileOutputStream(localName), false, "UTF-8"));
         return localName;
@@ -52,7 +53,7 @@ public class JnlpEnhancer {
         }
     }
 
-    private Document createEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception {
+    private Document createEnhancedJnlp(String rmiPort, String jnlpUrl) throws Exception {
         Document doc = createDocument(jnlpUrl);
         MyElement jnlp = doc.element("jnlp");
         jnlp.removeAttribute("href");
@@ -66,9 +67,9 @@ public class JnlpEnhancer {
             mainClass = mainJar.getMainClass();
         }
         
-        appDesc.setAttribute("main-class", "RMILauncher");
+        appDesc.setAttribute("main-class", RMILauncher.class.getName());
         appDesc.insertElement("argument").insertText(mainClass);
-        appDesc.insertElement("argument").insertText(rmiConfigFilePath);
+        appDesc.insertElement("argument").insertText(rmiPort);
         
         modifyResourcesElement(jnlp);
         return doc;

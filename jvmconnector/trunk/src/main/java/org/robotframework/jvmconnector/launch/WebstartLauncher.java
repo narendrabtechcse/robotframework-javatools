@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package org.robotframework.jvmconnector.launch;
+
 import java.io.IOException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -44,13 +46,13 @@ public class WebstartLauncher {
         this.javawsExecutable = javawsExecutable;
     }
 
-    public void startWebstartApplicationAndRmiService(String rmiConfigFilePath, String jnlpUrl) throws Exception {
-        String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+    public void startWebstartApplicationAndRmiService(String rmiPort, String jnlpUrl) throws Exception {
+        String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(rmiPort, jnlpUrl);
         launchRmiEnhancedJnlp(pathToJnlp);
     }
     
-    public String createRmiEnhancedJnlp(String rmiConfigFilePath, String jnlpUrl) throws Exception {
-        return jnlpRunner.createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+    public String createRmiEnhancedJnlp(String rmiPort, String jnlpUrl) throws Exception {
+        return jnlpRunner.createRmiEnhancedJnlp(rmiPort, jnlpUrl);
     }
 
     private Process launchRmiEnhancedJnlp(String jnlpFile) throws IOException {

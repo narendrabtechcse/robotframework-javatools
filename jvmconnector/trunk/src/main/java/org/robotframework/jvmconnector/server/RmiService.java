@@ -22,7 +22,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 
 public class RmiService {
-    public void start(final String rmiConfigFilePath) {
-        new GenericApplicationContext(new XmlBeanFactory(new FileSystemResource(rmiConfigFilePath))).refresh();
+    public void start(final String rmiPort) {
+        new GenericApplicationContext(new XmlBeanFactory(new FileSystemResource(rmiPort))).refresh();
     }
 }
