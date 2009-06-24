@@ -6,51 +6,14 @@ import jdave.junit4.JDaveRunner;
 import org.jmock.Expectations;
 import org.junit.runner.RunWith;
 import org.laughingpanda.beaninject.Inject;
-import org.robotframework.jvmconnector.launch.RMILauncher;
 import org.robotframework.jvmconnector.server.ApplicationLauncher;
 import org.robotframework.jvmconnector.server.RmiService;
 
 @RunWith(JDaveRunner.class)
 public class RMILauncherSpec extends Specification<RMILauncher> {
-    private String javaExecutable = "java";
-    private String jvmArgs = "-Dfoo=bar";
-    private String applicationClassName = "com.acme.SomeApp";
-    private String rmiConfigFilePath = "rmiConfig.xml";
-    
-    public class ActingAsLibrary {
-        private Runtime runtime;
-        private Runtime originalRuntime;
-
-        public RMILauncher create() {
-            originalRuntime = Runtime.getRuntime();
-            runtime = mock(Runtime.class);
-            injectRuntime(runtime);
-            return new RMILauncher(javaExecutable, jvmArgs);
-        }
-        
-        public void executesItselfWithGivenArgs() throws Exception {
-            String applicationArgs = "foo bar baz";
-            
-            final String expectedCommand = javaExecutable + " " + jvmArgs + " " + RMILauncher.class.getName()
-                + " " + rmiConfigFilePath + " " + applicationClassName + " " + applicationArgs;
-            
-            checking(new Expectations() {{
-                one(runtime).exec(expectedCommand);
-            }});
-            
-            context.startApplicationAndRMIService(rmiConfigFilePath, applicationClassName, new String[] {"foo", "bar", "baz" });
-        }
-        
-        public void destroy() {
-            injectRuntime(originalRuntime);
-        }
-        
-        private void injectRuntime(Runtime runtime) {
-            Inject.staticField("currentRuntime").of(Runtime.class).with(runtime);
-        }
-    }
-    
     public class WhenExecuted {
+        private String applicationClassName = "com.acme.SomeApp";
+        private String rmiConfigFilePath = "rmiConfig.xml";
         private RmiService rmiService;
         private ApplicationLauncher applicationLauncher;
 
