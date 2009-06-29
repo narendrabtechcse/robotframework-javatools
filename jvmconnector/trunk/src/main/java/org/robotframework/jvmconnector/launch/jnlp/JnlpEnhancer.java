@@ -32,13 +32,15 @@ import org.robotframework.jvmconnector.xml.Document.MyElement;
 
 public class JnlpEnhancer {
     private final String resourceDir;
+    private final String pathToRmiStorage;
 
-    public JnlpEnhancer(String resourceDir) {
+    public JnlpEnhancer(String pathToRmiStorage, String resourceDir) {
+        this.pathToRmiStorage = pathToRmiStorage;
         this.resourceDir = resourceDir;
     }
     
-    public String createRmiEnhancedJnlp(String rmiPort, String jnlpUrl) throws Exception, FileNotFoundException {
-        Document modifiedJnlp = createEnhancedJnlp(rmiPort, jnlpUrl);
+    public String createRmiEnhancedJnlp(String jnlpUrl) throws Exception, FileNotFoundException {
+        Document modifiedJnlp = createEnhancedJnlp(jnlpUrl);
         String localName = getLocalName(jnlpUrl);
         modifiedJnlp.printTo(new PrintStream(new FileOutputStream(localName), false, "UTF-8"));
         return localName;
@@ -53,7 +55,7 @@ public class JnlpEnhancer {
         }
     }
 
-    private Document createEnhancedJnlp(String rmiPort, String jnlpUrl) throws Exception {
+    private Document createEnhancedJnlp(String jnlpUrl) throws Exception {
         Document doc = createDocument(jnlpUrl);
         MyElement jnlp = doc.element("jnlp");
         jnlp.removeAttribute("href");
@@ -69,7 +71,7 @@ public class JnlpEnhancer {
         
         appDesc.setAttribute("main-class", RMILauncher.class.getName());
         appDesc.insertElement("argument").insertText(mainClass);
-        appDesc.insertElement("argument").insertText(rmiPort);
+        appDesc.insertElement("argument").insertText(pathToRmiStorage);
         
         modifyResourcesElement(jnlp);
         return doc;

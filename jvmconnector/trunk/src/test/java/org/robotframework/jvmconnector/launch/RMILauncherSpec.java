@@ -13,7 +13,7 @@ import org.robotframework.jvmconnector.server.RmiService;
 public class RMILauncherSpec extends Specification<RMILauncher> {
     public class WhenExecuted {
         private String applicationClassName = "com.acme.SomeApp";
-        private String rmiConfigFilePath = "rmiConfig.xml";
+        private String pathToStorage = "/tmp/launcher.txt";
         private RmiService rmiService;
         private ApplicationLauncher applicationLauncher;
 
@@ -24,11 +24,11 @@ public class RMILauncherSpec extends Specification<RMILauncher> {
         
         public void startsRmiService() throws Exception {
             checking(new Expectations() {{
-                one(rmiService).start(rmiConfigFilePath);
+                one(rmiService).start(pathToStorage);
                 ignoring(applicationLauncher);
             }});
             
-            RMILauncher.main(new String[] {rmiConfigFilePath, applicationClassName });
+            RMILauncher.main(new String[] {pathToStorage, applicationClassName });
         }
         
         public void startsApplication() throws Exception {
@@ -37,7 +37,7 @@ public class RMILauncherSpec extends Specification<RMILauncher> {
                 ignoring(rmiService);
             }});
             
-            RMILauncher.main(new String[] {rmiConfigFilePath, applicationClassName, "foo", "bar"});
+            RMILauncher.main(new String[] {pathToStorage, applicationClassName, "foo", "bar"});
         }
         
         private <T> T injectMock(Class<T> mockedClass, String fieldName, Class<?> target) {

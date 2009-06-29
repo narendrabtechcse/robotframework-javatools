@@ -61,8 +61,6 @@ Close Application
 	closeable.closeApplication
 	runKeywordAndExpectError	*	closeableApp.applicationIsRunning
 
-Starting Webstart Application	[tags]	not_ready
-
 *** Keyword ***	
 
 remoteLibraryShouldBeImported	[arguments]	${library}

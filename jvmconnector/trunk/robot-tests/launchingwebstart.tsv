@@ -1,0 +1,29 @@
+*** Setting ***
+
+library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
+library	ApplicationLauncher	${jnlpWithMainClassUrl}	WITH NAME	myAppLauncher
+suiteSetup	startWebstartService
+suiteTeardown	stopWebstartService
+
+*** Variable ***
+${testAppDir}	${CURDIR}${/}..${/}src${/}test${/}resources
+${codeBase}	http://localhost:14563/test-app
+${jnlpWithMainClassUrl}	${codeBase}/test-application.jnlp
+
+*** Test Case ***
+
+Starts Application And Imports Remote Library
+	myAppLauncher.startWebstartApplication	${testAppDir}${/}test-lib
+	myAppLauncher.importRemoteLibrary	SwingLibrary	WITH NAME	myApp
+	remoteLibraryShouldBeImported	myApp
+	[teardown]	myAppLauncher.closeApplication
+
+*** Keyword ***	
+startWebstartService
+	FileServer.start	${testAppDir}
+
+stopWebstartService
+	FileServer.stop
+
+remoteLibraryShouldBeImported	[arguments]	${library}
+	runKeyword	${library}.selectMainWindow

@@ -37,22 +37,22 @@ public class WebstartLauncher {
         });
     }
     
-    public WebstartLauncher(String libraryResourceDir) {
-        this(libraryResourceDir, "javaws");
+    public WebstartLauncher(String pathToRmiInfoStorage, String libraryResourceDir) {
+        this(pathToRmiInfoStorage, libraryResourceDir, "javaws");
     }
 
-    public WebstartLauncher(String libraryResourceDir, String javawsExecutable) {
-        this.jnlpRunner = new JnlpEnhancer(libraryResourceDir);
+    public WebstartLauncher(String pathToRmiInfoStorage, String libraryResourceDir, String javawsExecutable) {
+        this.jnlpRunner = new JnlpEnhancer(pathToRmiInfoStorage, libraryResourceDir);
         this.javawsExecutable = javawsExecutable;
     }
 
-    public void startWebstartApplicationAndRmiService(String rmiPort, String jnlpUrl) throws Exception {
-        String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(rmiPort, jnlpUrl);
+    public void startWebstartApplicationAndRmiService(String jnlpUrl) throws Exception {
+        String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(jnlpUrl);
         launchRmiEnhancedJnlp(pathToJnlp);
     }
     
-    public String createRmiEnhancedJnlp(String rmiPort, String jnlpUrl) throws Exception {
-        return jnlpRunner.createRmiEnhancedJnlp(rmiPort, jnlpUrl);
+    public String createRmiEnhancedJnlp(String jnlpUrl) throws Exception {
+        return jnlpRunner.createRmiEnhancedJnlp(jnlpUrl);
     }
 
     private Process launchRmiEnhancedJnlp(String jnlpFile) throws IOException {

@@ -86,11 +86,13 @@ if __name__ == '__main__':
     else:
         python_path = get_python_path()
         add_dependencies_to_path()
-        add_fake_java_to_path()
+        #add_fake_java_to_path()
         if len(sys.argv[1:]) > 0:
             runner = os.path.join(python_path, 'robot', 'runner.py')
             args_as_string = ' '.join(sys.argv[1:])
-            rc = os.system('jython -Dpython.path=%s %s --loglevel TRACE --outputdir %s %s' % (python_path, runner, gettempdir(), args_as_string))
+            command = 'jython -Dpython.path=%s %s --loglevel TRACE --outputdir %s %s' % (python_path, runner, gettempdir(), args_as_string)
+            print command
+            rc = os.system(command)
         else:
             rc = os.system('jython -Dpython.path=%s %s' % (python_path, __file__))
 

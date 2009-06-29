@@ -13,6 +13,8 @@ import org.robotframework.jvmconnector.mocks.MyApplication;
 
 @RobotKeywords
 public class JvmconnectorKeywords extends AnnotationLibrary {
+    private final String tmpDir = System.getProperty("java.io.tmpdir");
+    
     public JvmconnectorKeywords() {
         super("org/robotframework/jvmconnector/keyword/**/*.class");
     }
@@ -38,9 +40,9 @@ public class JvmconnectorKeywords extends AnnotationLibrary {
     }
     
     @RobotKeyword
-    public String getEnhancedJnlp(String libraryResourceDir, String rmiConfigFilePath, String jnlpUrl) throws Exception {
-        JnlpEnhancer jnlpRunner = new JnlpEnhancer(libraryResourceDir);
-        String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(rmiConfigFilePath, jnlpUrl);
+    public String getEnhancedJnlp(String libraryResourceDir, String jnlpUrl) throws Exception {
+        JnlpEnhancer jnlpRunner = new JnlpEnhancer(tmpDir + "/launcher.txt", libraryResourceDir);
+        String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(jnlpUrl);
         return FileUtils.readFileToString(new File(pathToJnlp), "UTF-8");
     }
     

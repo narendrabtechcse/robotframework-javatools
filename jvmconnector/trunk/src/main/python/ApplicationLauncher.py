@@ -17,12 +17,13 @@ from robot.running.importer import Importer
 from org.springframework.remoting import RemoteAccessException
 from org.springframework.beans.factory import BeanCreationException
 from org.springframework.remoting.rmi import RmiServiceExporter
+from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 from org.robotframework.jvmconnector.server import LibraryImporter
 from org.robotframework.jvmconnector.server import CloseableRobotRmiService
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
-from org.springframework.remoting.rmi import RmiProxyFactoryBean
+from org.robotframework.jvmconnector.launch import WebstartLauncher
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
@@ -174,11 +175,10 @@ class ApplicationLauncher:
         self.rmi_url = None
 
     def start_webstart_application(self, libdir, jvm_args=''):
-        free_port = FreePortFinder().find_free_port()
-        command = 'javaws %s %s'  % (pythonpath,
-                  jvm_args, __file__, self.application, args, out_file, err_file)
-
-        
+        jnlp = WebstartLauncher(DATABASE, libdir).createRmiEnhancedJnlp(self.application)
+        command = 'javaws %s %s'  % (jvm_args, jnlp)
+        self.operating_system.start_process(command)
+        self.application_started()
 
     def start_application(self, args='', jvm_args=''):
         """Starts the application with given arguments.

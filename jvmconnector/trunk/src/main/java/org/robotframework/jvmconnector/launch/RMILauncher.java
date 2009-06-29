@@ -33,7 +33,8 @@ public class RMILauncher {
         if (args.length < 2)
             throw new IllegalArgumentException("Usage: java RmiServiceLibrary [jvmArgs] rmiConfigFilePath applicationClassName [applicationArgs]");
 
-        rmiService.start(args[0]);
+        String pathToRmiStorage = args[0];
+        rmiService.start(pathToRmiStorage);
         String[] restOfTheArgs = extractRestOfTheArgs(args);
         log("starting the application '" + args[1] + " with args '" + Arrays.asList(restOfTheArgs) + "'");
         
