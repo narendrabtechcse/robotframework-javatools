@@ -2,9 +2,9 @@
 
 library	ApplicationLauncher	${app}	WITH NAME	myAppLauncher
 library	ApplicationLauncher	${app}	1sec	WITH NAME	oneSec
-library	ApplicationLauncher	${app}	10sec	WITH NAME	tenSec
+library	ApplicationLauncher	${app}	20sec	WITH NAME	tenSec
 library	ApplicationLauncher	${app}	WITH NAME	reimport
-library	ApplicationLauncher	${app}	10sec	WITH NAME	passingArguments
+library	ApplicationLauncher	${app}	20sec	WITH NAME	passingArguments
 library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 library	ApplicationLauncher	${app}	WITH NAME	closeable
 library	ApplicationLauncher	${app}	WITH NAME	logging
@@ -14,7 +14,7 @@ resource	applauncher_resource.tsv
 
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
-${timeoutMsg}=	Could not connect to application ${app}
+${timeoutMsg}	Could not connect to application ${app}
 ${dirWithSpaces}	${TEMPDIR}${/}dir with spaces in name
 
 *** Test Case ***
@@ -25,14 +25,14 @@ Starts Application And Imports Remote Library
 	remoteLibraryShouldBeImported	myApp
 	[teardown]	myAppLauncher.closeApplication
 
-Importing Remote Library Times Outs If Application Is Not Started
+Importing Remote Library Times Outs If Application Is Not Started	[tags]	problem
 	shouldFailInApproximatelyOneSecond	${timeoutMsg}	oneSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
 
-Importing Remote Library Times Outs If Application Is Stopped
+Importing Remote Library Times Outs If Application Is Stopped	[tags]	problem
 	tenSec.startApplication
 	tenSec.importRemoteLibrary	${remoteLib}	WITH NAME	stoppedApp
 	runKeywordAndIgnoreError	stoppedApp.stopJvm
-	shouldFailInApproximatelyTenSeconds	${timeoutMsg}	tenSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
+	shouldFailInApproximatelyTwentySeconds	${timeoutMsg}	tenSec.importRemoteLibrary	${remoteLib}	WITH NAME	thisShouldFail
 
 Reimports After Restart
 	reimport.startApplication
@@ -79,8 +79,8 @@ applicationShouldNotBeRunning	[arguments]	${library}
 shouldFailInApproximatelyOneSecond	[arguments]	${expectedErrorMsg}	${keyword}	@{arguments}
 	shouldFailInApproximatelyTime	1	${expectedErrorMsg}	${keyword}	@{arguments}
 
-shouldFailInApproximatelyTenSeconds	[arguments]	${expectedErrorMsg}	${keyword}	@{arguments}
-	shouldFailInApproximatelyTime	10	${expectedErrorMsg}	${keyword}	@{arguments}
+shouldFailInApproximatelyTwentySeconds	[arguments]	${expectedErrorMsg}	${keyword}	@{arguments}
+	shouldFailInApproximatelyTime	20	${expectedErrorMsg}	${keyword}	@{arguments}
 
 shouldFailInApproximatelyTime	[arguments]	${timeout}	${expectedErrorMsg}	${keyword}	@{arguments}
 	${startTime}=	getTime	epoch
