@@ -1,4 +1,5 @@
 *** Setting ***
+
 library	OperatingSystem
 library	PythonpathHelper.py
 library	ApplicationLauncher	${app}	WITH NAME	xLauncher
@@ -7,11 +8,13 @@ library	ApplicationLauncher	${app}	WITH NAME	zLauncher
 library	ApplicationLauncher	${app}	WITH NAME	externalXLauncher
 
 *** Variable ***
+
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${testingLibrary}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 ${appLauncherScript}	${CURDIR}${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
 
 *** Keyword ***
+
 startExternalApplicationX
 	startExternalApplicationAndImportLibraries	externalX	externalX
 

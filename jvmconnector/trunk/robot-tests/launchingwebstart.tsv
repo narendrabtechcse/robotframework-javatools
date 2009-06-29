@@ -6,6 +6,7 @@ suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
 
 *** Variable ***
+
 ${testAppDir}	${CURDIR}${/}..${/}src${/}test${/}resources
 ${codeBase}	http://localhost:14563/test-app
 ${jnlpWithMainClassUrl}	${codeBase}/test-application.jnlp
@@ -19,6 +20,7 @@ Starts Application And Imports Remote Library
 	[teardown]	myAppLauncher.closeApplication
 
 *** Keyword ***	
+
 startWebstartService
 	FileServer.start	${testAppDir}
 

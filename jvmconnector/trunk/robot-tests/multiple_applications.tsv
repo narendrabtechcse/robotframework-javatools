@@ -1,7 +1,9 @@
 *** Setting ***
+
 resource	applauncher_resource.tsv
 
 *** Test Case ***
+
 Using Multiple Applications
 	startApplicationX
 	startApplicationY

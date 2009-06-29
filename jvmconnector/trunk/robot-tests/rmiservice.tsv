@@ -1,11 +1,11 @@
-* Setting *	* Value *
+*** Setting ***
+
 library	org.robotframework.jvmconnector.server.RmiServiceLibrary
 suiteSetup	startRmiServiceAndImportRemoteRobot
 suiteTeardown	closeRmiService
 
-* Variable *	* Value *
+*** Test Case ***
 
-* Test Case *	* Action *	* Argument *
 Remote Exception Should Be Wrapped Into TestFailedException
 	runKeywordAndExpectError	TestFailedException:*	exceptionThrowingKeyword
 
@@ -20,7 +20,8 @@ Should Fail If Client Is Not Resetted After The Service Is Restarted
 	restartRmiService
 	runKeywordAndExpectError	RemoteConnectFailureException:*	someRemoteKeyword
 
-* Keyword *	* Action *	* Argument *
+*** Keyword ***
+
 startRmiServiceAndImportRemoteRobot
 	startRmiService	
 	importLibrary	org.robotframework.jvmconnector.client.RobotRemoteLibrary
