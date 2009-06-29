@@ -1,4 +1,4 @@
-*'* Setting ***
+*** Setting ***
 
 library	org.robotframework.jvmconnector.server.RmiServiceLibrary	3333
 suiteSetup	startRmiServiceAndImportRemoteRobot
