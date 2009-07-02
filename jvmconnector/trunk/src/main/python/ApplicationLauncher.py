@@ -21,7 +21,7 @@ from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
 from org.robotframework.jvmconnector.server import *
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
-from org.robotframework.jvmconnector.launch import WebstartLauncher
+from org.robotframework.jvmconnector.launch.jnlp import JnlpEnhancer
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
@@ -70,7 +70,7 @@ class ApplicationLauncher:
     
     """
 
-    def __init__(self, application, timeout='60 seconds'):
+    def __init__(self, application, timeout='60 seconds', libdir=''):
         """ApplicationLauncher takes one mandatory and one optional argument.
 
         `application` is a required argument, it is the name of the main
@@ -79,16 +79,11 @@ class ApplicationLauncher:
         `timeout` is the timeout used to wait for importing a remote library.
         """
         self.application = application
-        self.timeout = timestr_to_secs(timeout)
+        self.timeout = timestr_to_secs(timeout or '60')
+        self.libdir = libdir
         self.builtin = BuiltIn()
         self.operating_system = OperatingSystem()
         self.rmi_url = None
-
-    def start_webstart_application(self, libdir, jvm_args=''):
-        jnlp = WebstartLauncher(DATABASE, libdir).createRmiEnhancedJnlp(self.application)
-        command = 'javaws %s %s'  % (jvm_args, jnlp)
-        self.operating_system.start_process(command)
-        self.application_started()
 
     def start_application(self, args='', jvm_args=''):
         """Starts the application with given arguments.
@@ -99,10 +94,7 @@ class ApplicationLauncher:
         Example:
         | Start Application | one two three | -Dproperty=value |
         """
-        pythonpath = self._get_python_path()
-        out_file, err_file = self._get_output_files()
-        command = 'jython -Dpython.path="%s" %s "%s" %s %s 1>%s 2>%s' % (pythonpath,
-                  jvm_args, __file__, self.application, args, out_file, err_file)
+        command = self._create_command(args, jvm_args)
         self.operating_system.start_process(command)
         self.application_started()
     
@@ -158,6 +150,19 @@ class ApplicationLauncher:
         """
         self.rmi_url = None
         self._connect_to_base_rmi_service()
+
+    def _create_command(self, args, jvm_args):
+        if (self._is_normal_application()):
+            pythonpath = self._get_python_path()
+            out_file, err_file = self._get_output_files()
+            return 'jython -Dpython.path="%s" %s "%s" %s %s 1>%s 2>%s' % (pythonpath,
+                   jvm_args, __file__, self.application, args, out_file, err_file)
+        else:
+            jnlp = JnlpEnhancer(DATABASE, self.libdir).createRmiEnhancedJnlp(self.application)
+            return 'javaws %s %s'  % (jvm_args, jnlp)
+
+    def _is_normal_application(self):
+        return not self.application.startswith('http')
         
     def _get_output_files(self):
         out_file = mktemp('%s.out' % self.application)

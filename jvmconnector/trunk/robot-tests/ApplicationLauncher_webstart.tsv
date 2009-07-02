@@ -4,12 +4,13 @@ resource	applauncher_resource.tsv
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
 library	JavaTools
 library	JvmconnectorKeywords
+library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${testAppDir}/test-lib
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
 
 *** Variable ***
 
-${testAppDir}	${CURDIR}${/}..${/}src${/}test${/}resources
+${testAppDir}	${CURDIR}/../src/test/resources
 ${codeBase}	http://localhost:14563/test-app
 ${jnlpWithMainClassUrl}	${codeBase}/test-application.jnlp
 ${jnlpWithoutMainClassUrl}	${codeBase}/test-application-withoutmainclass.jnlp
@@ -31,11 +32,16 @@ ApplicationLauncher Works With Https
 	setTrustStore
 	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithSsl}	Test App
 
-Create RMI Enhanced JNLP
-	${pathToJnlp}=	createRmiEnhancedJnlp	${jnlpWithMainClassUrl}
-	${expectedJnlpContents}=	getEnhancedJnlp	${testAppDir}${/}test-lib	${jnlpWithMainClassUrl}
-	${jnlpContents}=	getFile	${pathToJnlp}
-	shouldBeEqual	${expectedJnlpContents}	${jnlpContents}
+Can Be Launched Externally
+	${pathToJnlp}=	JnlpEnhancer.createRmiEnhancedJnlp	${jnlpWithMainClassUrl}
+	start_process	javaws ${pathToJnlp}
+	importLibrary	ApplicationLauncher	${pathToJnlp}	WITH NAME	externalLauncher
+	setLibrarySearchOrder	externalLauncher
+	applicationStarted
+	importRemoteLibraries	external
+	selectApplication	external
+	selectMainWindow
+	closeApplication
 
 *** Keyword ***
 
@@ -46,12 +52,16 @@ stopWebstartService
 	FileServer.stop
 
 applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${windowTitle}
-	importLibrary	ApplicationLauncher	${jnlpUrl}	WITH NAME	${windowTitle}Launcher
+	importApplicationLauncher	${jnlpUrl}	${windowTitle}
 	startApplicationAndImportLibraries	${windowTitle}	${EMPTY}
 	selectApplication	${windowTitle}
-	waitUntilKeywordSucceeds	30	2	${windowTitle}.selectWindow	${windowTitle}
+	waitUntilKeywordSucceeds	30	2	selectWindow	${windowTitle}
 	runKeyword	closeApplication
 
+importApplicationLauncher	[arguments]	${jnlpUrl}	${name}
+	importLibrary	ApplicationLauncher	${jnlpUrl}		${testAppDir}/test-lib	WITH NAME	${name}Launcher
+	selectApplication	${name}
+
 setTrustStore
-	setSystemProperty	javax.net.ssl.trustStore	${testAppDir}${/}jssecacerts
-	setSystemProperty	javax.net.ssl.trustStorePassword	changeit
+	JavaTools.setSystemProperty	javax.net.ssl.trustStore	${testAppDir}/jssecacerts
+	JavaTools.setSystemProperty	javax.net.ssl.trustStorePassword	changeit

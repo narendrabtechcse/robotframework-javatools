@@ -46,7 +46,7 @@ def add_dependencies_to_path():
     if not exists('dependencies.txt'):
         os.environ['MAVEN_OPTS'] = '-DoutputAbsoluteArtifactFilename=true'
         mvn_output = sh('mvn dependency:list').splitlines()
-        jars = [re.sub('.*:(C:)?', '\\1', file) for file in mvn_output if re.search('jar', file)]
+        jars = [file for file in mvn_output if re.search('jar', file)]
         dependencies_txt = open(os.path.join(base, 'dependencies.txt'), 'w')
         for jar in jars:
             dependencies_txt.write(jar + '\n')
