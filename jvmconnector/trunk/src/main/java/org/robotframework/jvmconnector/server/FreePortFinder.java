@@ -22,15 +22,36 @@ import java.net.ServerSocket;
 
 public class FreePortFinder {
     public int findFreePort() {
-        ServerSocket serverSocket = null;
+        FreeSocket serverSocket = new FreeSocket();
         try {
-            serverSocket = new ServerSocket(0);
             return serverSocket.getLocalPort();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } finally {
+            serverSocket.close();
+        }
+    }
+    
+    private class FreeSocket {
+        private final ServerSocket serverSocket;
+
+        public FreeSocket() {
+            this.serverSocket = createRandomSocket();
+        }
+        
+        public int getLocalPort() {
+            return serverSocket.getLocalPort();
+        }
+        
+        public void close() {
             try {
                 serverSocket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        
+        private ServerSocket createRandomSocket() {
+            try {
+                return new ServerSocket(0);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
