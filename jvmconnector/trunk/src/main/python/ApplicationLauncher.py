@@ -19,13 +19,9 @@ from org.springframework.beans.factory import BeanCreationException
 from org.springframework.remoting.rmi import RmiServiceExporter
 from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
+from org.robotframework.jvmconnector.server import *
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
-from org.robotframework.jvmconnector.server import LibraryImporter
-from org.robotframework.jvmconnector.server import CloseableRobotRmiService
-from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 from org.robotframework.jvmconnector.launch import WebstartLauncher
-
-from org.robotframework.jvmconnector.server import RmiServicePublisher
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
@@ -208,7 +204,7 @@ class ApplicationLauncher:
         if self.rmi_url:
             return self.rmi_url
 
-        return LibraryDb(DATABASE).retrieve_base_rmi_url()
+        return RmiInfoStorage(DATABASE).retrieve()
 
     def _create_rmi_client(self, url):
         if not re.match('rmi://[^:]+:\d{1,5}/.*', url):
@@ -229,8 +225,7 @@ class ApplicationLauncher:
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
-        db = LibraryDb(DATABASE)
-        wrapper = RmiWrapper(LibraryImporterPublisher(db))
+        wrapper = RmiWrapper(RmiService())
         wrapper.export_rmi_service_and_launch_application(sys.argv[1],
                                                           sys.argv[2:])
 

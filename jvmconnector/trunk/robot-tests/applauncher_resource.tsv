@@ -36,6 +36,7 @@ correctApplicationShouldBeInUse	[arguments]	${expectedName}
 
 selectApplication	[arguments]	${name}
 	setLibrarySearchOrder	${name}Launcher	${testingLibrary}${name}	JavaTools${name}
+	...	SwingLibrary${name}
 
 closeApplications	[arguments]	@{names}
 	:FOR	${name}	IN	@{names}
@@ -56,4 +57,5 @@ startExternalApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jv
 
 importRemoteLibraries	[arguments]	${name}
 	importRemoteLibrary	${testingLibrary}	WITH NAME	${testingLibrary}${name}
+	importRemoteLibrary	SwingLibrary	WITH NAME	SwingLibrary${name}
 	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
