@@ -25,6 +25,8 @@ from org.robotframework.jvmconnector.server import CloseableRobotRmiService
 from org.robotframework.jvmconnector.server import SimpleRobotRmiService
 from org.robotframework.jvmconnector.launch import WebstartLauncher
 
+from org.robotframework.jvmconnector.server import RmiServicePublisher
+
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
 
@@ -49,94 +51,6 @@ class RemoteLibrary:
             return self.remote_lib.runKeyword(name, args)
 
 
-class FreePortFinder:
-
-    def find_free_port(self, socket=ServerSocket(0)):
-        try:
-            return socket.getLocalPort()
-        finally:
-            socket.close()
-
-
-class LibraryDb:
-
-    def __init__(self, path, fileutil=__builtin__):
-        self.path = path
-        self.fileutil = fileutil
-
-    def store(self, rmi_info):
-        file = self.fileutil.open(self.path, 'w')
-        file.write(rmi_info + '\n')
-        file.close()
-
-    def retrieve_base_rmi_url(self):
-        if self._is_new():
-            return ''
-
-        file = self.fileutil.open(self.path, 'r')
-
-        try:
-            return file.read().rstrip()
-        finally:
-            file.close()
-
-    def _is_new(self):
-        return not path.exists(self.path)
-
-
-class MyRmiServicePublisher:
-
-    def __init__(self, class_loader=Class, exporter=RmiServiceExporter(),
-                 port_finder=FreePortFinder()):
-        self.class_loader = class_loader
-        self.exporter = exporter
-        self.port_finder = port_finder
-
-    def publish(self, service_name, service, service_interface_name):
-        port = self.port_finder.find_free_port()
-        service_class = self.class_loader.forName(service_interface_name)
-
-        self.exporter.setServiceName(service_name)
-        self.exporter.setRegistryPort(port)
-        self.exporter.setService(service)
-        self.exporter.setServiceInterface(service_class)
-        self.exporter.prepare()
-        self.rmi_info = 'rmi://localhost:%s/%s' % (port, service_name)
-
-
-class RemoteLibraryImporter(LibraryImporter):
-
-    def __init__(self, rmi_publisher=MyRmiServicePublisher(),
-                 class_loader=Class):
-        self.rmi_publisher = rmi_publisher
-        self.class_loader = class_loader
-
-    def importLibrary(self, library_name):
-        service_name = re.sub('\.', '', library_name)
-        lib = self.class_loader.forName(library_name)()
-        service = CloseableRobotRmiService(SimpleRobotRmiService(library=lib))
-        interface_name = 'org.robotframework.jvmconnector.server.RobotRmiService'
-        self.rmi_publisher.publish(service_name, service, interface_name)
-        return self.rmi_publisher.rmi_info
-
-    def closeService(self):
-        System.exit(0);
-
-
-class LibraryImporterPublisher:
-
-    def __init__(self, library_db,
-                 rmi_publisher=MyRmiServicePublisher()):
-        self.library_db = library_db
-        self.rmi_publisher = rmi_publisher
-
-    def publish(self):
-        interface_name = 'org.robotframework.jvmconnector.server.LibraryImporter'
-        self.rmi_publisher.publish('robotrmiservice', RemoteLibraryImporter(),
-                                   interface_name)
-        self.library_db.store(self.rmi_publisher.rmi_info)
-
-
 class RmiWrapper:
 
     def __init__(self, library_importer_publisher):
@@ -144,7 +58,7 @@ class RmiWrapper:
         self.class_loader = Class
 
     def export_rmi_service_and_launch_application(self, application, args):
-        self.library_importer_publisher.publish()
+        self.library_importer_publisher.start(DATABASE)
         self.class_loader.forName(application).main(args)
 
 
@@ -190,8 +104,7 @@ class ApplicationLauncher:
         | Start Application | one two three | -Dproperty=value |
         """
         pythonpath = self._get_python_path()
-        err_file = mktemp('%s.err' % self.application)
-        out_file = mktemp('%s.out' % self.application)
+        out_file, err_file = self._get_output_files()
         command = 'jython -Dpython.path="%s" %s "%s" %s %s 1>%s 2>%s' % (pythonpath,
                   jvm_args, __file__, self.application, args, out_file, err_file)
         self.operating_system.start_process(command)
@@ -250,6 +163,11 @@ class ApplicationLauncher:
         self.rmi_url = None
         self._connect_to_base_rmi_service()
         
+    def _get_output_files(self):
+        out_file = mktemp('%s.out' % self.application)
+        err_file = mktemp('%s.err' % self.application)
+        return out_file, err_file 
+
     def _get_python_path(self):
         for path_entry in sys.path:
             if path.exists(path.join(path_entry, 'robot')):

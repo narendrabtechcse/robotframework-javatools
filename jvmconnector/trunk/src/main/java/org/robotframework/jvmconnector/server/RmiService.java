@@ -17,9 +17,6 @@
 
 package org.robotframework.jvmconnector.server;
 
-import org.robotframework.javalib.library.RobotJavaLibrary;
-
-
 public class RmiService {
     private final Class<LibraryImporter> serviceInterface = LibraryImporter.class;
     private RmiServicePublisher rmiPublisher = new RmiServicePublisher();
@@ -29,38 +26,5 @@ public class RmiService {
         RemoteLibraryImporter libraryImporter = new RemoteLibraryImporter(rmiPort, rmiPublisher);
         String rmiInfo = rmiPublisher.publish("robotrmiservice", serviceInterface, libraryImporter, rmiPort);
         new RmiInfoStorage(pathToRmiStorage).store(rmiInfo);
-    }
-}
-
-class RemoteLibraryImporter implements LibraryImporter {
-    private final int rmiPort;
-    private final RmiServicePublisher rmiPublisher;
-        
-    
-    public RemoteLibraryImporter(int rmiPort, RmiServicePublisher rmiPublisher) {
-        this.rmiPort = rmiPort;
-        this.rmiPublisher = rmiPublisher;
-    }
-
-    public void closeService() {
-        System.exit(0);
-    }
-
-    public String importLibrary(String libraryName) {
-        //TODO: check if this is really necessary
-        String serviceName = libraryName.replace('.', '_');
-        SimpleRobotRmiService rmiService = new SimpleRobotRmiService();
-        rmiService.setLibrary(instantiateLibrary(libraryName));
-        RobotRmiService service = new CloseableRobotRmiService(rmiService);
-        
-        return rmiPublisher.publish(serviceName, RobotRmiService.class, service, rmiPort);
-    }
-
-    private RobotJavaLibrary instantiateLibrary(String libraryName) {
-        try {
-            return (RobotJavaLibrary) Class.forName(libraryName).newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

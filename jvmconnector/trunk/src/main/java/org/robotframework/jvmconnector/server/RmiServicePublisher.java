@@ -32,7 +32,7 @@ public class RmiServicePublisher {
         this.serviceExporter = serviceExporter;
     }
     
-    public String publish(String serviceName, Class serviceInterface, Object service, int registryPort) {
+    public String publish(String serviceName, Class<?> serviceInterface, Object service, int registryPort) {
         serviceExporter.setServiceName(serviceName);
         serviceExporter.setRegistryPort(registryPort);
         serviceExporter.setService(service);
