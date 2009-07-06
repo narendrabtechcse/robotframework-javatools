@@ -68,7 +68,7 @@ applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${wind
 	startApplicationAndImportLibraries	${windowTitle}	${EMPTY}
 	selectApplication	${windowTitle}
 	waitUntilKeywordSucceeds	30	2	selectWindow	${windowTitle}
-	runKeyword	closeApplication
+	closeApplication
 
 importApplicationLauncher	[arguments]	${jnlpUrl}	${name}
 	importLibrary	ApplicationLauncher	${jnlpUrl}		${testAppDir}/test-lib	WITH NAME	${name}Launcher
