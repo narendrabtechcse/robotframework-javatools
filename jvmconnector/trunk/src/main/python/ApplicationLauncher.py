@@ -245,8 +245,8 @@ class ApplicationLauncher:
         if len(self.libdir) == 0:
             raise RuntimeError('Library directory required for test dependencies.')
         else:
-            self.operating_system.directory_should_exist(self.libdir,
-            "Library directory '%s' doesn't exist." % self.libdir)
+            if not path.isdir(self.libdir):
+                raise RuntimeError("Library directory '%s' doesn't exist." % self.libdir)
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
