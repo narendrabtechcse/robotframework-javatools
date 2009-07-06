@@ -43,6 +43,18 @@ Can Be Launched Externally
 	selectMainWindow
 	closeApplication
 
+Importing Application Launcher With URL And Without Libdir Fails
+	runKeywordAndExpectError	*Library directory required for test dependencies.*	importLibrary	ApplicationLauncher	${jnlpWithMainClassUrl}
+
+Importing Application Launcher With Unexisting Libdir Fails
+	runKeywordAndExpectError	*Library directory '/lol' doesn't exist.*	importLibrary	ApplicationLauncher	${jnlpWithMainClassUrl}		/lol
+
+Creating Enhanced Jnlp With Empty Directory Fails
+	${emptyDir}=	setVariable	${TEMPDIR}/empty_directory
+	createDirectory	${emptyDir}
+	importLibrary	JnlpEnhancer	${TEMPDIR}/launcher.txt	${emptyDir}	WITH NAME	emptyEnhancer
+	runKeywordAndExpectError	*${emptyDir} doesn't contain jvmconnector jar.	emptyEnhancer.createRmiEnhancedJnlp	${jnlpWithMainClassUrl}
+
 *** Keyword ***
 
 startWebstartService

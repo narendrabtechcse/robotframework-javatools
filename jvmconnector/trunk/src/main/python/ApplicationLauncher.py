@@ -71,12 +71,19 @@ class ApplicationLauncher:
     """
 
     def __init__(self, application, timeout='60 seconds', libdir=''):
-        """ApplicationLauncher takes one mandatory and one optional argument.
+        """ApplicationLauncher takes one mandatory and two optional arguments.
 
         `application` is a required argument, it is the name of the main
-        class or the class that has the main method.
+        class or the class that has the main method or the url to the Java
+        Webstart jnlp descriptor file. In case the `application` is a jnlp url
+        `libdir` must be provided.
 
         `timeout` is the timeout used to wait for importing a remote library.
+
+        `libdir` is the path to the directory which is scanned for jar files.
+        These jar files are added to the jnlp and they must contain the
+        libraries you want to import. Jvmconnector jar must be present inside
+        this directory as well.
         """
         self.application = application
         self.timeout = timestr_to_secs(timeout or '60')
@@ -84,6 +91,7 @@ class ApplicationLauncher:
         self.builtin = BuiltIn()
         self.operating_system = OperatingSystem()
         self.rmi_url = None
+        self._assert_invariants()
 
     def start_application(self, args='', jvm_args=''):
         """Starts the application with given arguments.
@@ -152,17 +160,17 @@ class ApplicationLauncher:
         self._connect_to_base_rmi_service()
 
     def _create_command(self, args, jvm_args):
-        if (self._is_normal_application()):
+        if (self._is_jnlp_application()):
+            jnlp = JnlpEnhancer(DATABASE, self.libdir).createRmiEnhancedJnlp(self.application)
+            return 'javaws %s %s'  % (jvm_args, jnlp)
+        else:
             pythonpath = self._get_python_path()
             out_file, err_file = self._get_output_files()
             return 'jython -Dpython.path="%s" %s "%s" %s %s 1>%s 2>%s' % (pythonpath,
                    jvm_args, __file__, self.application, args, out_file, err_file)
-        else:
-            jnlp = JnlpEnhancer(DATABASE, self.libdir).createRmiEnhancedJnlp(self.application)
-            return 'javaws %s %s'  % (jvm_args, jnlp)
 
-    def _is_normal_application(self):
-        return not self.application.startswith('http')
+    def _is_jnlp_application(self):
+        return self.application.startswith('http') and self.application.endswith('jnlp')
         
     def _get_output_files(self):
         out_file = mktemp('%s.out' % self.application)
@@ -227,6 +235,17 @@ class ApplicationLauncher:
         self.rmi_url = url
         if path.exists(DATABASE):
             remove(DATABASE)
+    
+    def _assert_invariants(self):
+        if self._is_jnlp_application():
+            self._assert_libdir_is_correct()
+
+    def _assert_libdir_is_correct(self):
+        if len(self.libdir) == 0:
+            raise RuntimeError('Library directory required for test dependencies.')
+        else:
+            self.operating_system.directory_should_exist(self.libdir,
+            "Library directory '%s' doesn't exist." % self.libdir)
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) >= 1:
