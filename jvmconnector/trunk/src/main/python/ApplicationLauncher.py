@@ -64,8 +64,9 @@ class InvalidURLException(Exception):
 DATABASE = path.join(gettempdir(), 'launcher.txt')
 
 class ApplicationLauncher:
-    """A library for starting java application in separate JVM and importing
-    remote libraries for operating it.
+    """A library for starting java application or Java Webstart application and importing
+    remote libraries for operating it. The application is started as a separate
+    process.
 
     
     """
@@ -74,16 +75,16 @@ class ApplicationLauncher:
         """ApplicationLauncher takes one mandatory and two optional arguments.
 
         `application` is a required argument, it is the name of the main
-        class or the class that has the main method or the url to the Java
+        class (the class that has the main method) or the url to the Java
         Webstart jnlp descriptor file. In case the `application` is a jnlp url
         `libdir` must be provided.
 
         `timeout` is the timeout used to wait for importing a remote library.
 
-        `libdir` is the path to the directory which is scanned for jar files.
-        These jar files are added to the jnlp and they must contain the
-        libraries you want to import. Jvmconnector jar must be present inside
-        this directory as well.
+        `libdir` is the path to the directory which should contain jars which
+        should contain all the dependencies required for running the tests. In
+        another words these jar files should contain jvmconnector jar and
+        libraries that you want to remotely import (packaged in jars).
         """
         self.application = application
         self.timeout = timestr_to_secs(timeout or '60')
