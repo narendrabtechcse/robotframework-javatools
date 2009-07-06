@@ -46,10 +46,12 @@ def add_dependencies_to_path():
     if not exists('dependencies.txt'):
         os.environ['MAVEN_OPTS'] = '-DoutputAbsoluteArtifactFilename=true'
         mvn_output = sh('mvn dependency:list').splitlines()
-        jars = [file for file in mvn_output if re.search('jar', file)]
+        
+        jars = [re.sub('.*:((:?C:)?)', '\\1', file) for file in mvn_output if re.search('jar', file)]
         dependencies_txt = open(os.path.join(base, 'dependencies.txt'), 'w')
         for jar in jars:
             dependencies_txt.write(jar + '\n')
+        dependencies_txt.flush()
 
     classes = os.path.join('target', 'classes')
     test_classes = os.path.join('target', 'test-classes')
@@ -57,6 +59,7 @@ def add_dependencies_to_path():
         sh('mvn test-compile')
 
     dependencies = [classes, test_classes] + open('dependencies.txt', 'rb').read().splitlines()
+
     os.environ['CLASSPATH'] = os.pathsep.join(dependencies)
     os.environ['PYTHONPATH'] = os.pathsep.join(sys.path)
 
@@ -65,15 +68,6 @@ def get_python_path():
         if os.path.exists(os.path.join(path, 'robot')):
             return path
     
-def add_fake_java_to_path():
-    dir = os.path.dirname(__file__)
-    bindir = 'bin'
-    if os.name == 'nt':
-        bindir += '_nt'
-
-    lib = os.path.join(dir, 'robot-tests', bindir)
-    os.environ['PATH'] = lib + os.pathsep + os.environ['PATH']
-
 if __name__ == '__main__':
     rc = 0
     if os.name == 'java':
@@ -84,9 +78,8 @@ if __name__ == '__main__':
         rc = len(result.failures) + len(result.errors)
         if rc > 250: rc = 250
     else:
-        python_path = get_python_path()
         add_dependencies_to_path()
-        #add_fake_java_to_path()
+        python_path = get_python_path()
         if len(sys.argv[1:]) > 0:
             runner = os.path.join(python_path, 'robot', 'runner.py')
             args_as_string = ' '.join(sys.argv[1:])
