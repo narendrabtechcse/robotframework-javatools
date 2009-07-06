@@ -51,7 +51,7 @@ startApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jvmArgumen
 startExternalApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jvmArguments}=
 	setLibrarySearchOrder	${name}Launcher
 	${pythonPath}=	getPythonPath
-	startProcess	jython -Dpython.path=${pythonPath} ${jvmArguments} ${appLauncherScript} ${app} ${arguments}
+	startProcess	jython -Dpython.path=${pythonPath} ${jvmArguments} "${appLauncherScript}" ${app} ${arguments}
 	applicationStarted
 	importRemoteLibraries	${name}
 
