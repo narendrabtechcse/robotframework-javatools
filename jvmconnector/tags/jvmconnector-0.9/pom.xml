@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.robotframework</groupId>
   <artifactId>jvmconnector</artifactId>
-  <version>0.8.1-SNAPSHOT</version>
+  <version>0.9</version>
   <packaging>jar</packaging>
   <name>jvmconnector</name>
   <dependencies>
@@ -225,8 +225,8 @@
   </repositories>
 
   <scm>
-    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7.4-SNAPSHOT</connection>
-    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.7.4-SNAPSHOT</developerConnection>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.9</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.9</developerConnection>
   </scm>
 
   <distributionManagement>
