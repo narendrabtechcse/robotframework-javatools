@@ -4,7 +4,7 @@
 
 ===Library documentation===
 
- * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.8/doc/ApplicationLauncher.html Version 0.8]
+ * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-0.9/doc/ApplicationLauncher.html Version 0.9]
 
 ===Examples===
 
@@ -103,4 +103,3 @@ In this example every application has a unique name. Every application has a lau
 || *Set System Property* || _javax.net.ssl.trustStorePassword_ || changeit || ||
 
 *Set System Property* keyword is found in the JavaTools library.
-
