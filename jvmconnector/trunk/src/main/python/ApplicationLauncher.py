@@ -71,6 +71,8 @@ class ApplicationLauncher:
     
     """
 
+    ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
+
     def __init__(self, application, timeout='60 seconds', libdir=''):
         """ApplicationLauncher takes one mandatory and two optional arguments.
 

@@ -9,6 +9,7 @@ library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 library	ApplicationLauncher	${app}	WITH NAME	closeable
 library	ApplicationLauncher	${app}	WITH NAME	logging
 resource	applauncher_resource.tsv
+#suiteSetup	startAppAndImportSomething
 
 *** Variable ***
 
@@ -18,6 +19,10 @@ ${timeoutMsg}	Could not connect to application ${app}
 ${dirWithSpaces}	${TEMPDIR}${/}dir with spaces in name
 
 *** Test Case ***
+
+Closes Application That Has Been Started In Suite Setup
+	startAppAndImportSomething
+	myAppLauncher.closeApplication
 
 Starts Application And Imports Remote Library
 	myAppLauncher.startApplication
@@ -62,6 +67,10 @@ Close Application
 	runKeywordAndExpectError	*	closeableApp.applicationIsRunning
 
 *** Keyword ***	
+
+startAppAndImportSomething
+	myAppLauncher.startApplication
+	myAppLauncher.importRemoteLibrary	SwingLibrary	WITH NAME	remoteLibraryInSuiteSetup
 
 remoteLibraryShouldBeImported	[arguments]	${library}
 	applicationShouldBeRunning	${library}
