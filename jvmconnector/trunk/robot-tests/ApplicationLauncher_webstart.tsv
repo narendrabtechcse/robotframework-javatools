@@ -18,19 +18,22 @@ ${jnlpWithMainAttribute}	${codeBase}/test-application-with-main-attribute.jnlp
 ${jnlpWithSsl}	https://localhost:14564/test-app/test-application.jnlp
 
 *** Test Case ***
+Works With Local Jnlp	[tags]	not_ready
+	${localJnlp}=	setVariable	${CURDIR}/../src/test/resources/test-app/test-application.jnlp
+	applicationLauncherLaunchesJavaWebstartApplication	${localJnlp}	localApp	Test App
 
 ApplicationLauncher Launches Java Webstart Application
-	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithMainClassUrl}	Test App
+	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithMainClassUrl}	testApp	Test App
 
 ApplicationLauncher Launches Java Webstart Application When No Main Class Attribute In Jnlp
-	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithoutMainClassUrl}	Other App
+	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithoutMainClassUrl}	testAppWithoutMainUrl	Other App
 
 ApplicationLauncher Works With Main Attribute
-	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithMainAttribute}	Other App
+	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithMainAttribute}	testAppWithMainAttribute	Other App
 
 ApplicationLauncher Works With Https
 	setTrustStore
-	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithSsl}	Test App
+	applicationLauncherLaunchesJavaWebstartApplication	${jnlpWithSsl}	testAppWithSsl	Test App
 
 Can Be Launched Externally
 	${pathToJnlp}=	JnlpEnhancer.createRmiEnhancedJnlp	${jnlpWithMainClassUrl}
@@ -63,10 +66,10 @@ startWebstartService
 stopWebstartService
 	FileServer.stop
 
-applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${windowTitle}
-	importApplicationLauncher	${jnlpUrl}	${windowTitle}
-	startApplicationAndImportLibraries	${windowTitle}	${EMPTY}
-	selectApplication	${windowTitle}
+applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${name}	${windowTitle}
+	importApplicationLauncher	${jnlpUrl}	${name}
+	startApplicationAndImportLibraries	${name}	${EMPTY}
+	selectApplication	${name}
 	waitUntilKeywordSucceeds	30	2	selectWindow	${windowTitle}
 	closeApplication
 
