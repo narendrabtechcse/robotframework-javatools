@@ -16,7 +16,6 @@ resource	applauncher_resource.tsv
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${remoteLib}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 ${timeoutMsg}	Could not connect to application ${app}
-${dirWithSpaces}	${TEMPDIR}${/}dir with spaces in name
 
 *** Test Case ***
 
