@@ -82,7 +82,7 @@ In this example every application has a unique name. Every application has a lau
  # Wrap all the testing dependencies into jar files and copy them to a directory.
  # When you create the library you'll need to provide the path to the directory containing the dependencies. All the jar files from this directory will be added to your webstart application's classpath: || Library     || !ApplicationLauncher || http://myhost/myapp.jnlp || 60seconds || *${CURDIR}/test-lib* ||
  # Launch the application: || Start Application ||
- # Import remote libraries, notice that all the libraries need to be wrapped in jars and present in the abovementioned directory for dependencies: || Import Remote Library || SwingLibrary ||
+ # Import remote libraries, notice that all the libraries need to be wrapped in jars and present in the abovementioned directory for dependencies: || Import Remote Library || !SwingLibrary ||
  # Operate on the application
  # At the end, you can use `Close Application` keyword to kill the SUT's jvm.
 
