@@ -4,13 +4,14 @@ resource	applauncher_resource.tsv
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
 library	JavaTools
 library	JvmconnectorKeywords
-library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${testAppDir}/test-lib
+library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${jarDir}
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
 
 *** Variable ***
 
 ${testAppDir}	${CURDIR}/../src/test/resources
+${jarDir}	${testAppDir}/test-lib
 ${codeBase}	http://localhost:14563/test-app
 ${jnlpWithMainClassUrl}	${codeBase}/test-application.jnlp
 ${jnlpWithoutMainClassUrl}	${codeBase}/test-application-withoutmainclass.jnlp
@@ -37,8 +38,8 @@ ApplicationLauncher Works With Https
 
 Can Be Launched Externally
 	${pathToJnlp}=	JnlpEnhancer.createRmiEnhancedJnlp	${jnlpWithMainClassUrl}
-	start_process	javaws ${pathToJnlp}
-	importLibrary	ApplicationLauncher	${pathToJnlp}	WITH NAME	externalLauncher
+	startProcess	javaws ${pathToJnlp}
+	importLibrary	ApplicationLauncher	${pathToJnlp}	60	${jarDir}	WITH NAME	externalLauncher
 	setLibrarySearchOrder	externalLauncher
 	applicationStarted
 	importRemoteLibraries	external
@@ -74,7 +75,7 @@ applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${name
 	closeApplication
 
 importApplicationLauncher	[arguments]	${jnlpUrl}	${name}
-	importLibrary	ApplicationLauncher	${jnlpUrl}		${testAppDir}/test-lib	WITH NAME	${name}Launcher
+	importLibrary	ApplicationLauncher	${jnlpUrl}		${jarDir}	WITH NAME	${name}Launcher
 	selectApplication	${name}
 
 setTrustStore

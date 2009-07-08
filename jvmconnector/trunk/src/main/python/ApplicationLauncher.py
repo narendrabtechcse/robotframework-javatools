@@ -173,7 +173,7 @@ class ApplicationLauncher:
                    jvm_args, __file__, self.application, args, out_file, err_file)
 
     def _is_jnlp_application(self):
-        return self.application.startswith('http') and self.application.endswith('jnlp')
+        return self.application.startswith('http') or path.isfile(self.application)
         
     def _get_output_files(self):
         out_file = mktemp('%s.out' % self.application)
