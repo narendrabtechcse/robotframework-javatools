@@ -1,4 +1,12 @@
-﻿== Jvmconnector 0.8 ==
+﻿== Jvmconnector 0.9 ==
+
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 20 || Enhancement || Medium ||  ApplicationLauncher should support java webstart applications   ||
+|| Issue 21 || Enhancement || Medium ||  Extraxt WebstartLauncher's "Create Rmi Enhanced Jnlp" to it's own library ||
+|| Issue 22 || Enhancement || Medium ||  Remove old WebstartLauncher ||
+
+== Jvmconnector 0.8 ==
 
 In WebstartLauncher we added one new keyword and fixed one bug.<br>
 Jvmconnector dependent library ApplicationLauncher is introduced.
