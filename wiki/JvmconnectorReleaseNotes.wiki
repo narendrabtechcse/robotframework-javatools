@@ -1,5 +1,13 @@
 ﻿== Jvmconnector 0.9 ==
 
+Support for Java Web Start applications has been added.
+
+Contrary to old WebstartLauncher, it is no longer needed to edit xml files for
+configuring the Robot Framework libraries and rmi services.
+
+The old WebstartLauncher has been removed and the new ApplicationLauncher
+should be used instead.
+
 
 || *ID* || *Type* || *Priority* || *Summary* ||
 || Issue 20 || Enhancement || Medium ||  ApplicationLauncher should support java webstart applications   ||
