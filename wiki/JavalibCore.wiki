@@ -31,7 +31,7 @@ A fourth library combining all the abovementioned libraries is also provided:
 
 Javalib-core libraries requires you to explicitly set the pattern that specifies under which packages the keywords should be searched for. If javalib-core just scanned through all the classes in the classpath a keyword naming conflict would occur in case of having two javalib-core libraries in the same test file. 
 
-*N.B:* When the keywords are contained in jar files the jars need to include the directory entries, otherwise javalib-core is unable to find the classes.
+*N.B:* When the keywords are contained in jar files the jars need to include the directory entries, otherwise javalib-core is unable to find the classes. When creating keyword jar with Eclipse be certain to check the checkbox "Add directory entries".
 
 ====Instructions====
 
