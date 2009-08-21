@@ -31,6 +31,8 @@ A fourth library combining all the abovementioned libraries is also provided:
 
 Javalib-core libraries requires you to explicitly set the pattern that specifies under which packages the keywords should be searched for. If javalib-core just scanned through all the classes in the classpath a keyword naming conflict would occur in case of having two javalib-core libraries in the same test file. 
 
+*N.B:* When the keywords are contained in jar files the jars need to include the directory entries, otherwise javalib-core is unable to find the classes.
+
 ====Instructions====
 
 Keyword pattern must begin with the the first part of a Java package. For example `**/**.class` is not allowed. It must be something like `com/**/**.class`. It is a good idea to make the pattern as restrictive as possible in order to prevent keyword name collisions. That is why pattern above is not recommended as it makes javalib-core to scour through all the classes which package starts with `com`. If your keywords are all in the same package it is preferable to use keyword pattern that doesn't make javalib-core to look elsewhere, e.g. if all your keywords reside under `com.acme.myproject.keyword` you should use `com/acme/myproject/keyword/**.class` pattern.
