@@ -9,7 +9,7 @@ library	ApplicationLauncher	${app}	WITH NAME	multipleLauncher
 library	ApplicationLauncher	${app}	WITH NAME	closeable
 library	ApplicationLauncher	${app}	WITH NAME	logging
 resource	applauncher_resource.tsv
-#suiteSetup	startAppAndImportSomething
+suiteSetup	startAppAndImportSomething
 
 *** Variable ***
 
@@ -20,7 +20,6 @@ ${timeoutMsg}	Could not connect to application ${app}
 *** Test Case ***
 
 Closes Application That Has Been Started In Suite Setup
-	startAppAndImportSomething
 	myAppLauncher.closeApplication
 
 Starts Application And Imports Remote Library
