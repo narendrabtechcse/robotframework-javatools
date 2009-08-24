@@ -5,7 +5,7 @@ library	PythonpathHelper.py
 library	ApplicationLauncher	${app}	WITH NAME	xLauncher
 library	ApplicationLauncher	${app}	WITH NAME	yLauncher
 library	ApplicationLauncher	${app}	WITH NAME	zLauncher
-library	ApplicationLauncher	${app}	WITH NAME	externalXLauncher
+library	ApplicationLauncher	externalX	WITH NAME	externalXLauncher
 
 *** Variable ***
 
@@ -56,6 +56,20 @@ startExternalApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jv
 	importRemoteLibraries	${name}
 
 importRemoteLibraries	[arguments]	${name}
+	#importRemoteLibrary	SwingLibrary	WITH NAME	SwingLibrary${name}
 	importRemoteLibrary	${testingLibrary}	WITH NAME	${testingLibrary}${name}
-	importRemoteLibrary	SwingLibrary	WITH NAME	SwingLibrary${name}
 	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
+
+startWithJavaAgent	
+	[Arguments]	${command}
+	Variable Should Exist	${JAVA AGENT JAR}	You should give --variable JAVA_AGENT_JAR:jvm_connector.jar from command line when starting the tests.
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${JAVA AGENT JAR}
+	startProcess	${command} 1> out.txt 2> err.txt
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
+
+closeAppStartedWithJavaAgent
+	[Arguments]	${lib}
+	Variable Should Exist	${JAVA AGENT JAR}
+	Run Keyword	${lib}.closeApplication
+
+	

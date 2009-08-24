@@ -1,10 +1,11 @@
 *** Setting ***
-
+library	Dialogs
 resource	applauncher_resource.tsv
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
 library	JavaTools
 library	JvmconnectorKeywords
 library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${jarDir}
+library	ApplicationLauncher	javaagent	10 seconds	WITH NAME	javaagent
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
 
@@ -18,7 +19,15 @@ ${jnlpWithoutMainClassUrl}	${codeBase}/test-application-withoutmainclass.jnlp
 ${jnlpWithMainAttribute}	${codeBase}/test-application-with-main-attribute.jnlp
 ${jnlpWithSsl}	https://localhost:14564/test-app/test-application.jnlp
 
+
 *** Test Case ***
+Starting Webstart Application With Java Agent
+	[Tags]	javaagent
+	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
+	waitUntilKeywordSucceeds	30	2	selectWindow	${windowTitle}
+	applicationStarted 
+	[teardown]	closeAppStartedWithJavaAgent	javaagent
+
 Works With Local Jnlp	[tags]	not_ready
 	${localJnlp}=	setVariable	${CURDIR}/../src/test/resources/test-app/test-application.jnlp
 	applicationLauncherLaunchesJavaWebstartApplication	${localJnlp}	localApp	Test App
@@ -67,6 +76,7 @@ startWebstartService
 stopWebstartService
 	FileServer.stop
 
+
 applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${name}	${windowTitle}
 	importApplicationLauncher	${jnlpUrl}	${name}
 	startApplicationAndImportLibraries	${name}	${EMPTY}
@@ -81,3 +91,11 @@ importApplicationLauncher	[arguments]	${jnlpUrl}	${name}
 setTrustStore
 	JavaTools.setSystemProperty	javax.net.ssl.trustStore	${testAppDir}/jssecacerts
 	JavaTools.setSystemProperty	javax.net.ssl.trustStorePassword	changeit
+
+startWebstartWithJavaAgent	
+	[Arguments]	${name}	${command}
+	startWithJavaAgent	${command}
+	setLibrarySearchOrder	${name}
+	importRemoteLibraries	${name}
+	selectApplication	${name}
+	

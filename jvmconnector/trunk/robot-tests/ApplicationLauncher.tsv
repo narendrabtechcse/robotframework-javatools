@@ -86,18 +86,9 @@ Close Application
 	runKeywordAndExpectError	*	closeableApp.applicationIsRunning
 
 *** Keyword ***	
-
 startApplicationWithJavaAgent
-	Variable Should Exist	${JAVA AGENT JAR}	You should give --variable JAVA_AGENT_JAR:jvm_connector.jar from command line when starting the tests.
-	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${JAVA AGENT JAR}
-	startProcess	java ${app}
-	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
-
-closeAppStartedWithJavaAgent
-	[Arguments]	${lib}
-	Variable Should Exist	${JAVA AGENT JAR}
-	Run Keyword	${lib}.closeApplication
-
+	startWithJavaAgent	java ${app}
+	
 startAppAndImportSomething
 	myAppLauncher.startApplication
 	myAppLauncher.importRemoteLibrary	SwingLibrary	WITH NAME	remoteLibraryInSuiteSetup
