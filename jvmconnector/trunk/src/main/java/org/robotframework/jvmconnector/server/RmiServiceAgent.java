@@ -8,9 +8,9 @@ import java.util.jar.JarFile;
 public class RmiServiceAgent {
 		
 	public static void premain(String agentArguments, Instrumentation inst) {
-		System.out.println("Starting Agent");
+		System.out.println("Starting Agent " + agentArguments);
 		if (agentArguments != null) {
-			String[] paths = agentArguments.split(":");
+			String[] paths = agentArguments.split(System.getProperty("path.separator"));
 			for (String path : paths) {
 				try {
 					System.out.println("Appending path: " + path);
@@ -22,7 +22,7 @@ public class RmiServiceAgent {
 				}
 			}
 		}
-		new RmiService().start("/tmp/launcher.txt");
+		new RmiService().start(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + "launcher.txt");
 
 		System.out.println("Agent started");
 	}	
