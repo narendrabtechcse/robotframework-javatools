@@ -1,2 +1,2 @@
 --include javaagent 
---variable JAVA_AGENT_JAR:target\jvmconnector-0.9.1-SNAPSHOT-jar-with-dependencies.jar=src\test\resources\test-lib\helper-keywords.jar;src\test\resources\test-lib\javalib-core-0.7.3-SNAPSHOT.jar;src\test\resources\test-lib\jvmconnector.jar;src\test\resources\test-lib\swinglibrary-0.14.jar
+--variable JAVA_AGENT_JAR:target/jvmconnector-0.9.1-SNAPSHOT-jar-with-dependencies.jar=src/test/resources/test-lib/helper-keywords.jar:src/test/resources/test-lib/javalib-core-0.7.3-SNAPSHOT.jar:src/test/resources/test-lib/jvmconnector.jar:src/test/resources/test-lib/swinglibrary-0.14.jar
