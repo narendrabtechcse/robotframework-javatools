@@ -56,9 +56,9 @@ startExternalApplicationAndImportLibraries	[arguments]	${name}	${arguments}	${jv
 	importRemoteLibraries	${name}
 
 importRemoteLibraries	[arguments]	${name}
-	#importRemoteLibrary	SwingLibrary	WITH NAME	SwingLibrary${name}
+	importRemoteLibrary	SwingLibrary	WITH NAME	SwingLibrary${name}
 	importRemoteLibrary	${testingLibrary}	WITH NAME	${testingLibrary}${name}
-	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
+	#importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
 
 startWithJavaAgent	
 	[Arguments]	${command}

@@ -5,7 +5,7 @@ library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
 library	JavaTools
 library	JvmconnectorKeywords
 library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${jarDir}
-library	ApplicationLauncher	javaagent	10 seconds	WITH NAME	javaagent
+library	ApplicationLauncher	javaagent	10 seconds	WITH NAME	javaagentLauncher
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
 
@@ -24,9 +24,8 @@ ${jnlpWithSsl}	https://localhost:14564/test-app/test-application.jnlp
 Starting Webstart Application With Java Agent
 	[Tags]	javaagent
 	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
-	waitUntilKeywordSucceeds	30	2	selectWindow	${windowTitle}
-	applicationStarted 
-	[teardown]	closeAppStartedWithJavaAgent	javaagent
+	waitUntilKeywordSucceeds	30	2	selectMainWindow
+	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
 
 Works With Local Jnlp	[tags]	not_ready
 	${localJnlp}=	setVariable	${CURDIR}/../src/test/resources/test-app/test-application.jnlp
@@ -76,7 +75,6 @@ startWebstartService
 stopWebstartService
 	FileServer.stop
 
-
 applicationLauncherLaunchesJavaWebstartApplication	[arguments]	${jnlpUrl}	${name}	${windowTitle}
 	importApplicationLauncher	${jnlpUrl}	${name}
 	startApplicationAndImportLibraries	${name}	${EMPTY}
@@ -95,7 +93,8 @@ setTrustStore
 startWebstartWithJavaAgent	
 	[Arguments]	${name}	${command}
 	startWithJavaAgent	${command}
-	setLibrarySearchOrder	${name}
+	setLibrarySearchOrder	${name}Launcher
+	applicationStarted
 	importRemoteLibraries	${name}
 	selectApplication	${name}
 	
