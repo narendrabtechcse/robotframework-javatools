@@ -1,6 +1,5 @@
 package org.robotframework.jvmconnector.agent;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -12,13 +11,9 @@ import org.robotframework.jdave.mock.MockSupportSpecification;
 
 @RunWith(JDaveRunner.class)
 public class JarFinderIntegrationSpec extends MockSupportSpecification<String> {
-    private static String fileSep = System.getProperty("file.separator");
-    private static String thisDir = new File(".").getAbsolutePath();
-    private static String jarDir =  thisDir + fileSep + "src" + fileSep + "test" + fileSep + "resources" + fileSep + "test-lib";
-
     public class HandlingDirectory {
         public String create() {
-            return jarDir;
+            return JarSpecUtil.jarDir;
         }
 
         public void findsJars() {
@@ -29,7 +24,7 @@ public class JarFinderIntegrationSpec extends MockSupportSpecification<String> {
     
     public class HandlingFile {
         public String create() {
-            return jarDir + fileSep + "helper-keywords.jar";
+            return JarSpecUtil.jarDir + JarSpecUtil.fileSep + "helper-keywords.jar";
         }
 
         public void findsJars() {
@@ -43,7 +38,7 @@ public class JarFinderIntegrationSpec extends MockSupportSpecification<String> {
         JarFinder jarFinder = new JarFinder(file);
         jarFinder.each(new JarFileAction() {
             public void doOnFile(JarFile jar) {
-                int lastFileSepIndex = jar.getName().lastIndexOf(fileSep);
+                int lastFileSepIndex = jar.getName().lastIndexOf(JarSpecUtil.fileSep);
                 String simpleName = jar.getName().substring(lastFileSepIndex + 1);
                 jarsFound.add(simpleName);
             }

@@ -31,7 +31,7 @@ public class RmiServiceAgent {
         startRmiService();
 	}
 
-    private static void setClasspath(String agentArguments, final Instrumentation inst) {
+    static void setClasspath(String agentArguments, final Instrumentation inst) {
         for (String file : agentArguments.split(pathSeparator)) {
             addJarsToClasspath(inst, file);
         }
