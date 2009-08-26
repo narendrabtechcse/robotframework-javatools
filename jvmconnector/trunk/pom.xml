@@ -5,6 +5,10 @@
   <version>0.9.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>jvmconnector</name>
+  <properties>
+        <agentClass>org.robotframework.jvmconnector.agent.RmiServiceAgent</agentClass>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>org.robotframework</groupId>
@@ -161,7 +165,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Premain-Class>org.robotframework.jvmconnector.server.RmiServiceAgent</Premain-Class>
+              <Premain-Class>${agentClass}</Premain-Class>
             </manifestEntries>
           </archive>
         </configuration>
@@ -175,7 +179,7 @@
           </descriptorRefs>
           <archive>
             <manifestEntries>
-              <Premain-Class>org.robotframework.jvmconnector.server.RmiServiceAgent</Premain-Class>
+              <Premain-Class>${agentClass}</Premain-Class>
             </manifestEntries>
           </archive>
         </configuration>
