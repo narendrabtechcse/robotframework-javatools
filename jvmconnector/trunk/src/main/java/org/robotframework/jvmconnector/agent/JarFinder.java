@@ -57,11 +57,19 @@ public class JarFinder extends DirectoryWalker {
     
     private List<File> findJars() {
         List<File> jars = new ArrayList<File>();
+        if (path.isDirectory()) {
+            walkThrough(jars);
+        } else if (path.isFile()) {
+            jars.add(path);
+        }
+        return jars;
+    }
+
+    private void walkThrough(List<File> jars) {
         try {
             walk(path, jars);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return jars;
     }
 }

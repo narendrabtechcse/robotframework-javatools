@@ -23,6 +23,7 @@ import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiServiceAgent {
     private static String tmpDir = System.getProperty("java.io.tmpdir");
+    private static String pathSeparator = System.getProperty("path.separator");
     private static String fileSeparator = System.getProperty("file.separator");
 
     public static void premain(String agentArguments, Instrumentation inst) {
@@ -31,13 +32,19 @@ public class RmiServiceAgent {
 	}
 
     private static void setClasspath(String agentArguments, final Instrumentation inst) {
-        new JarFinder(agentArguments).each(new JarFileAction() {
+        for (String file : agentArguments.split(pathSeparator)) {
+            addJarsToClasspath(inst, file);
+        }
+    }
+
+    private static void addJarsToClasspath(final Instrumentation inst, String file) {
+        new JarFinder(file).each(new JarFileAction() {
             public void doOnFile(JarFile file) {
                 inst.appendToSystemClassLoaderSearch(file);
             }
         });
     }
-
+    
     private static void startRmiService() {
         new RmiService().start(tmpDir + fileSeparator + "launcher.txt");
     }
