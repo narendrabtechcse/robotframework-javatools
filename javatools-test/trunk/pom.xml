@@ -9,7 +9,7 @@
     <dependency>
       <groupId>org.robotframework</groupId>
       <artifactId>javalib-core</artifactId>
-      <version>0.7.3</version>
+      <version>0.8.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -61,7 +61,7 @@
   <distributionManagement>
     <repository>
       <id>laughingpanda</id>
-      <url>scp://www.laughingpanda.org/var/www/localhost/htdocs/maven2/</url>
+      <url>scp://localhost:7003/var/www/localhost/htdocs/maven2/</url>
     </repository>
   </distributionManagement>
 </project>
