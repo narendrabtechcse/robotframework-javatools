@@ -35,7 +35,6 @@ public class JarFinder extends DirectoryWalker {
     public void each(JarFileAction fileAction) {
         List<File> jars = findJars();
         for (File jarFile : jars) {
-            System.out.println(jarFile);
             fileAction.doOnFile(createJar(jarFile));
         }
     }
@@ -48,6 +47,7 @@ public class JarFinder extends DirectoryWalker {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void handleFile(File file, int depth, Collection results) throws IOException {
         if (file.getName().toLowerCase().endsWith(".jar")) {

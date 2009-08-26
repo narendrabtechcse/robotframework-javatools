@@ -22,7 +22,6 @@ import java.util.jar.JarFile;
 import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiServiceAgent {
-	private static String pathSeparator = System.getProperty("path.separator");
     private static String tmpDir = System.getProperty("java.io.tmpdir");
     private static String fileSeparator = System.getProperty("file.separator");
 

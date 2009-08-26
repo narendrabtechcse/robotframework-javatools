@@ -13,9 +13,9 @@ import org.robotframework.jdave.mock.MockSupportSpecification;
 
 @RunWith(JDaveRunner.class)
 public class JarFinderIntegrationSpec extends MockSupportSpecification<JarFinder> {
-    private static String tmpDir = System.getProperty("java.io.tmpdir");
     private static String fileSep = System.getProperty("file.separator");
-    private static String jarDir = new File(".").getAbsolutePath() + fileSep + "src" + fileSep + "test" + fileSep + "resources" + fileSep + "test-lib";
+    private static String thisDir = new File(".").getAbsolutePath();
+    private static String jarDir =  thisDir + fileSep + "src" + fileSep + "test" + fileSep + "resources" + fileSep + "test-lib";
 
     public class Any {
         public JarFinder create() throws IOException {
@@ -26,17 +26,13 @@ public class JarFinderIntegrationSpec extends MockSupportSpecification<JarFinder
             final List<String> jarsFound = new ArrayList<String>();
             context.each(new JarFileAction() {
                 public void doOnFile(JarFile jar) {
-                    jarsFound.add(jar.getName());
+                    int lastFileSepIndex = jar.getName().lastIndexOf(fileSep);
+                    String simpleName = jar.getName().substring(lastFileSepIndex + 1);
+                    jarsFound.add(simpleName);
                 }
             }); 
             
-            System.out.println(jarsFound);
-            System.out.println(new File(".").getAbsolutePath());
-//            specify(jars, containExactly(jarsFound));
+            specify(jarsFound, containsExactly("helper-keywords.jar", "jvmconnector.jar", "javalib-core.jar", "swinglibrary.jar"));
         }
-    }
-    
-    public void destroy() throws Exception {
-//        FileUtils.deleteDirectory(new File(jarDir));
     }
 }
