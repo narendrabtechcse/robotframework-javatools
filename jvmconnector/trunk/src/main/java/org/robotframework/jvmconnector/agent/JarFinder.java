@@ -50,12 +50,9 @@ public class JarFinder extends DirectoryWalker {
 
     @Override
     protected void handleFile(File file, int depth, Collection results) throws IOException {
-        results.add(file);
-    }
-    
-    @Override
-    protected void handleEnd(Collection results) throws IOException {
-        System.out.println(results);
+        if (file.getName().toLowerCase().endsWith(".jar")) {
+            results.add(file);
+        }
     }
     
     private List<File> findJars() {
