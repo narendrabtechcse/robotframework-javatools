@@ -1,4 +1,4 @@
-package org.robotframework.jvmconnector.server;
+package org.robotframework.jvmconnector.agent;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;

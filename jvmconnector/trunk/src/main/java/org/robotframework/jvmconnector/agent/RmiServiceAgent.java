@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.robotframework.jvmconnector.server;
+package org.robotframework.jvmconnector.agent;
 
-import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.jar.JarFile;
+
+import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiServiceAgent {
 	private static String pathSeparator = System.getProperty("path.separator");
@@ -30,30 +31,15 @@ public class RmiServiceAgent {
         startRmiService();
 	}
 
-    private static void setClasspath(String agentArguments, Instrumentation inst) {
-        String[] jarPaths = getJarPaths(agentArguments);
-        for (String path : jarPaths) {
-            JarFile jarFile = createJar(path);
-            inst.appendToSystemClassLoaderSearch(jarFile);
-        }
-    }
-
-    private static JarFile createJar(String path) {
-        try {
-            return new JarFile(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private static void setClasspath(String agentArguments, final Instrumentation inst) {
+        new JarFinder(agentArguments).each(new JarFileAction() {
+            public void doOnFile(JarFile file) {
+                inst.appendToSystemClassLoaderSearch(file);
+            }
+        });
     }
 
     private static void startRmiService() {
         new RmiService().start(tmpDir + fileSeparator + "launcher.txt");
     }
-
-    private static String[] getJarPaths(String agentArguments) {
-        if (agentArguments != null) {
-			return agentArguments.split(pathSeparator);
-		}
-        return new String[0];
-    }	
 }
