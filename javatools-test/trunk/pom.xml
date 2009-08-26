@@ -3,7 +3,7 @@
   <groupId>org.robotframework</groupId>
   <artifactId>javatools-test</artifactId>
   <packaging>jar</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <name>javatools-test</name>
   <dependencies>
     <dependency>
@@ -54,8 +54,8 @@
   </repositories>
 
   <scm>
-    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/trunk</connection>
-    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/trunk</developerConnection>
+    <connection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/tags/javatools-test-0.2</connection>
+    <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javatools-test/tags/javatools-test-0.2</developerConnection>
   </scm>
 
   <distributionManagement>
