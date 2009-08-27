@@ -1,2 +1,0 @@
---include javaagent 
---variable JAVA_AGENT_JAR:target/jvmconnector-0.9.1-SNAPSHOT-jar-with-dependencies.jar=src/test/resources/test-lib/
