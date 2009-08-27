@@ -8,6 +8,7 @@ library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${jarDir}
 library	ApplicationLauncher	javaagent	10 seconds	WITH NAME	javaagentLauncher
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
+testTimeout	30sec
 
 *** Variable ***
 
@@ -21,10 +22,22 @@ ${jnlpWithSsl}	https://localhost:14564/test-app/test-application.jnlp
 
 
 *** Test Case ***
+
 Starting Webstart Application With Java Agent
 	[Tags]	javaagent
 	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
 	waitUntilKeywordSucceeds	30	2	selectMainWindow
+	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
+
+Starting Webstart Application From Webstart Application	[Tags]	javaagent
+	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
+	waitUntilKeywordSucceeds	30	2	selectMainWindow
+	pushButton	Start javaws application
+	importLibrary	ApplicationLauncher	javaagent2	10 seconds	WITH NAME	javaagentLauncher2
+	javaagentLauncher2.applicationStarted
+	importRemoteLibraries	javaagent2
+	selectApplication	javaagent2
+	javaagentLauncher2.closeApplication
 	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
 
 Works With Local Jnlp	[tags]	not_ready
