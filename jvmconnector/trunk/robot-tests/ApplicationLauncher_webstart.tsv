@@ -37,6 +37,7 @@ Starting Webstart Application From Webstart Application	[Tags]	javaagent
 	javaagentLauncher2.applicationStarted
 	importRemoteLibraries	javaagent2
 	selectApplication	javaagent2
+	selectMainWindow
 	javaagentLauncher2.closeApplication
 	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
 
