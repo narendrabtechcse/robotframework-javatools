@@ -90,9 +90,9 @@ setTrustStore
 	JavaTools.setSystemProperty	javax.net.ssl.trustStore	${testAppDir}/jssecacerts
 	JavaTools.setSystemProperty	javax.net.ssl.trustStorePassword	changeit
 
-startWebstartWithJavaAgent	
+startWebstartWithJavaAgent
 	[Arguments]	${name}	${command}
-	startWithJavaAgent	${command}
+	startWithJavaAgent	${command}	${jarDir}
 	setLibrarySearchOrder	${name}Launcher
 	applicationStarted
 	importRemoteLibraries	${name}

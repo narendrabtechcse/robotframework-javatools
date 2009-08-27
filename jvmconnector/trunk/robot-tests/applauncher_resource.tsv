@@ -6,6 +6,7 @@ library	ApplicationLauncher	${app}	WITH NAME	xLauncher
 library	ApplicationLauncher	${app}	WITH NAME	yLauncher
 library	ApplicationLauncher	${app}	WITH NAME	zLauncher
 library	ApplicationLauncher	externalX	WITH NAME	externalXLauncher
+variables	variables.py
 
 *** Variable ***
 
@@ -61,9 +62,10 @@ importRemoteLibraries	[arguments]	${name}
 	importRemoteLibrary	JavaTools	WITH NAME	JavaTools${name}
 
 startWithJavaAgent	
-	[Arguments]	${command}
-	Variable Should Exist	${JAVA AGENT JAR}	You should give --variable JAVA_AGENT_JAR:jvm_connector.jar from command line when starting the tests.
-	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${JAVA AGENT JAR}
+	[Arguments]	${command}	${java agent args}=
+	Variable Should Exist	${JAVA AGENT JAR}
+	...	You should create jar with dependencies with command "mvn assembly:assembly" before running javaagent tests.
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${JAVA AGENT JAR}=${java agent args}
 	startProcess	${command} 1> out.txt 2> err.txt
 	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
 
