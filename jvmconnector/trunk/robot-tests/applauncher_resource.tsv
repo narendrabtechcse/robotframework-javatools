@@ -13,6 +13,9 @@ variables	variables.py
 ${app}	org.robotframework.jvmconnector.mocks.MyApplication
 ${testingLibrary}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
 ${appLauncherScript}	${CURDIR}${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
+${policyFile}	${CURDIR}${/}allow_libraries.policy
+${javaPolicyFile}	%{HOME}${/}.java.policy
+
 
 *** Keyword ***
 
@@ -66,12 +69,20 @@ startWithJavaAgent
 	Variable Should Exist	${JAVA AGENT JAR}
 	...	You should create jar with dependencies with command "mvn assembly:assembly" before running javaagent tests.
 	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${JAVA AGENT JAR}=${java agent args}
-	startProcess	${command} 1> out.txt 2> err.txt
+	checkPolicyFileAllowLibraryUse
+	startProcess	${command}
 	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
 
 closeAppStartedWithJavaAgent
 	[Arguments]	${lib}
+	comment	Two steps below fails test faster in case the env is not ok
 	Variable Should Exist	${JAVA AGENT JAR}
-	Run Keyword	${lib}.closeApplication
+	checkPolicyFileAllowLibraryUse
+	runKeyword	${lib}.closeApplication
 
+checkPolicyFileAllowLibraryUse
+	${msg} =	Set Variable	You should copy ${policyFile} to ${javaPolicyFile} to allow library use with webstart.
+	File Should Exist	${javaPolicyFile}	${msg}
+	${content} =	Get File	${javaPolicyFile}
+	Should Contain	${content}	grant	${msg}	No values
 	
