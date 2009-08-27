@@ -29,6 +29,13 @@ public class RmiServiceAgentIntegrationSpec extends Specification<Void> {
             
             specify(expectedJars, instrumentation.appendedJars);
         }
+        
+        public void doesNothingWhenNoArgumentsAreGiven() {
+            FakeInstrumentation instrumentation = new FakeInstrumentation();
+            RmiServiceAgent.setClasspath(null, instrumentation);
+            
+            specify(instrumentation.appendedJars.isEmpty());
+        }
     }
     
     private List<String> getExpectedJars(String... additionalJars) {
