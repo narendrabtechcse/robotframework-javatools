@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
+
 package org.robotframework.jvmconnector.agent;
 
-import java.lang.instrument.Instrumentation;
+import java.util.jar.JarFile;
 
-public class ClassPathAppenderFactory {
-    public ClassPathAppender create(Instrumentation inst) {
-        if (System.getProperty("java.version").startsWith("1.6"))
-            return new Java6ClassPathAppender(inst);
-        else
-            return new NullClassPathAppender();
+public class NullClassPathAppender implements ClassPathAppender {
+    public void appendToClasspath(JarFile jar) {
+        // does nothing
     }
 }
