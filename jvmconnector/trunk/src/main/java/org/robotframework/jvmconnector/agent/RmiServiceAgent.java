@@ -17,6 +17,7 @@
 package org.robotframework.jvmconnector.agent;
 
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Method;
 import java.util.jar.JarFile;
 
 import org.robotframework.jvmconnector.server.RmiService;
@@ -45,9 +46,26 @@ public class RmiServiceAgent {
     private static void addJarsToClasspath(final Instrumentation inst, String file) {
         new JarFinder(file).each(new JarFileAction() {
             public void doOnFile(JarFile file) {
-                inst.appendToSystemClassLoaderSearch(file);
+                addToClassPath(inst, file);
             }
         });
+    }
+    
+    private static void addToClassPath(Instrumentation inst, JarFile file) {
+        Method appendMethod = getAppendMethod(inst);
+        try {
+            appendMethod.invoke(inst, file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Method getAppendMethod(Instrumentation inst) {
+        try {
+            return inst.getClass().getMethod("appendToSystemClassLoaderSearch", JarFile.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
     private static void startRmiService() {
