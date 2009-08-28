@@ -14,7 +14,9 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import org.apache.commons.io.FileUtils;
+import org.jmock.Expectations;
 import org.junit.runner.RunWith;
+import org.laughingpanda.beaninject.Inject;
 
 @RunWith(JDaveRunner.class)
 public class RmiServiceAgentIntegrationSpec extends Specification<Void> {
@@ -37,6 +39,23 @@ public class RmiServiceAgentIntegrationSpec extends Specification<Void> {
             specify(instrumentation.appendedJars.isEmpty());
         }
     }
+    
+    public class AppendingToClassPath {
+        public void usesClassPathAppender() {
+            final ClassPathAppenderFactory factory = mock(ClassPathAppenderFactory.class);
+            final ClassPathAppender appender = mock(ClassPathAppender.class);
+            Inject.staticField("appenderFactory").of(RmiServiceAgent.class).with(factory);
+            
+            final Instrumentation inst = dummy(Instrumentation.class);
+            checking(new Expectations() {{
+                atLeast(1).of(factory).create(inst); will(returnValue(appender));
+                atLeast(1).of(appender).appendToClasspath(with(any(JarFile.class)));
+            }});
+            
+            RmiServiceAgent.setClasspath(agentArguments, inst);
+        }
+    }
+    
     
     private List<String> getExpectedJars(String... additionalJars) {
         Collection<File> jars = FileUtils.listFiles(new File(JarSpecUtil.jarDir), new String[] {"jar" }, true);

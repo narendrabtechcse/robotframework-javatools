@@ -43,7 +43,8 @@ public class Java6ClassPathAppender implements ClassPathAppender {
 
     private Method appendMethod() {
         try {
-            return instrumentation.getClass().getMethod("appendToSystemClassLoaderSearch", JarFile.class);
+            return instrumentation.getClass()
+                                  .getMethod("appendToSystemClassLoaderSearch", JarFile.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

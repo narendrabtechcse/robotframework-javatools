@@ -25,6 +25,8 @@ public class RmiServiceAgent {
     private static String tmpDir = System.getProperty("java.io.tmpdir");
     private static String pathSeparator = System.getProperty("path.separator");
     private static String fileSeparator = System.getProperty("file.separator");
+    
+    private static ClassPathAppenderFactory appenderFactory = new ClassPathAppenderFactory();
 
     public static void premain(String agentArguments, Instrumentation inst) {
         setClasspath(agentArguments, inst);
@@ -51,7 +53,11 @@ public class RmiServiceAgent {
     }
     
     private static void addToClassPath(Instrumentation inst, JarFile file) {
-        new Java6ClassPathAppender(inst).appendToClasspath(file);
+        getAppender(inst).appendToClasspath(file);
+    }
+
+    private static ClassPathAppender getAppender(Instrumentation inst) {
+        return appenderFactory.create(inst);
     }
 
     private static void startRmiService() {
