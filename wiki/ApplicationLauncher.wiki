@@ -93,7 +93,7 @@ Enables testing applications that are not started from !ApplicationLauncher.
 Sometimes you cannot control the startup of the system under test. For example when one application starts an other. In this situation you are not able to start the application with !ApplicationLauncher.
 You can still access the target jvm and import remote libraries to operate on it by using the Robot Agent.
 
-This works by setting an environment variable JAVA_TOOLS_OPTIONS to include a javaagent option that points to the jvmconnector.jar. The Robot Agent will then start the listener service to all started jvms which allows us to access them.
+This works by setting an environment variable _JAVA_TOOLS_OPTIONS_ to include a javaagent option that points to the jvmconnector.jar. The Robot Agent will then start the listener service to all started jvms which allows us to access them.
 
 Robot Agent works both with java webstart applications and standalone java applications.
 
