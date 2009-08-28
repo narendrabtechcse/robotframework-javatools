@@ -27,15 +27,15 @@ import org.jmock.Expectations;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class MustangClassPathAppenderSpec extends Specification<MustangClassPathAppender> {
+public class Java6ClassPathAppenderSpec extends Specification<Java6ClassPathAppender> {
     public class Any {
         private Instrumentation mustangInstrumentation;
-        private MustangClassPathAppender classPathAppender;
+        private Java6ClassPathAppender classPathAppender;
 
-        public MustangClassPathAppender create() {
+        public Java6ClassPathAppender create() {
             mustangInstrumentation = mock(Instrumentation.class);
             
-            classPathAppender = new MustangClassPathAppender(mustangInstrumentation);
+            classPathAppender = new Java6ClassPathAppender(mustangInstrumentation);
             return classPathAppender;
         }
         

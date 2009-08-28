@@ -22,10 +22,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.jar.JarFile;
 
-public class MustangClassPathAppender implements ClassPathAppender {
+public class Java6ClassPathAppender implements ClassPathAppender {
     private final Instrumentation instrumentation;
 
-    public MustangClassPathAppender(Instrumentation instrumentation) {
+    public Java6ClassPathAppender(Instrumentation instrumentation) {
         this.instrumentation = instrumentation;
     }
 
