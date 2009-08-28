@@ -86,6 +86,32 @@ In this example every application has a unique name. Every application has a lau
  # Operate on the application
  # At the end, you can use `Close Application` keyword to kill the SUT's jvm.
 
+====Robot Agent====
+
+Enables testing applications that are not started from !ApplicationLauncher. 
+
+Sometimes you cannot control the startup of the system under test. For example when one application starts an other. In this situation you are not able to start the application with !ApplicationLauncher.
+You can still access the target jvm and import remote libraries to operate on it by using the Robot Agent.
+
+This works by setting an environment variable JAVA_TOOLS_OPTIONS to include a javaagent option that points to the jvmconnector.jar. The Robot Agent will then start the listener service to all started jvms which allows us to access them.
+
+Robot Agent works both with java webstart applications and standalone java applications.
+
+=====Using Robot Agent=====
+
+- Set JAVA_TOOLS_OPTIONS environment variable on your system before starting to test:
+  On Windows:
+  set JAVA_TOOLS_OPTIONS=-javaagent:${jvmconnector.jar}=${path_to_testing_dependencies}
+  On Linux: 
+  export JAVA_TOOLS_OPTIONS=-javaagent:${jvmconnector.jar}=${path_to_testing_dependencies}
+
+  Where ${jvmconnector.jar} is the path to the jvmconnector package and ${path_to_testing_dependencies} is the path to the directory containing the test library jars.
+
+- When testing java webstart applications a [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/robot-tests/allow_libraries.policy permission file that allows the agent to be used] must be copied to your _%HOME%\.java.policy_ directory
+
+- Start testing
+
+
 ===Troubleshooting===
 
 *Problem:* You get the following exception when trying to launch your application:
