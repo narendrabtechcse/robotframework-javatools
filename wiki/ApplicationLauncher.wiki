@@ -99,7 +99,7 @@ Robot Agent works both with java webstart applications and standalone java appli
 
 =====Using Robot Agent=====
 
-1. Set _JAVA_TOOLS_OPTIONS_ environment variable on your system before starting to test:
+1. Set _JAVA_TOOLS_OPTIONS_ environment variable:
 
   On Windows:
   {{{
@@ -115,8 +115,7 @@ Robot Agent works both with java webstart applications and standalone java appli
 
 2. When testing java webstart applications a [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/robot-tests/allow_libraries.policy permission file that allows the agent to be used] must be copied to *%HOME%\.java.policy*
 
-3. Start testing
-
+3. Start testing.
 
 ===Troubleshooting===
 
