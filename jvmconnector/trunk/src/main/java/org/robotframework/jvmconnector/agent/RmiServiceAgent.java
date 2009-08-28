@@ -53,10 +53,10 @@ public class RmiServiceAgent {
     }
     
     private static void addToClassPath(Instrumentation inst, JarFile file) {
-        getAppender(inst).appendToClasspath(file);
+        classPathAppender(inst).appendToClasspath(file);
     }
 
-    private static ClassPathAppender getAppender(Instrumentation inst) {
+    private static ClassPathAppender classPathAppender(Instrumentation inst) {
         return appenderFactory.create(inst);
     }
 
