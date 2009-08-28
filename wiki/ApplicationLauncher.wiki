@@ -99,11 +99,19 @@ Robot Agent works both with java webstart applications and standalone java appli
 
 =====Using Robot Agent=====
 
-- Set JAVA_TOOLS_OPTIONS environment variable on your system before starting to test:
+- Set _JAVA_TOOLS_OPTIONS_ environment variable on your system before starting to test:
+
   On Windows:
+
+  {{{
   set JAVA_TOOLS_OPTIONS=-javaagent:${jvmconnector.jar}=${path_to_testing_dependencies}
+  }}}
+
   On Linux: 
+
+  {{{
   export JAVA_TOOLS_OPTIONS=-javaagent:${jvmconnector.jar}=${path_to_testing_dependencies}
+  }}}
 
   Where ${jvmconnector.jar} is the path to the jvmconnector package and ${path_to_testing_dependencies} is the path to the directory containing the test library jars.
 
