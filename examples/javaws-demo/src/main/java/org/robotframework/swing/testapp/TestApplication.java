@@ -4,12 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class TestApplication {
+    private static String jnlpUrl = "http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp";
     private JPanel panel;
     private JFrame frame;
 
@@ -64,5 +69,29 @@ public class TestApplication {
 
     private void addComponentsToMainPanel() {
         panel.add(new SystemExitButton());
+        panel.add(new JButton("Start javaws application"){{
+            addActionListener(new MyAction("javaws " + jnlpUrl));
+        }});
+        panel.add(new JButton("Start java application") {{
+            addActionListener(new MyAction("java " + TestApplication.class.getName()));
+        }});
+
     }
+    
+    private static class MyAction implements ActionListener {
+        private final String command;
+
+        public MyAction(String command) {
+            this.command = command;
+        }
+         
+        public void actionPerformed(ActionEvent e) {
+            try {
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e1) {
+                throw new RuntimeException(e1);
+            }
+        }
+    }
+
 }
