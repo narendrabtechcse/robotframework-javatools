@@ -3,16 +3,22 @@
 #suiteSetup	setProxy	# Uncomment if you are behind proxy. Notice that you need to configure your javaws proxy separately
 library	ApplicationLauncher	${jnlpUrl}	60sec	${testLibDir}	WITH NAME	testAppLauncher
 library	ApplicationLauncher	javaAgent	WITH NAME	javaAgentConnector
-testSetup	setLibrarySearchOrder	testAppLauncher
+library	ApplicationLauncher	javaAgent	WITH NAME	javaAgentConnector2
+library	OperatingSystem
 
 *** Variable ***
 
 ${testLibDir}	${CURDIR}/test-lib
 ${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp
+${javaAgentJar}	${testLibDir}/jvmconnector-jar-with-dependencies.jar
+${javaAgentArguments}	${javaAgentJar}=${testLibDir}
+${policyFile}	${CURDIR}${/}allow_libraries.policy
+${javaPolicyFile}	%{HOME}${/}.java.policy
 
 *** TestCase ***
 
-Demonstration
+ApplicationLauncher Starts Javaws Application And Operates On It
+	setLibrarySearchOrder	testAppLauncher
 	startApplication
 	importRemoteLibrary	SwingLibrary
 	waitUntilKeywordSucceeds	40	2	selectMainWindow
@@ -21,10 +27,36 @@ Demonstration
 	pushButton	OK
 	closeApplication
 
-*** Keyword ***
+ApplicationLauncher Connects To Application Started With JavaAgent
+	checkPolicyFileAllowLibraryUse
+	setLibrarySearchOrder	javaAgentConnector
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${javaAgentArguments}
+	startProcess	javaws ${jnlpUrl}
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
+	applicationStarted
+	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib1
+	setLibrarySearchOrder	javaAgentConnector	swingLib1
+	waitUntilKeywordSucceeds	20	2	selectMainWindow
+	pushButton	Start javaws application
+	setLibrarySearchOrder	javaAgentConnector2
+	applicationStarted
+	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib2
+	setLibrarySearchOrder	javaAgentConnector2	swingLib2
+	waitUntilKeywordSucceeds	20	2	selectMainWindow
+	closeApplication
+	setLibrarySearchOrder	javaAgentConnector	swingLib1
+	waitUntilKeywordSucceeds	20	2	selectMainWindow
+	closeApplication
 
+*** Keyword ***
 # Edit to match your proxy configuration
 setProxy
 	importLibrary	JavaTools
 	setSystemProperty	http.proxyHost	10.159.32.155
 	setSystemProperty	http.proxyPort	8080
+
+checkPolicyFileAllowLibraryUse
+	${msg}=	setVariable	You should copy ${policyFile} to ${javaPolicyFile} to allow library use with webstart.
+	fileShouldExist	${javaPolicyFile}	${msg}
+	${content}=	getFile	${javaPolicyFile}
+	shouldContain	${content}	grant	${msg}	No values
