@@ -75,7 +75,6 @@ public class TestApplication {
         panel.add(new JButton("Start java application") {{
             addActionListener(new MyAction("java " + TestApplication.class.getName()));
         }});
-
     }
     
     private static class MyAction implements ActionListener {

@@ -1,28 +1,30 @@
-*Setting*	*Value*
-#library	JavaTools
-library	WebstartLauncher	test-lib
-#suiteSetup	setProxy
-suiteTeardown	closeApplication
+*** Setting ***
 
-*Variable*	*Value*	*Value*
+#suiteSetup	setProxy	# Uncomment if you are behind proxy. Notice that you need to configure your javaws proxy separately
+library	ApplicationLauncher	${jnlpUrl}	60sec	${testLibDir}	WITH NAME	testAppLauncher
+library	ApplicationLauncher	javaAgent	WITH NAME	javaAgentConnector
+testSetup	setLibrarySearchOrder	testAppLauncher
+
+*** Variable ***
+
+${testLibDir}	${CURDIR}/test-lib
 ${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp
-${rmiConfigFile}	${CURDIR}${/}test-lib${/}rmiServiceContext.xml
 
-*TestCase*	*Action*	*Argument*
+*** TestCase ***
+
 Demonstration
 	startApplication
-	selectFromMainMenu	Test Menu|Show Dialog
+	importRemoteLibrary	SwingLibrary
+	waitUntilKeywordSucceeds	40	2	selectMainWindow
+	selectFromMenu	Test Menu|Show Dialog
 	selectDialog	Message
 	pushButton	OK
+	closeApplication
 
-*Keyword*	*Action*	*Argument*
-startApplication
-	startWebstartApplicationAndRmiService	${rmiConfigFile}	${jnlpUrl}
-	importLibrary	${CURDIR}${/}tools${/}RemoteLibrary.py
+*** Keyword ***
 
-closeApplication
-	runKeywordAndIgnoreError	systemExit
-
-#setProxy
-	#setSystemProperty	http.proxyHost	172.16.42.133
-	#setSystemProperty	http.proxyPort	8080
+# Edit to match your proxy configuration
+setProxy
+	importLibrary	JavaTools
+	setSystemProperty	http.proxyHost	10.159.32.155
+	setSystemProperty	http.proxyPort	8080

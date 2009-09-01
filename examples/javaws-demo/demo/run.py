@@ -6,10 +6,12 @@ from glob import glob
 
 def main(args):
     dir = os.path.dirname(__file__)
-    jars = glob(os.path.join(dir, 'test-lib', '*.jar'))
+    testlibdir = os.path.join(dir, 'test-lib')
+    jars = glob(os.path.join(testlibdir, '*.jar'))
     os.environ['CLASSPATH'] = os.pathsep.join(jars)
     outputdir = os.path.join(dir, 'results')
-    os.system("jybot --loglevel TRACE --outputdir \"%s\" %s" % (outputdir, ' '.join(args)))
+    os.system("jybot --pythonpath %s --loglevel TRACE --outputdir \"%s\" %s" %
+    (testlibdir, outputdir, ' '.join(args)))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
