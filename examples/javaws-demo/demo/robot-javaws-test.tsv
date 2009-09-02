@@ -31,11 +31,7 @@ ApplicationLauncher Starts Javaws Application And Operates On It
 
 ApplicationLauncher Connects To Application Started With JavaAgent
 	checkPolicyFileAllowLibraryUse
-	setLibrarySearchOrder	javaAgentConnector
-	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${javaAgentArguments}
-	startProcess	javaws ${jnlpUrl}
-	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
-	applicationStarted
+	setAgentAndStartFirstApplication
 	connectToFirstApplication
 	pushButton	Start javaws application
 	connectToSecondApplicationAndCloseIt
@@ -55,9 +51,13 @@ checkPolicyFileAllowLibraryUse
 	${content}=	getFile	${javaPolicyFile}
 	shouldContain	${content}	grant	${msg}	No values
 
+setAgentAndStartFirstApplication
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${javaAgentArguments}
+	startProcess	javaws ${jnlpUrl}
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
+
 connectToSecondApplication
 	setLibrarySearchOrder	javaAgentConnector2
-	applicationStarted
 	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib2
 	setLibrarySearchOrder	javaAgentConnector2	swingLib2
 	waitUntilKeywordSucceeds	20	2	selectMainWindow
