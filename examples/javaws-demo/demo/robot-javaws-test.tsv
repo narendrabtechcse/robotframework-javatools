@@ -1,6 +1,8 @@
 *** Setting ***
 
-#suiteSetup	setProxy	# Uncomment if you are behind proxy. Notice that you need to configure your javaws proxy separately
+# Uncomment the suite setup below and configure the setProxy user keyword if you are behind proxy.
+# Notice that you need to configure your javaws proxy separately
+#suiteSetup	setProxy
 library	ApplicationLauncher	${jnlpUrl}	60sec	${testLibDir}	WITH NAME	testAppLauncher
 library	ApplicationLauncher	javaAgent	WITH NAME	javaAgentConnector
 library	ApplicationLauncher	javaAgent	WITH NAME	javaAgentConnector2
@@ -34,21 +36,13 @@ ApplicationLauncher Connects To Application Started With JavaAgent
 	startProcess	javaws ${jnlpUrl}
 	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
 	applicationStarted
-	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib1
-	setLibrarySearchOrder	javaAgentConnector	swingLib1
-	waitUntilKeywordSucceeds	20	2	selectMainWindow
+	connectToFirstApplication
 	pushButton	Start javaws application
-	setLibrarySearchOrder	javaAgentConnector2
-	applicationStarted
-	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib2
-	setLibrarySearchOrder	javaAgentConnector2	swingLib2
-	waitUntilKeywordSucceeds	20	2	selectMainWindow
-	closeApplication
-	setLibrarySearchOrder	javaAgentConnector	swingLib1
-	waitUntilKeywordSucceeds	20	2	selectMainWindow
-	closeApplication
+	connectToSecondApplicationAndCloseIt
+	connectToFirstApplicationAndCloseIt
 
 *** Keyword ***
+
 # Edit to match your proxy configuration
 setProxy
 	importLibrary	JavaTools
@@ -60,3 +54,24 @@ checkPolicyFileAllowLibraryUse
 	fileShouldExist	${javaPolicyFile}	${msg}
 	${content}=	getFile	${javaPolicyFile}
 	shouldContain	${content}	grant	${msg}	No values
+
+connectToSecondApplication
+	setLibrarySearchOrder	javaAgentConnector2
+	applicationStarted
+	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib2
+	setLibrarySearchOrder	javaAgentConnector2	swingLib2
+	waitUntilKeywordSucceeds	20	2	selectMainWindow
+
+connectToSecondApplicationAndCloseIt
+	connectToSecondApplication
+	closeApplication
+
+connectToFirstApplication
+	setLibrarySearchOrder	javaAgentConnector
+	importRemoteLibrary	SwingLibrary	WITH NAME	swingLib1
+	setLibrarySearchOrder	javaAgentConnector	swingLib1
+	waitUntilKeywordSucceeds	20	2	selectMainWindow
+
+connectToFirstApplicationAndCloseIt
+	connectToFirstApplication
+	closeApplication
