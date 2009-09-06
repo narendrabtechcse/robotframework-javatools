@@ -14,8 +14,8 @@ ${testLibDir}	${CURDIR}/test-lib
 ${jnlpUrl}	http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp
 ${javaAgentJar}	${testLibDir}/jvmconnector-jar-with-dependencies.jar
 ${javaAgentArguments}	${javaAgentJar}=${testLibDir}
-${policyFile}	${CURDIR}${/}allow_libraries.policy
-${javaPolicyFile}	%{HOME}${/}.java.policy
+${policyFile}	${CURDIR}/allow_libraries.policy
+${javaPolicyFile}	%{HOME}/.java.policy
 
 *** TestCase ***
 
@@ -52,7 +52,7 @@ checkPolicyFileAllowLibraryUse
 	shouldContain	${content}	grant	${msg}	No values
 
 setAgentAndStartFirstApplication
-	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${javaAgentArguments}
+	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:"${javaAgentArguments}"
 	startProcess	javaws ${jnlpUrl}
 	setEnvironmentVariable	JAVA_TOOL_OPTIONS	${EMPTY}
 
