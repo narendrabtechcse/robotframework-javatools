@@ -40,8 +40,8 @@ public class AnnotationLibrary extends KeywordFactoryBasedLibrary<DocumentedKeyw
         addKeywordPattern(keywordPattern);
     }
 
-    public AnnotationLibrary(List<String> keywordPatters) {
-    	for (String pattern : keywordPatters) {
+    public AnnotationLibrary(List<String> keywordPatterns) {
+    	for (String pattern : keywordPatterns) {
             addKeywordPattern(pattern);
 		}
 	}
