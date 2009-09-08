@@ -119,6 +119,10 @@ Robot Agent works both with java webstart applications and standalone java appli
 
 3. Start testing.
 
+=====Robot Agent Example=====
+
+Download the [http://robotframework-javatools.googlecode.com/files/robot-javaws-demo-2009-09-07.zip demo package] and extract its contents. Follow the instructions in the [https://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/README.txt README.txt].
+
 ===Troubleshooting===
 
 *Problem:* You get the following exception when trying to launch your application:
