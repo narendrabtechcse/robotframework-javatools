@@ -1,4 +1,12 @@
-﻿== Jvmconnector 0.9 ==
+﻿== Jvmconnector 0.9.1 ==
+
+This release introdues on new feature: a [ApplicationLauncher#Robot_Agent JVM startup hook] to enable testing of applications that are not started with !ApplicationLauncher. This feature works only on java 1.5 or higher.
+
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 24  || Enhancement  || Medium  || ApplicationLauncher can connect to applications started externally ||
+
+== Jvmconnector 0.9 ==
 
 Support for Java Web Start applications has been added.
 Contrary to old WebstartLauncher, it is no longer needed to edit xml files for
