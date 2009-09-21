@@ -1,14 +1,6 @@
 package org.robotframework.jvmconnector.mocks;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
-
 
 public class MyApplication {
     public static boolean isRunning = false;

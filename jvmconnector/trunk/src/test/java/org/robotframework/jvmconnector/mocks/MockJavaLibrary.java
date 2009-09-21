@@ -11,6 +11,7 @@ public class MockJavaLibrary implements RobotJavaLibrary {
     public static final String PATTERN_KEYWORD_PROPERTY_VALUE = "patternKeyword";
 
     public Map<String, Keyword> keywordMap = new HashMap<String, Keyword>() {{
+        put("concatenatingKeyword", new ConcatenatingKeyword());
         put(LoggingKeyword.KEYWORD_NAME, new LoggingKeyword());
         put(ExceptionThrowingKeyword.KEYWORD_NAME, new ExceptionThrowingKeyword());
     }};
