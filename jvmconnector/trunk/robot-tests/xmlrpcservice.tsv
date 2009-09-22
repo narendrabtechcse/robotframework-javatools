@@ -5,10 +5,12 @@ library	org.robotframework.jvmconnector.xmlrpc.XmlRpcStarter
 *** Test Case ***
 
 Remote Library Uses XmlRpc Service
+	runKeywordAndExpectError	*	LoggingKeyword
 	startProcess	java org.robotframework.jvmconnector.mocks.XmlRpcTestApplication 
 	importLibrary	Remote
 	LoggingKeyword
 	${retVal}=	concatenatingKeyword	foo	bar
 	shouldBeEqual	foobar	${retVal}
 	closeApplication
-	LoggingKeyword
+	sleep	1
+	runKeywordAndExpectError	*	LoggingKeyword
