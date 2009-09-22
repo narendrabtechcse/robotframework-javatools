@@ -16,12 +16,22 @@
 
 package org.robotframework.jvmconnector.agent;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.instrument.Instrumentation;
 import java.util.jar.JarFile;
 
 import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiServiceAgent {
+    private static final String LOG_FILE = "/tmp/lol.log";
+
+    static {
+        new File(LOG_FILE).delete();
+    }
+    
     private static String tmpDir = System.getProperty("java.io.tmpdir");
     private static String pathSeparator = System.getProperty("path.separator");
     private static String fileSeparator = System.getProperty("file.separator");
@@ -29,12 +39,16 @@ public class RmiServiceAgent {
     private static ClassPathAppenderFactory appenderFactory = new ClassPathAppenderFactory();
 
     public static void premain(String agentArguments, Instrumentation inst) {
+        log("1: " + agentArguments);
+        String javaToolOption = System.getenv("JAVA_TOOL_OPTIONS");
+        log("javaToolOption: " + javaToolOption);
         setClasspath(agentArguments, inst);
         startRmiService();
 	}
 
     static void setClasspath(String agentArguments, final Instrumentation inst) {
         for (String file : split(agentArguments)) {
+            log("2: " + file);
             addJarsToClasspath(inst, file);
         }
     }
@@ -45,11 +59,16 @@ public class RmiServiceAgent {
     }
 
     private static void addJarsToClasspath(final Instrumentation inst, String file) {
+        final StringBuilder sb = new StringBuilder();
+        
         new JarFinder(file).each(new JarFileAction() {
             public void doOnFile(JarFile file) {
+                sb.append(file.getName() + "\n");
                 addToClassPath(inst, file);
             }
         });
+        
+        log("3: " + sb.toString());
     }
     
     private static void addToClassPath(Instrumentation inst, JarFile file) {
@@ -62,5 +81,20 @@ public class RmiServiceAgent {
 
     private static void startRmiService() {
         new RmiService().start(tmpDir + fileSeparator + "launcher.txt");
+    }
+    
+    public static void log(String msg) {
+        try {
+            write(LOG_FILE, msg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void write(String fileName, String msg) throws IOException {
+        Writer writer = new FileWriter(fileName, true);
+        writer.write(msg + "\n");
+        writer.flush();
+        writer.close();
     }
 }

@@ -1,4 +1,5 @@
 *** Setting ***
+library	${CURDIR}/Dependencies.py
 library	Dialogs
 resource	applauncher_resource.tsv
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
@@ -23,8 +24,7 @@ ${jnlpWithSsl}	https://localhost:14564/test-app/test-application.jnlp
 
 *** Test Case ***
 
-Starting Webstart Application With Java Agent
-	[Tags]	javaagent
+Starting Webstart Application With Java Agent	[tags]	javaagent	lol
 	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
 	waitUntilKeywordSucceeds	30	2	selectMainWindow
 	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
@@ -104,9 +104,9 @@ setTrustStore
 	JavaTools.setSystemProperty	javax.net.ssl.trustStore	${testAppDir}/jssecacerts
 	JavaTools.setSystemProperty	javax.net.ssl.trustStorePassword	changeit
 
-startWebstartWithJavaAgent
-	[Arguments]	${name}	${command}
-	startWithJavaAgent	${command}	${jarDir}
+startWebstartWithJavaAgent	[arguments]	${name}	${command}
+	copyDependenciesTo	${TEMPDIR}/dependencies
+	startWithJavaAgent	${command}	${TEMPDIR}/dependencies
 	setLibrarySearchOrder	${name}Launcher
 	applicationStarted
 	importRemoteLibraries	${name}

@@ -3,7 +3,7 @@ import time
 import sys
 import __builtin__
 
-from os import pathsep, path, remove
+from os import path, remove
 from tempfile import gettempdir, mktemp
 
 from java.lang import Class
