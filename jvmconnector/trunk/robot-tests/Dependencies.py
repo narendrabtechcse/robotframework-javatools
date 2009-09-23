@@ -1,9 +1,9 @@
-from os import path, makedirs
+from os import path, makedirs, popen
 from shutil import copy
-import glob
+from glob import glob
 
 def sh(command):
-    process = os.popen(command)
+    process = popen(command)
     output = process.read()
     process.close()
     return output
@@ -14,36 +14,35 @@ class Dependencies:
             makedirs(dir)
 
         self._copy_maven_dependencies(dir)
+        self._copy_test_keywords(dir)
 
     def _copy_maven_dependencies(self, dir):
         dependencies_txt = path.join(path.dirname(__file__), '..',  'dependencies.txt')
         dependencies = open(dependencies_txt).read().splitlines()
 
         for dependency in dependencies:
-            newdepsu = path.join(dir, path.basename(dependency))
-            print newdepsu
-            if not path.exists(newdepsu):
+            if not path.exists(path.join(dir, path.basename(dependency))):
                 copy(dependency, dir)
 
-    def _copy_other_dependencies(self, dir):
-        if not self._uber_jar():
-            sh('mvn assembly:assembly')
-    
+    def _copy_test_keywords(self, dir):
         if not self._keywords_jar():
+            print 'Running mvn -f keywords-pom.xml package'
             sh('mvn -f keywords-pom.xml package')
-            copy(self._get_keywords_jar(), dir)
+
+        copy(self._keywords_jar(), dir)
 
     def _keywords_jar(self):
+        print '_keywords_jar'
         return self._find_jar('jvmconnector-keywords-*.jar')
 
-    def _uber_jar(self):
-        return self._find_jar('*-jar-with-dependencies.jar')
-    
     def _find_jar(self, jar_pattern):
+        print '_find_jar'
         pattern = path.join(path.dirname(__file__), '..',  
                             'target', jar_pattern)
 
+        print '_find_jar 2'
         jar = glob(pattern)
+        print jar
         if jar:
             return jar[0]
         else:

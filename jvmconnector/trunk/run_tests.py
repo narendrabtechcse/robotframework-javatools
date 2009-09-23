@@ -50,7 +50,8 @@ def add_dependencies_to_path():
         jars = [re.sub('.*:((:?C:)?)', '\\1', file) for file in mvn_output if re.search('jar', file)]
         dependencies_txt = open(os.path.join(base, 'dependencies.txt'), 'w')
         for jar in jars:
-            dependencies_txt.write(jar + '\n')
+            if exists(jar):
+                dependencies_txt.write(jar + '\n')
         dependencies_txt.flush()
 
     classes = os.path.join('target', 'classes')
