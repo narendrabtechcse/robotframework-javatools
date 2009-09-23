@@ -26,23 +26,18 @@ class Dependencies:
 
     def _copy_test_keywords(self, dir):
         if not self._keywords_jar():
-            print 'Running mvn -f keywords-pom.xml package'
             sh('mvn -f keywords-pom.xml package')
 
         copy(self._keywords_jar(), dir)
 
     def _keywords_jar(self):
-        print '_keywords_jar'
         return self._find_jar('jvmconnector-keywords-*.jar')
 
     def _find_jar(self, jar_pattern):
-        print '_find_jar'
         pattern = path.join(path.dirname(__file__), '..',  
                             'target', jar_pattern)
 
-        print '_find_jar 2'
         jar = glob(pattern)
-        print jar
         if jar:
             return jar[0]
         else:
