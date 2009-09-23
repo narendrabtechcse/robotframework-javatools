@@ -24,12 +24,12 @@ ${jnlpWithSsl}	https://localhost:14564/test-app/test-application.jnlp
 
 *** Test Case ***
 
-Starting Webstart Application With Java Agent	[tags]	javaagent	lol
+Starting Webstart Application With Java Agent
 	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
 	waitUntilKeywordSucceeds	30	2	selectMainWindow
 	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
 
-Starting Webstart Application From Webstart Application	[Tags]	javaagent
+Starting Webstart Application From Webstart Application
 	startWebstartWithJavaAgent	javaagent	javaws ${jnlpWithMainClassUrl}
 	waitUntilKeywordSucceeds	30	2	selectMainWindow
 	pushButton	Start javaws application
@@ -41,7 +41,7 @@ Starting Webstart Application From Webstart Application	[Tags]	javaagent
 	javaagentLauncher2.closeApplication
 	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
 
-Works With Local Jnlp	[tags]	not_ready
+Works With Local Jnlp
 	${localJnlp}=	setVariable	${CURDIR}/../src/test/resources/test-app/test-application.jnlp
 	applicationLauncherLaunchesJavaWebstartApplication	${localJnlp}	localApp	Test App
 
