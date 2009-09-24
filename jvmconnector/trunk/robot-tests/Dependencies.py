@@ -21,8 +21,7 @@ class Dependencies:
         dependencies = open(dependencies_txt).read().splitlines()
 
         for dependency in dependencies:
-            if not path.exists(path.join(dir, path.basename(dependency))):
-                copy(dependency, dir)
+            copy(dependency, dir)
 
     def _copy_test_keywords(self, dir):
         if not self._keywords_jar():
