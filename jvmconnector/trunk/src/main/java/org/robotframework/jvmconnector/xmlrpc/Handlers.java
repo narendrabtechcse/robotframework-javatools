@@ -9,6 +9,8 @@ import org.apache.xmlrpc.XmlRpcRequest;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 import org.robotframework.javalib.util.StdStreamRedirecter;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 class GetKeywordNameHandler implements XmlRpcHandler {
     private final RobotJavaLibrary library;
     
@@ -16,7 +18,7 @@ class GetKeywordNameHandler implements XmlRpcHandler {
         this.library = library;
     }
 
-    public Object execute(XmlRpcRequest pRequest) throws XmlRpcException {
+    public Object execute(XmlRpcRequest req) throws XmlRpcException {
         return library.getKeywordNames();
     }
 }
@@ -50,9 +52,9 @@ class RunKeywordHandler implements XmlRpcHandler {
 
     @SuppressWarnings("serial")
     private Map<String, String> runKeyword(XmlRpcRequest req) {
-        String methodName = (String)req.getParameter(0);            
+        String keywordName = (String)req.getParameter(0);            
         Object[] args = (Object[])req.getParameter(1);
-        final Object rslt = library.runKeyword(methodName, args);
+        final Object rslt = library.runKeyword(keywordName, args);
         return new HashMap<String, String>() {{
             put("status", "PASS");
             put("return", ""+rslt);
@@ -81,17 +83,31 @@ class RunKeywordHandler implements XmlRpcHandler {
 }
 
 class GetKeywordArgumentsHandler implements XmlRpcHandler {
-    public GetKeywordArgumentsHandler(RobotJavaLibrary library) {}
+    private final RobotLibrary library;
 
-    public Object execute(XmlRpcRequest pRequest) throws XmlRpcException {
-        throw new UnsupportedOperationException("");
+    public GetKeywordArgumentsHandler(RobotLibrary library) {
+        this.library = library;
+    }
+
+    public Object execute(XmlRpcRequest req) throws XmlRpcException {
+        String keywordName = (String)req.getParameter(0);
+        String[] keywordArguments = library.getKeywordArguments(keywordName);
+        System.out.println("executing GetKeywordArgumentsHandler for " + keywordName + ", received " + Arrays.asList(keywordArguments));
+        return keywordArguments;
     }
 }
 
 class GetKeywordDocumentationHandler implements XmlRpcHandler {
-    public GetKeywordDocumentationHandler(RobotJavaLibrary library) {}
+    private final RobotLibrary library;
 
-    public Object execute(XmlRpcRequest pRequest) throws XmlRpcException {
-        throw new UnsupportedOperationException("");
+    public GetKeywordDocumentationHandler(RobotLibrary library) {
+        this.library = library;
+    }
+
+    public Object execute(XmlRpcRequest req) throws XmlRpcException {
+        String keywordName = (String)req.getParameter(0);
+        String keywordDocumentation = library.getKeywordDocumentation(keywordName);
+        System.out.println("executing GetKeywordDocumentationHandler for " + keywordName + ", received " + keywordDocumentation);
+        return keywordDocumentation;
     }
 }

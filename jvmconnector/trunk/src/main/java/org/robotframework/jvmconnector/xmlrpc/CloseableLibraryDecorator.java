@@ -25,11 +25,14 @@ import org.laughingpanda.jretrofit.Retrofit;
 import org.robotframework.javalib.library.KeywordDocumentationRepository;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 public class CloseableLibraryDecorator implements RobotLibrary {
     public static final String KEYWORD_CLOSE_APPLICATION = "closeapplication";
     private final RobotJavaLibrary library;
 
     public CloseableLibraryDecorator(RobotJavaLibrary library) {
+        System.out.println("Wrapping library " + library.getClass().getName());
         this.library = library;
     }
 
@@ -37,10 +40,12 @@ public class CloseableLibraryDecorator implements RobotLibrary {
         List<String> newKeywordNames = new ArrayList<String>();
         CollectionUtils.addAll(newKeywordNames, library.getKeywordNames());
         newKeywordNames.add(KEYWORD_CLOSE_APPLICATION);
+        System.out.println("getKeywordNames: " + newKeywordNames);
         return newKeywordNames.toArray(new String[0]);
     }
 
     public Object runKeyword(String keywordName, Object[] args) {
+        System.out.println("runKeyword: " + keywordName + " with args " + Arrays.asList(args));
         if (KEYWORD_CLOSE_APPLICATION.equalsIgnoreCase(keywordName)) {
             shutdownInSeparateThread();
             return true;
@@ -49,11 +54,15 @@ public class CloseableLibraryDecorator implements RobotLibrary {
     }
 
     public String[] getKeywordArguments(String keywordName) {
-        return keywordInfo().getKeywordArguments(keywordName);
+        String[] keywordArguments = keywordInfo().getKeywordArguments(keywordName);
+        System.out.println("getKeywordArguments: " + Arrays.asList(keywordArguments));
+        return keywordArguments;
     }
     
     public String getKeywordDocumentation(String keywordName) {
-        return keywordInfo().getKeywordDocumentation(keywordName);
+        String keywordDocumentation = keywordInfo().getKeywordDocumentation(keywordName);
+        System.out.println("getKeywordDocumentation: " + keywordDocumentation);
+        return keywordDocumentation;
     }
     
     private void shutdownInSeparateThread() {

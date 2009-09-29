@@ -14,5 +14,14 @@ Remote Library Uses XmlRpc Service
 	${retVal}=	concatenatingKeyword	foo	bar
 	shouldBeEqual	foobar	${retVal}
 	closeApplication
-	sleep	1
+	sleep	2
 	runKeywordAndExpectError	*	LoggingKeyword
+	[teardown]	runKeywordAndIgnoreError	Remote.closeApplication
+
+Remote Library Has Keyword Argument Info	[tags]	lol
+	#startProcess	java org.robotframework.jvmconnector.mocks.XmlRpcTestApplication 
+	importLibrary	Remote	WITH NAME	Remote2
+	LoggingKeyword
+	Remote2.concatenatingKeyword	foo	bar	baz
+	runKeywordAndExpectError	*	Remote2.concatenatingKeyword
+	[teardown]	runKeywordAndIgnoreError	Remote2.closeApplication

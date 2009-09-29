@@ -41,7 +41,9 @@ public class RobotXmlRpcServer {
                 put("get_keyword_documentation", new GetKeywordDocumentationHandler(library));
             }};
             public XmlRpcHandler getHandler(String handlerName) throws XmlRpcNoSuchHandlerException, XmlRpcException {
-                return handlers.get(handlerName);
+                XmlRpcHandler xmlRpcHandler = handlers.get(handlerName);
+                System.out.println("handler for " + handlerName + " is " + xmlRpcHandler.getClass().getName());
+                return xmlRpcHandler;
             }
         });
     }
