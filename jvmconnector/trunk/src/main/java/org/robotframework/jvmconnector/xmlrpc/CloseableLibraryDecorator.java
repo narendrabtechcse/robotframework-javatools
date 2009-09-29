@@ -20,16 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.laughingpanda.jretrofit.AllMethodsNotImplementedException;
+import org.laughingpanda.jretrofit.Retrofit;
+import org.robotframework.javalib.library.KeywordDocumentationRepository;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 
-public class CloseableLibraryDecorator implements RobotJavaLibrary {
+public class CloseableLibraryDecorator implements RobotLibrary {
     public static final String KEYWORD_CLOSE_APPLICATION = "closeapplication";
     private final RobotJavaLibrary library;
 
     public CloseableLibraryDecorator(RobotJavaLibrary library) {
         this.library = library;
     }
-    
+
     public String[] getKeywordNames() {
         List<String> newKeywordNames = new ArrayList<String>();
         CollectionUtils.addAll(newKeywordNames, library.getKeywordNames());
@@ -38,18 +41,44 @@ public class CloseableLibraryDecorator implements RobotJavaLibrary {
     }
 
     public Object runKeyword(String keywordName, Object[] args) {
-        if (KEYWORD_CLOSE_APPLICATION.equalsIgnoreCase(keywordName))  {
+        if (KEYWORD_CLOSE_APPLICATION.equalsIgnoreCase(keywordName)) {
             shutdownInSeparateThread();
             return true;
         }
         return library.runKeyword(keywordName, args);
     }
 
+    public String[] getKeywordArguments(String keywordName) {
+        return keywordInfo().getKeywordArguments(keywordName);
+    }
+    
+    public String getKeywordDocumentation(String keywordName) {
+        return keywordInfo().getKeywordDocumentation(keywordName);
+    }
+    
     private void shutdownInSeparateThread() {
         new Thread() {
             public void run() {
                 System.exit(0);
             }
         }.start();
+    }
+
+    private KeywordDocumentationRepository keywordInfo() {
+        try {
+            return (KeywordDocumentationRepository) Retrofit.complete(library, KeywordDocumentationRepository.class);
+        } catch (AllMethodsNotImplementedException e) {
+            return new NullDocumentationRepo();
+        }
+    }
+}
+
+class NullDocumentationRepo implements KeywordDocumentationRepository {
+    public String[] getKeywordArguments(String keywordName) {
+        return null;
+    }
+
+    public String getKeywordDocumentation(String keywordName) {
+        return null;
     }
 }
