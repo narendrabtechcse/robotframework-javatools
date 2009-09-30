@@ -12,10 +12,10 @@ public class ConcatenatingKeyword implements DocumentedKeyword {
     }
 
     public String[] getArgumentNames() {
-        throw new UnsupportedOperationException("");
+        return new String[] { "arg1", "arg2", "*rest" };
     }
 
     public String getDocumentation() {
-        throw new UnsupportedOperationException("");
+        return "Concatenates two or more arguments together";
     }
 }

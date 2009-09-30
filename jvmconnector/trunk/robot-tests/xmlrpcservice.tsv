@@ -2,26 +2,19 @@
 *** Setting ***
 
 library	OperatingSystem
-library	org.robotframework.jvmconnector.xmlrpc.XmlRpcStarter
+suiteSetup	startApplicationAndImportRemote
+suiteTeardown	closeApplication
 
 *** Test Case ***
 
 Remote Library Uses XmlRpc Service
-	runKeywordAndExpectError	*	LoggingKeyword
-	startProcess	java org.robotframework.jvmconnector.mocks.XmlRpcTestApplication 
-	importLibrary	Remote
-	LoggingKeyword
 	${retVal}=	concatenatingKeyword	foo	bar
 	shouldBeEqual	foobar	${retVal}
-	closeApplication
-	sleep	2
-	runKeywordAndExpectError	*	LoggingKeyword
-	[teardown]	runKeywordAndIgnoreError	Remote.closeApplication
 
-Remote Library Has Keyword Argument Info	[tags]	lol
-	#startProcess	java org.robotframework.jvmconnector.mocks.XmlRpcTestApplication 
-	importLibrary	Remote	WITH NAME	Remote2
-	LoggingKeyword
-	Remote2.concatenatingKeyword	foo	bar	baz
-	runKeywordAndExpectError	*	Remote2.concatenatingKeyword
-	[teardown]	runKeywordAndIgnoreError	Remote2.closeApplication
+Remote Library Has Keyword Argument Info
+	runKeywordAndExpectError	Keyword 'Remote.Concatenating Keyword' expected at least 2 arguments, got 0.	concatenatingKeyword
+
+*** Keywords ***
+startApplicationAndImportRemote
+	startProcess	java org.robotframework.jvmconnector.mocks.XmlRpcTestApplication 
+	importLibrary	Remote

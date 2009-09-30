@@ -9,8 +9,6 @@ import org.apache.xmlrpc.XmlRpcRequest;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 import org.robotframework.javalib.util.StdStreamRedirecter;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 class GetKeywordNameHandler implements XmlRpcHandler {
     private final RobotJavaLibrary library;
     
@@ -91,9 +89,12 @@ class GetKeywordArgumentsHandler implements XmlRpcHandler {
 
     public Object execute(XmlRpcRequest req) throws XmlRpcException {
         String keywordName = (String)req.getParameter(0);
-        String[] keywordArguments = library.getKeywordArguments(keywordName);
-        System.out.println("executing GetKeywordArgumentsHandler for " + keywordName + ", received " + Arrays.asList(keywordArguments));
-        return keywordArguments;
+        try {
+            return library.getKeywordArguments(keywordName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }
 
@@ -106,8 +107,6 @@ class GetKeywordDocumentationHandler implements XmlRpcHandler {
 
     public Object execute(XmlRpcRequest req) throws XmlRpcException {
         String keywordName = (String)req.getParameter(0);
-        String keywordDocumentation = library.getKeywordDocumentation(keywordName);
-        System.out.println("executing GetKeywordDocumentationHandler for " + keywordName + ", received " + keywordDocumentation);
-        return keywordDocumentation;
+        return library.getKeywordDocumentation(keywordName);
     }
 }
