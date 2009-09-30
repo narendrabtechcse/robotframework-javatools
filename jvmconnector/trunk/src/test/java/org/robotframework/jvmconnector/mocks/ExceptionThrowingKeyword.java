@@ -8,4 +8,9 @@ public class ExceptionThrowingKeyword extends LoggingKeyword {
 		super.execute(args);
 		throw new MockException(); 
 	}
+	
+	@Override
+	public String getDocumentation() {
+	    return "Throws mock exception.";
+	}
 }

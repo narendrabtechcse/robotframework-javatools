@@ -1,9 +1,9 @@
 package org.robotframework.jvmconnector.mocks;
 
-import org.robotframework.javalib.keyword.Keyword;
+import org.robotframework.javalib.keyword.DocumentedKeyword;
 
 
-public class LoggingKeyword implements Keyword {
+public class LoggingKeyword implements DocumentedKeyword {
 	public static final String LOG_STRING_STDOUT = "mock keyword executing";
 	public static final String LOG_STRING_STDERR = "some error occurred";
 	public static final Object RETURN_VALUE = Boolean.TRUE;
@@ -18,4 +18,12 @@ public class LoggingKeyword implements Keyword {
 	public String getName() {
 		return KEYWORD_NAME;
 	}
+
+    public String[] getArgumentNames() {
+        return new String[0];
+    }
+
+    public String getDocumentation() {
+        return "Logs some strings to stdout and stderr.";
+    }
 }

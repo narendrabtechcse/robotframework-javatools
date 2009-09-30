@@ -20,10 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.laughingpanda.jretrofit.AllMethodsNotImplementedException;
 import org.laughingpanda.jretrofit.Retrofit;
 import org.robotframework.javalib.library.KeywordDocumentationRepository;
 import org.robotframework.javalib.library.RobotJavaLibrary;
 
+/**
+ * A library decorator to enable the remote JVM shutdown. 
+ */
 public class CloseableLibraryDecorator implements RobotLibrary {
     public static final String KEYWORD_CLOSE_APPLICATION = "closeapplication";
     private final RobotJavaLibrary library;
@@ -55,6 +59,7 @@ public class CloseableLibraryDecorator implements RobotLibrary {
         return keywordInfo().getKeywordDocumentation(keywordName);
     }
     
+    // JVM shutdown needs to be done later because xml-rpc requires a return value
     private void shutdownInSeparateThread() {
         new Thread() {
             public void run() {
@@ -63,11 +68,11 @@ public class CloseableLibraryDecorator implements RobotLibrary {
         }.start();
     }
 
+    // If Library doesn't contain keyword metadata, just return null object 
     private KeywordDocumentationRepository keywordInfo() {
         try {
             return (KeywordDocumentationRepository) Retrofit.complete(library, KeywordDocumentationRepository.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (AllMethodsNotImplementedException e) {
             return new NullDocumentationRepo();
         }
     }
@@ -75,7 +80,7 @@ public class CloseableLibraryDecorator implements RobotLibrary {
 
 class NullDocumentationRepo implements KeywordDocumentationRepository {
     public String[] getKeywordArguments(String keywordName) {
-        return null;
+        return new String[0];
     }
 
     public String getKeywordDocumentation(String keywordName) {

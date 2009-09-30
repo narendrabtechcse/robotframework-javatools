@@ -70,7 +70,7 @@ class RunKeywordHandler implements XmlRpcHandler {
 
     private String extractStackTrace(final Throwable t) {
         final StringBuilder stackTrace = new StringBuilder();
-        for (StackTraceElement elem :t.getStackTrace())
+        for (StackTraceElement elem : t.getStackTrace())
             stackTrace.append(elem).append("\n");
         return stackTrace.toString();
     }
