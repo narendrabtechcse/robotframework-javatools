@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
-KEYSTORE='~/doc/keystore/robotframework'
+path = File.dirname(File.readlink(__FILE__))
+KEYSTORE="#{path}/keystore/robotframework"
 STOREPASS='robotframework'
 ALIAS='robotframework'
 
