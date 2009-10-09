@@ -23,7 +23,7 @@ public class ResultPublishingAction implements HealthReportingAction {
 	}
 
 	public String getUrlName() {
-		return "../ws" + "/" + testExecutionsResultPath;
+		return "../ws/" + testExecutionsResultPath;
 	}
 
 	public HealthReport getBuildHealth() {
