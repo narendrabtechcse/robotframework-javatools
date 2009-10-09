@@ -1,8 +1,18 @@
 package robotframework;
 
-import hudson.model.Action;
+import hudson.model.AbstractBuild;
+import hudson.model.HealthReport;
+import hudson.model.HealthReportingAction;
 
-public class ResultPublishingAction implements Action {
+public class ResultPublishingAction implements HealthReportingAction {
+	
+	private AbstractBuild build;
+	private String testExecutionsResultPath;
+
+	public ResultPublishingAction(AbstractBuild b, String path) {
+		build = b;
+		testExecutionsResultPath = path;
+	}
 
 	public String getDisplayName() {
 		return "Robot Framework test execution results";
@@ -13,7 +23,11 @@ public class ResultPublishingAction implements Action {
 	}
 
 	public String getUrlName() {
-		return "http://robotframework.org";
+		return "../ws" + "/" + testExecutionsResultPath;
 	}
 
+	public HealthReport getBuildHealth() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
