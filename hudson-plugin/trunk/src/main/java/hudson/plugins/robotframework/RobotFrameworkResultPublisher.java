@@ -1,10 +1,12 @@
-package robotframework;
+package hudson.plugins.robotframework;
 
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.Project;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -25,9 +27,12 @@ public class RobotFrameworkResultPublisher extends Recorder {
 		return testExecutionResultPath;
 	}
 
+	public Action getProjectAction(Project project) {
+	    return new RobotFrameworkProjectAction(project, testExecutionResultPath);
+	}
+
 	@Override
-	public boolean perform(AbstractBuild build, Launcher launcher,
-			BuildListener listener) {
+	public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
 		build.addAction(new ResultPublishingAction(build, testExecutionResultPath));
 		return true;
 	}
@@ -38,8 +43,7 @@ public class RobotFrameworkResultPublisher extends Recorder {
 	}
 
 	@Extension
-	public static final class DescriptorImpl extends
-			BuildStepDescriptor<Publisher> {
+	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
 			return true;
@@ -51,6 +55,7 @@ public class RobotFrameworkResultPublisher extends Recorder {
 
 	}
 
+	
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.NONE;
 	}

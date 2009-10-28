@@ -1,11 +1,11 @@
-package robotframework;
+package hudson.plugins.robotframework;
 
 import hudson.model.AbstractBuild;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
 
 public class ResultPublishingAction implements HealthReportingAction {
-	
+
 	private AbstractBuild build;
 	private String testExecutionsResultPath;
 
@@ -15,11 +15,11 @@ public class ResultPublishingAction implements HealthReportingAction {
 	}
 
 	public String getDisplayName() {
-		return "Robot Framework test execution results";
+		return RobotframeworkPlugin.DISPLAY_NAME;
 	}
 
 	public String getIconFileName() {
-		return "/rf-hudson/webapp/robot.png";
+		return RobotframeworkPlugin.ICON_FILE_NAME;
 	}
 
 	public String getUrlName() {
