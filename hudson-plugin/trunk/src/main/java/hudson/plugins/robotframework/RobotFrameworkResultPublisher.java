@@ -1,6 +1,9 @@
 package hudson.plugins.robotframework;
 
+import java.io.IOException;
+
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -27,13 +30,14 @@ public class RobotFrameworkResultPublisher extends Recorder {
 		return testExecutionResultPath;
 	}
 
+	@Override
 	public Action getProjectAction(Project project) {
 	    return new RobotFrameworkProjectAction(project, testExecutionResultPath);
 	}
-
+	
 	@Override
-	public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-		build.addAction(new ResultPublishingAction(build, testExecutionResultPath));
+	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
+		build.addAction(new RobotFrameworkBuildAction(build));
 		return true;
 	}
 
@@ -44,7 +48,6 @@ public class RobotFrameworkResultPublisher extends Recorder {
 
 	@Extension
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
 			return true;
 		}
@@ -52,7 +55,6 @@ public class RobotFrameworkResultPublisher extends Recorder {
 		public String getDisplayName() {
 			return "Publish Robot Framework test results";
 		}
-
 	}
 
 	

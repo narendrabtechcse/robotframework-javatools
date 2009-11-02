@@ -21,8 +21,8 @@ import hudson.Plugin;
 
 public class RobotframeworkPlugin extends Plugin {
 
-    static final String ICON_FILE_NAME = "graph.gif";//"robot.png";
+    static final String ICON_FILE_NAME = "/plugin/robotframework/robot.png";
     static final String DISPLAY_NAME = "Robot Framework Report";
-    static final String URL = "robotframework";
+	public static final String URL_NAME = "robotframework";
     
 }

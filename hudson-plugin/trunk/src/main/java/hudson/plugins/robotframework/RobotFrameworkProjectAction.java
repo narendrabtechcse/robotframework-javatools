@@ -17,37 +17,28 @@
 
 package hudson.plugins.robotframework;
 
-import hudson.model.AbstractBuild;
-import hudson.model.Action;
 import hudson.model.Project;
 
-public class RobotFrameworkProjectAction implements Action {
+public class RobotFrameworkProjectAction extends RobotframeworkAction {
 
-    private AbstractBuild build;
     private String testExecutionsResultPath;
     private Project project;
-    
-    public RobotFrameworkProjectAction(Project project) {
-        this.project = project;
-     }
 
-     public RobotFrameworkProjectAction(Project project, String testExecutionResultPath) {
-         this.testExecutionsResultPath = testExecutionResultPath;
-     }
+    public RobotFrameworkProjectAction(Project project, String testExecutionResultPath) {
+    	this.project = project;
+        this.testExecutionsResultPath = testExecutionResultPath;
+    }
 
     public Project getProject() {
         return project;
-     }
-
-    public String getDisplayName() {
-        return RobotframeworkPlugin.DISPLAY_NAME;
     }
 
-    public String getIconFileName() {
-        return RobotframeworkPlugin.ICON_FILE_NAME;
-    }
-
+    @Override
     public String getUrlName() {
-        return "./ws/" + testExecutionsResultPath;
+        String fullPath = "./ws";
+        if (testExecutionsResultPath != null && testExecutionsResultPath.length() > 0) 
+        	fullPath = fullPath + "/" + testExecutionsResultPath;
+        fullPath = fullPath + "/report.html"; 
+		return fullPath;
     }
 }
