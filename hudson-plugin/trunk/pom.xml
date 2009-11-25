@@ -26,4 +26,12 @@
       <url>http://maven.glassfish.org/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
+  
+  <dependencies>
+    <dependency>
+	  <groupId>net.htmlparser.jericho</groupId>
+	  <artifactId>jericho-html</artifactId>
+	  <version>3.1</version>
+    </dependency>
+  </dependencies>
 </project>
