@@ -17,6 +17,7 @@ import net.htmlparser.jericho.Tag;
 public class RobotFrameworkBuildAction extends RobotframeworkAction {
 
 	private AbstractBuild<?, ?> build;
+	private static final String REPORT_FILE_NAME = "report.html";
 	
 	public RobotFrameworkBuildAction(AbstractBuild<?, ?> build) {
 		this.build = build;
@@ -25,6 +26,7 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 	
 	private void copyRobotFilesToBuildDir(AbstractBuild<?, ?> build) {
 		try {
+		    System.out.println("COPYING FILES!!!!!!!!!!!!!!!!!!!");
 			build.getWorkspace().copyRecursiveTo("*.*ml", new FilePath(build.getRootDir()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -42,7 +44,7 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 	public String getHtmlReport() throws IOException {
 		String buildDirPath = build.getRootDir()
 		                           .getPath();
-		String htmlReportPath = buildDirPath+File.separator+"report.html";
+        String htmlReportPath = buildDirPath+File.separator+REPORT_FILE_NAME;
 		return getHtml(htmlReportPath);
 	}
 
