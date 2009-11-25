@@ -15,5 +15,4 @@ public class RobotframeworkAction implements Action {
     public String getUrlName() {
         return RobotframeworkPlugin.URL_NAME;
     }
-	
 }
