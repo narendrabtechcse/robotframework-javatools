@@ -56,7 +56,6 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 		                           .getPath();
 		String htmlReportPath = buildDirPath+File.separator+"report.html";
 		String html = parseHtml(htmlReportPath);
-		System.out.println("HTML: " +html);
 		return html;
 	}
 	
