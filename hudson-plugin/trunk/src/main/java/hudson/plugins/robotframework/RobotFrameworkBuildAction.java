@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import net.htmlparser.jericho.Segment;
@@ -40,22 +39,6 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 		return build.getUrl()+"report.html";
 	}
 	
-	public InputStream getXmlReportInputStream() throws IOException {
-		return new FilePath(getXmlReportFile()).read();
-	}
-
-	public String getXmlReport() throws IOException {
-		String xml = new FilePath(getXmlReportFile()).readToString();
-		return xml;
-	}
-	
-	private File getXmlReportFile() {
-		String buildDirPath = build.getRootDir()
-		                           .getPath();
-		File outputXmlFile = new File(buildDirPath+File.separator+"output.xml");
-		return outputXmlFile;
-	}
-	
 	public String getHtmlReport() throws IOException {
 		String buildDirPath = build.getRootDir()
 		                           .getPath();
@@ -70,14 +53,13 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 	    for (Segment segment: source) {
 	       if (segment instanceof Tag) {
   	           Tag tag = (Tag)segment;
-  	           if (tag.getName().equals("body"))
+  	           if (tag.getName().equalsIgnoreCase("body"))
   	               inBody = !inBody;
-  	           if (tag.getName().equals("html"))
-  	               inBody = false;
+//  	           if (tag.getName().equalsIgnoreCase("html"))
+//  	               inBody = false;
 	       }
-	       if (inBody) {
+	       if (inBody)
 	           html.append(segment.toString());
-	       }
 	    }
 	    return html.toString();
 	}
