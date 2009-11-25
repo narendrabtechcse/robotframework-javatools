@@ -55,8 +55,6 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
   	           Tag tag = (Tag)segment;
   	           if (tag.getName().equalsIgnoreCase("body"))
   	               inBody = !inBody;
-//  	           if (tag.getName().equalsIgnoreCase("html"))
-//  	               inBody = false;
 	       }
 	       if (inBody)
 	           html.append(segment.toString());
