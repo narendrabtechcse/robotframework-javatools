@@ -26,7 +26,6 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 	
 	private void copyRobotFilesToBuildDir(AbstractBuild<?, ?> build) {
 		try {
-		    System.out.println("COPYING FILES!!!!!!!!!!!!!!!!!!!");
 			build.getWorkspace().copyRecursiveTo("*.*ml", new FilePath(build.getRootDir()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
