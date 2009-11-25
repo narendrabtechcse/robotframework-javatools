@@ -37,7 +37,7 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
     }
 	
 	public String getReportFilePath() {
-		return build.getUrl()+"report.html";
+		return build.getUrl()+REPORT_FILE_NAME;
 	}
 	
 	public String getHtmlReport() throws IOException {
