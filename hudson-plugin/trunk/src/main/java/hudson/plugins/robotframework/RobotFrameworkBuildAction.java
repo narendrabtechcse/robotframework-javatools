@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+
+import net.htmlparser.jericho.Segment;
+import net.htmlparser.jericho.StreamedSource;
+import net.htmlparser.jericho.Tag;
 
 
 public class RobotFrameworkBuildAction extends RobotframeworkAction {
@@ -55,55 +60,25 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 		String buildDirPath = build.getRootDir()
 		                           .getPath();
 		String htmlReportPath = buildDirPath+File.separator+"report.html";
-		String html = parseHtml(htmlReportPath);
-		return html;
-	}
-	
-	private String parseHtml(String htmlReportPath) {	
-		try {
-			boolean inScript = false;
-			boolean inStyle = false;
-			boolean inBody = false;
-			StringBuilder sb = new StringBuilder();
-		    BufferedReader br = new BufferedReader(new FileReader(htmlReportPath));
-		    String line;
-		    while ((line=br.readLine()) != null) {
-		    	if (line.startsWith("<script>")) {
-		    		inScript = true;
-		    	}
-		    	if (inScript) {
-		    		sb.append(line);
-		    	}
-		    	if (line.startsWith("</script>")) {
-		    		inScript = false;
-		    	}
-		    	
-		    	if (line.startsWith("<style")) {
-		    		inStyle = true;
-		    	}
-		    	if (inStyle) {
-		    		parseStyles(line, sb);
-		    	}
-		    	if (line.startsWith("</style>")) {
-		    		inStyle = false;
-		    	}
-		    	
-		    	if (line.startsWith("<body")) {
-		    		inBody = true;
-		    		continue;
-		    	}
-		    	if (line.startsWith("</body>"))
-		    		inBody = false;
-		    	if (inBody)
-		    		sb.append(line);
-		    }
-		    return sb.toString();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}	    
+		return getHtml(htmlReportPath);
 	}
 
-	private void parseStyles(String line, StringBuilder html) {
-//		html.append(line);		
+	private String getHtml(String htmlReportPath) throws MalformedURLException, IOException {
+	    StreamedSource source = new StreamedSource(new BufferedReader(new FileReader(htmlReportPath)));
+	    StringBuilder html = new StringBuilder();
+	    boolean inBody = false;
+	    for (Segment segment: source) {
+	       if (segment instanceof Tag) {
+  	           Tag tag = (Tag)segment;
+  	           if (tag.getName().equals("body"))
+  	               inBody = !inBody;
+  	           if (tag.getName().equals("html"))
+  	               inBody = false;
+	       }
+	       if (inBody) {
+	           html.append(segment.toString());
+	       }
+	    }
+	    return html.toString();
 	}
 }
