@@ -9,7 +9,7 @@ import org.junit.Test;
 public class RobotFrameworkHtmlParserTest {
 
     @Test
-    public void testParinsg() {
+    public void testParsing() {
         StreamedSource source = new StreamedSource(REPORT_HTML);
         RobotFrameworkHtmlParser parser = new RobotFrameworkHtmlParser();
         String html = parser.parse(source);
