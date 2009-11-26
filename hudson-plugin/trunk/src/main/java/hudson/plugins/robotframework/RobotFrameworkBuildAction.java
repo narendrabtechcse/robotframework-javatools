@@ -14,7 +14,7 @@ import net.htmlparser.jericho.StreamedSource;
 import net.htmlparser.jericho.Tag;
 
 
-public class RobotFrameworkBuildAction extends RobotframeworkAction {
+public class RobotFrameworkBuildAction extends RobotFrameworkAction {
 
 	private AbstractBuild<?, ?> build;
 	private static final String REPORT_FILE_NAME = "report.html";
@@ -44,22 +44,6 @@ public class RobotFrameworkBuildAction extends RobotframeworkAction {
 		String buildDirPath = build.getRootDir()
 		                           .getPath();
         String htmlReportPath = buildDirPath+File.separator+REPORT_FILE_NAME;
-		return getHtml(htmlReportPath);
-	}
-
-	private String getHtml(String htmlReportPath) throws MalformedURLException, IOException {
-	    StreamedSource source = new StreamedSource(new BufferedReader(new FileReader(htmlReportPath)));
-	    StringBuilder html = new StringBuilder();
-	    boolean inBody = false;
-	    for (Segment segment: source) {
-	       if (segment instanceof Tag) {
-  	           Tag tag = (Tag)segment;
-  	           if (tag.getName().equalsIgnoreCase("body"))
-  	               inBody = !inBody;
-	       }
-	       if (inBody)
-	           html.append(segment.toString());
-	    }
-	    return html.toString();
+		return new RobotFrameworkHtmlParser().parseFrom(htmlReportPath);
 	}
 }

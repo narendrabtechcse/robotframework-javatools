@@ -19,7 +19,7 @@ package hudson.plugins.robotframework;
 
 import hudson.Plugin;
 
-public class RobotframeworkPlugin extends Plugin {
+public class RobotFrameworkPlugin extends Plugin {
 
     static final String ICON_FILE_NAME = "/plugin/robotframework/robot.png";
     static final String DISPLAY_NAME = "Robot Framework Report";

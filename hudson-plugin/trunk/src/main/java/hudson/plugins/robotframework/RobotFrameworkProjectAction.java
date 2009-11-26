@@ -19,7 +19,7 @@ package hudson.plugins.robotframework;
 
 import hudson.model.Project;
 
-public class RobotFrameworkProjectAction extends RobotframeworkAction {
+public class RobotFrameworkProjectAction extends RobotFrameworkAction {
 
     private String testExecutionsResultPath;
     private Project project;
