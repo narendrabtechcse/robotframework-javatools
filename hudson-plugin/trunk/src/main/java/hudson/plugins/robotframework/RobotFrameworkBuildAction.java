@@ -3,15 +3,8 @@ package hudson.plugins.robotframework;
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-
-import net.htmlparser.jericho.Segment;
-import net.htmlparser.jericho.StreamedSource;
-import net.htmlparser.jericho.Tag;
 
 
 public class RobotFrameworkBuildAction extends RobotFrameworkAction {
