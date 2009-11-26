@@ -22,8 +22,10 @@ public class RobotFrameworkHtmlParser {
         for (Segment segment: source) {
            if (segment instanceof Tag) {
                Tag tag = (Tag)segment;
-               if (tag.getName().equalsIgnoreCase("body"))
+               if (tag.getName().equalsIgnoreCase("body")) {
                    inBody = !inBody;
+                   if (inBody) continue;
+               }
            }
            if (inBody)
                html.append(segment.toString());
