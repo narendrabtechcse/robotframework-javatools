@@ -3,7 +3,7 @@
   <l:layout>
     <st:include it="${it.project}" page="sidepanel.jelly" />
     <l:main-panel>
-      <h1>Robotframework PROJECT REPORT</h1>
+      ${it.htmlReport}
     </l:main-panel>
   </l:layout>
 </j:jelly>

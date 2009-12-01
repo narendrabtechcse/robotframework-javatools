@@ -17,10 +17,15 @@
 
 package hudson.plugins.robotframework;
 
+import hudson.FilePath;
 import hudson.model.Project;
+
+import java.io.IOException;
 
 public class RobotFrameworkProjectAction extends RobotFrameworkAction {
 
+    private static final String REPORT_FILE_NAME = "report.html";
+    
     private String testExecutionsResultPath;
     private Project project;
 
@@ -33,12 +38,11 @@ public class RobotFrameworkProjectAction extends RobotFrameworkAction {
         return project;
     }
 
-    @Override
-    public String getUrlName() {
-        String fullPath = "./ws";
-        if (testExecutionsResultPath != null && testExecutionsResultPath.length() > 0) 
-        	fullPath = fullPath + "/" + testExecutionsResultPath;
-        fullPath = fullPath + "/report.html"; 
-		return fullPath;
+    public String getHtmlReport() throws IOException {
+        FilePath reportFilePath = project.getWorkspace()
+                                         .child(REPORT_FILE_NAME);
+        RobotFrameworkHtmlParser htmlParser = new RobotFrameworkHtmlParser();
+        String html = htmlParser.parseFrom(reportFilePath.toString());
+        return htmlParser.replaceAllIn(html, "<a href=\"", "<a href=\"../ws/");
     }
 }

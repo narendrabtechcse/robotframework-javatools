@@ -8,12 +8,21 @@ import org.junit.Test;
 
 public class RobotFrameworkHtmlParserTest {
 
+    private RobotFrameworkHtmlParser parser = new RobotFrameworkHtmlParser();
+
     @Test
-    public void testParsing() {
+    public void parsing() {
         StreamedSource source = new StreamedSource(REPORT_HTML);
-        RobotFrameworkHtmlParser parser = new RobotFrameworkHtmlParser();
         String html = parser.parse(source);
         assertEquals(EXPECTED_OUTPUT, html);
+    }
+    
+    @Test
+    public void linkPrefixReplacing() {
+        String html = "<html><a href=\"foo.html\"><a href=\"bar.html\"><a href=\"quux.html\"></html>";
+        String expected = "<html><a href=\"../foo.html\"><a href=\"../bar.html\"><a href=\"../quux.html\"></html>";
+        String out = parser.replaceAllIn(html, "<a href=\"", "<a href=\"../");
+        assertEquals(expected, out);
     }
     
     private static final String REPORT_HTML = 

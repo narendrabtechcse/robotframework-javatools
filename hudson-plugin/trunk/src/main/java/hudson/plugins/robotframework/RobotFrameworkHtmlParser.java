@@ -24,12 +24,19 @@ public class RobotFrameworkHtmlParser {
                Tag tag = (Tag)segment;
                if (tag.getName().equalsIgnoreCase("body")) {
                    inBody = !inBody;
-                   if (inBody) continue;
+                   if (inBody) continue; // don't write the <body> -tag...
                }
            }
-           if (inBody)
-               html.append(segment.toString());
+           if (inBody) {
+               String seg = segment.toString();
+//               seg = seg.replace("<a href=\"", "<a href=\"../");
+               html.append(seg);
+           }
         }
         return html.toString();
-    }    
+    }
+    
+    public String replaceAllIn(String html, String regex, String replacement) {
+        return html.replaceAll(regex, replacement);
+    }
 }
