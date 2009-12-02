@@ -17,32 +17,28 @@
 
 package hudson.plugins.robotframework;
 
+import hudson.FilePath;
 import hudson.model.Project;
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotFrameworkProjectAction extends RobotFrameworkAction {
 
     private String testExecutionsResultPath;
-    private Project project;
+    private Project<?, ?> project;
 
-    public RobotFrameworkProjectAction(Project project, String testExecutionResultPath) {
+    public RobotFrameworkProjectAction(Project<?, ?> project, String testExecutionResultPath) {
     	this.project = project;
         this.testExecutionsResultPath = testExecutionResultPath;
     }
 
-    public Project getProject() {
+    public Project<?, ?> getProject() {
         return project;
     }
     
-    public void doDynamic(StaplerRequest req, StaplerResponse resp) throws IOException, ServletException {
+    @Override
+    protected FilePath getReportRootDir() {
         // FIXME: testExecutionsResultPath should be included in the path, now works
-        // only if reports are in the workspa
-        forwardToReport(req, resp, project.getWorkspace());
+        // only if reports are in the workspace
+        FilePath dir = project.getWorkspace();
+        return dir;
     }
 }

@@ -1,9 +1,6 @@
 package hudson.plugins.robotframework;
 
-import java.io.IOException;
-
 import hudson.Extension;
-import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;

@@ -3,13 +3,6 @@ package hudson.plugins.robotframework;
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
 
 public class RobotFrameworkBuildAction extends RobotFrameworkAction {
 
@@ -32,9 +25,10 @@ public class RobotFrameworkBuildAction extends RobotFrameworkAction {
 	public AbstractBuild<?, ?> getBuild() {
 		return build;
     }
-	
-    public void doDynamic(StaplerRequest req, StaplerResponse resp) throws IOException, ServletException {
-        forwardToReport(req, resp, new FilePath(build.getRootDir()));
-    }
-	
+
+    @Override
+    protected FilePath getReportRootDir() {
+        // TODO: Should the configured testExecutionsResultPath be included?
+        return new FilePath(build.getRootDir());
+    }	
 }
