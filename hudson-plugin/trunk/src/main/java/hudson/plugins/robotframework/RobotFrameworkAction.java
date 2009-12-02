@@ -1,3 +1,19 @@
+/*
+ * Copyright 2008 Nokia Siemens Networks Oyj
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package hudson.plugins.robotframework;
 
 import java.io.IOException;
@@ -13,22 +29,22 @@ import hudson.model.DirectoryBrowserSupport;
 
 public abstract class RobotFrameworkAction implements Action {
 
-    public static final String ICON_FILE_NAME = "/plugin/robotframework/robot.png";
-    public static final String DISPLAY_NAME = "Robot Framework Report";
-    public static final String URL_NAME = "robotframework";
+    private String testExecutionsResultPath;
     
-    private static final String REPORT_INDEX_HTML = "report.html";
+    public RobotFrameworkAction(String testExecutionsResultPath) {
+        this.testExecutionsResultPath = testExecutionsResultPath;
+    }
     
     public String getDisplayName() {
-        return DISPLAY_NAME;
+        return "Robot Framework Report";
     }
 
     public String getIconFileName() { 
-        return ICON_FILE_NAME;
+        return "/plugin/robotframework/robot.png";
     }
 
     public String getUrlName() {
-        return URL_NAME;
+        return "robotframework";
     }
     
     public void doDynamic(StaplerRequest req, StaplerResponse resp) throws IOException, ServletException {
@@ -37,10 +53,16 @@ public abstract class RobotFrameworkAction implements Action {
                                                                   getDisplayName(), 
                                                                   "folder.gif", 
                                                                   false);
-        dbs.setIndexFileName(REPORT_INDEX_HTML);
+        dbs.setIndexFileName("report.html");
         dbs.generateResponse(req, resp, this);
     }
 
+    protected FilePath getRobotReportsDir(FilePath rootDir) {
+        if (isNotNullOrBlank(testExecutionsResultPath))
+            return new FilePath(rootDir, testExecutionsResultPath);
+        return rootDir;
+    }
+    
     protected abstract FilePath getReportRootDir();
 
     protected boolean isNotNullOrBlank(String testExecutionsResultPath) {

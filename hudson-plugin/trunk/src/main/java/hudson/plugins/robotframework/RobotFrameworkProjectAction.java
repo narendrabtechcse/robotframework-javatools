@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package hudson.plugins.robotframework;
 
 import hudson.FilePath;
@@ -22,12 +21,11 @@ import hudson.model.Project;
 
 public class RobotFrameworkProjectAction extends RobotFrameworkAction {
 
-    private String testExecutionsResultPath;
     private Project<?, ?> project;
 
-    public RobotFrameworkProjectAction(Project<?, ?> project, String testExecutionResultPath) {
+    public RobotFrameworkProjectAction(Project<?, ?> project, String testExecutionsResultPath) {
+        super(testExecutionsResultPath);
     	this.project = project;
-        this.testExecutionsResultPath = testExecutionResultPath;
     }
 
     public Project<?, ?> getProject() {
@@ -36,9 +34,6 @@ public class RobotFrameworkProjectAction extends RobotFrameworkAction {
     
     @Override
     protected FilePath getReportRootDir() {
-        FilePath workspace = project.getWorkspace();
-        if (isNotNullOrBlank(testExecutionsResultPath))
-            return new FilePath(workspace, testExecutionsResultPath);
-        return workspace;
+        return getRobotReportsDir(project.getWorkspace());
     }
 }

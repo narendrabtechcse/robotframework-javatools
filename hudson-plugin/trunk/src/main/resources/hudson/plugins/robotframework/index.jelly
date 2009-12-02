@@ -1,3 +1,4 @@
 <div>
-  This plugin publishes results of Robot Framework test execution for each project.
+  This plugin publishes results of <a href="http://robotframework.org">Robot Framework</a> 
+  test execution for each project.
 </div>
