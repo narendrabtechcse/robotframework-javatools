@@ -26,7 +26,6 @@ public class RobotFrameworkBuildAction extends RobotFrameworkAction {
 	
 	public RobotFrameworkBuildAction(AbstractBuild<?, ?> build, String testExecutionsResultPath) {
 	    super(testExecutionsResultPath);
-	    System.out.println("RobotFrameworkBuildAction(): "+testExecutionsResultPath);
 		this.build = build;
 		copyRobotFilesToBuildDir();
 	}
@@ -48,7 +47,6 @@ public class RobotFrameworkBuildAction extends RobotFrameworkAction {
     @Override
     protected FilePath getReportRootDir() {
         FilePath robotReportsDir = getRobotReportsDir(new FilePath(build.getRootDir()));
-        System.out.println("getReportRootDir(): "+robotReportsDir);
         return robotReportsDir;
     }	
 }
