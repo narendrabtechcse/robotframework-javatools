@@ -6,29 +6,36 @@ import hudson.model.AbstractBuild;
 
 public class RobotFrameworkBuildAction extends RobotFrameworkAction {
 
+    private String testExecutionsResultPath;
 	private AbstractBuild<?, ?> build;
 	
-	public RobotFrameworkBuildAction(AbstractBuild<?, ?> build) {
+	public RobotFrameworkBuildAction(AbstractBuild<?, ?> build, String testExecutionResultPath) {
 		this.build = build;
-		copyRobotFilesToBuildDir(build);
+		this.testExecutionsResultPath = testExecutionResultPath;
+		copyRobotFilesToBuildDir(build, testExecutionsResultPath);
 	}
 	
-	private void copyRobotFilesToBuildDir(AbstractBuild<?, ?> build) {
+	private void copyRobotFilesToBuildDir(AbstractBuild<?, ?> build, String testExecutionsResultPath) {
 		try {
-		    // TODO: Should the configured testExecutionsResultPath be included?
-			build.getWorkspace().copyRecursiveTo("*.*ml", new FilePath(build.getRootDir()));
+			FilePath destDir = getRobotReportsDir(build, testExecutionsResultPath);
+            build.getWorkspace().copyRecursiveTo("*.*ml", destDir);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+    private FilePath getRobotReportsDir(AbstractBuild<?, ?> build, String testExecutionsResultPath) {
+        if (isNotNullOrBlank(testExecutionsResultPath))
+            return new FilePath(new FilePath(build.getRootDir()), testExecutionsResultPath);
+        return new FilePath(build.getRootDir());
+    }
+
 	public AbstractBuild<?, ?> getBuild() {
 		return build;
     }
 
     @Override
     protected FilePath getReportRootDir() {
-        // TODO: Should the configured testExecutionsResultPath be included?
-        return new FilePath(build.getRootDir());
+        return getRobotReportsDir(build, testExecutionsResultPath);
     }	
 }

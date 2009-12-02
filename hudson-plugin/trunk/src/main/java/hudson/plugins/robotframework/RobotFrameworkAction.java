@@ -42,4 +42,8 @@ public abstract class RobotFrameworkAction implements Action {
     }
 
     protected abstract FilePath getReportRootDir();
+
+    protected boolean isNotNullOrBlank(String testExecutionsResultPath) {
+        return testExecutionsResultPath != null && testExecutionsResultPath.length() > 0;
+    }
 }

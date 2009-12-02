@@ -36,9 +36,9 @@ public class RobotFrameworkProjectAction extends RobotFrameworkAction {
     
     @Override
     protected FilePath getReportRootDir() {
-        // FIXME: testExecutionsResultPath should be included in the path, now works
-        // only if reports are in the workspace
-        FilePath dir = project.getWorkspace();
-        return dir;
+        FilePath workspace = project.getWorkspace();
+        if (isNotNullOrBlank(testExecutionsResultPath))
+            return new FilePath(workspace, testExecutionsResultPath);
+        return workspace;
     }
 }

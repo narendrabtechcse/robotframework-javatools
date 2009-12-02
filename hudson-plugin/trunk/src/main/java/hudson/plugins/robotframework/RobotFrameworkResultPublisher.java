@@ -34,7 +34,7 @@ public class RobotFrameworkResultPublisher extends Recorder {
 	
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
-		build.addAction(new RobotFrameworkBuildAction(build));
+		build.addAction(new RobotFrameworkBuildAction(build, testExecutionResultPath));
 		return true;
 	}
 
