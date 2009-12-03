@@ -46,7 +46,6 @@ public class RobotFrameworkBuildAction extends RobotFrameworkAction {
 
     @Override
     protected FilePath getReportRootDir() {
-        FilePath robotReportsDir = getRobotReportsDir(new FilePath(build.getRootDir()));
-        return robotReportsDir;
+        return getRobotReportsDir(new FilePath(build.getRootDir()));
     }	
 }
