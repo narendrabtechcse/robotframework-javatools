@@ -1,0 +1,46 @@
+*** Setting ***
+
+Resource	remoteapps_resource.tsv
+
+
+*** Test Cases ***
+
+Using Single Application
+	Start Application	App1
+	Application Started	App1
+	Take Library Into Use	${JVM CONNECTOR LIB}
+	Application Should Be In Use	App1
+	[Teardown]	Close Application	App1
+
+Using Two Applications
+	Take Application Into Use	App1
+	Application Should Be In Use	App1
+	Take Application Into Use	App2
+	Application Should Be In Use	App2
+	Switch To Application	App1
+	Application Should Be In Use	App1
+	[Teardown]	Close All Applications
+
+Using Multiple Libraries
+	Start Application	App1
+	Application Started	App1
+	Take Library Into Use	${JVM CONNECTOR LIB}
+	Take Library Into Use	JavaTools
+	Application Should Be In Use	App1
+	Application Should Have Property	App1
+	[Teardown]	Close All Applications
+
+Using Multiple Libraries With Multiple Apps
+	Take Application Into Use	App1
+	Application Should Be In Use	App1
+	Application Should Have Property	App1
+	Take Application Into Use	App2
+	Application Should Be In Use	App2
+	Application Should Have Property	App2
+	Switch To Application	App1
+	Application Should Be In Use	App1
+	Application Should Have Property	App1
+	Switch To Application	App2
+	Application Should Be In Use	App2
+	Application Should Have Property	App2
+	[Teardown]	Close All Applications

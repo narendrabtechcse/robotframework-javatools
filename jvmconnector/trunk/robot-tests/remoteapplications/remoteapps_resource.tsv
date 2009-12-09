@@ -1,0 +1,24 @@
+*** Settings ***
+Library	RemoteApplications
+Resource	../resources/common.tsv
+
+*** Keyword ***
+Take Application Into Use
+	[Arguments]	${name}
+	Start Application	${name}
+	Application Started	${name}
+	Take Libraries Into Use	${JVM CONNECTOR LIB}	JavaTools
+
+Start Application
+	[Arguments]	${name}
+	Start With Java Agent	"java -Dproperty.name=""${name}"" ${APPLICATION} ${name}"
+
+Application Should Be In Use
+	[Arguments]	${name}
+	${is running} =	applicationIsRunning
+	Should Be True	${is running}	Application '${name}' is not running
+
+Application Should Have Property
+	[Arguments]	${expected Name}
+	${actual name} =	Get System Property	property.name
+	Should Be Equal	${expected name}	${actual name}

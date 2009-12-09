@@ -1,6 +1,6 @@
 *** Setting ***
-library	${CURDIR}/Dependencies.py
-library	Dialogs
+library	Dependencies.py
+#library	Dialogs
 resource	applauncher_resource.tsv
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
 library	JavaTools
@@ -9,7 +9,7 @@ library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${JAR DIR}
 library	ApplicationLauncher	javaagent	10 seconds	WITH NAME	javaagentLauncher
 suiteSetup	startWebstartService
 suiteTeardown	stopWebstartService
-testTimeout	30sec
+testTimeout	30 seconds
 
 *** Variable ***
 ${codeBase}	http://localhost:14563/test-app
@@ -39,7 +39,7 @@ Starting Webstart Application From Webstart Application
 	[teardown]	closeAppStartedWithJavaAgent	javaagentLauncher
 
 Works With Local Jnlp
-	${localJnlp}=	setVariable	${CURDIR}/../src/test/resources/test-app/test-application.jnlp
+	${localJnlp}=	setVariable	${CURDIR}${/}..${/}..${/}src${/}test${/}resources${/}test-app${/}test-application.jnlp
 	applicationLauncherLaunchesJavaWebstartApplication	${localJnlp}	localApp	Test App
 
 ApplicationLauncher Launches Java Webstart Application

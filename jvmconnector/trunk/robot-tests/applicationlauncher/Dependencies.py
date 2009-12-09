@@ -17,23 +17,32 @@ class Dependencies:
         self._copy_test_keywords(dir)
 
     def _copy_maven_dependencies(self, dir):
-        dependencies_txt = path.join(path.dirname(__file__), '..',  'dependencies.txt')
+        print '*DEBUG* copying maven dependencies'
+        dependencies_txt = path.join(path.dirname(__file__), '..',
+                                     '..', 'dependencies.txt')
         dependencies = open(dependencies_txt).read().splitlines()
 
         for dependency in dependencies:
-            copy(dependency, dir)
+            self._copy(dependency, dir)
+
+    def _copy(self, src, dst):
+        print "*DEBUG* Copying file '%s' to '%s'" % (src, dst)
+        if src is None or not path.exists(src):
+            raise RuntimeError("Path does not exist '%s'" % (src))
+        copy(src, dst)
 
     def _copy_test_keywords(self, dir):
+        print '*DEBUG* copying test keywords'
         if not self._keywords_jar():
             sh('mvn -f keywords-pom.xml package')
 
-        copy(self._keywords_jar(), dir)
+        self._copy(self._keywords_jar(), dir)
 
     def _keywords_jar(self):
         return self._find_jar('jvmconnector-keywords-*.jar')
 
     def _find_jar(self, jar_pattern):
-        pattern = path.join(path.dirname(__file__), '..',  
+        pattern = path.join(path.dirname(__file__), '..','..',
                             'target', jar_pattern)
 
         jar = glob(pattern)

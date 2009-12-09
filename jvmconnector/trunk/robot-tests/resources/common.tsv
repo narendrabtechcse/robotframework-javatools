@@ -1,21 +1,17 @@
-*** Setting ***
-
+*** Settings ***
+variables	variables.py
 library	OperatingSystem
 library	PythonpathHelper.py
-library	ApplicationLauncher	${APPLICATION}	WITH NAME	xLauncher
-library	ApplicationLauncher	${APPLICATION}	WITH NAME	yLauncher
-library	ApplicationLauncher	${APPLICATION}	WITH NAME	zLauncher
-library	ApplicationLauncher	externalX	WITH NAME	externalXLauncher
-variables	variables.py
 
 
 *** Variable ***
-${TEST APP DIR}	${CURDIR}${/}..${/}src${/}test${/}resources
+
+${TEST APP DIR}	${CURDIR}${/}..${/}..${/}src${/}test${/}resources
 ${JAR DIR}	${TEST APP DIR}${/}test-lib
 
 ${APPLICATION}	org.robotframework.jvmconnector.mocks.MyApplication
 ${JVM CONNECTOR LIB}	org.robotframework.jvmconnector.keyword.JvmconnectorKeywords
-${appLauncherScript}	${CURDIR}${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
+${appLauncherScript}	${CURDIR}${/}..${/}..${/}src${/}main${/}python${/}ApplicationLauncher.py
 ${policyFile}	${CURDIR}${/}allow_libraries.policy
 ${javaPolicyFile}	%{HOME}${/}.java.policy
 
@@ -71,7 +67,7 @@ importRemoteLibraries	[arguments]	${name}
 
 startWithJavaAgent	
 	[Arguments]	${command}	${java agent args}=
-	Variable Should Exist	${JAVA_AGENT_JAR}
+	Variable Should Exist	\${JAVA_AGENT_JAR}
 	...	You should create jar with dependencies with command "mvn assembly:assembly" before running javaagent tests.
 	setEnvironmentVariable	JAVA_TOOL_OPTIONS	-javaagent:${JAVA_AGENT_JAR}=${java agent args}
 	checkPolicyFileAllowLibraryUse
@@ -81,7 +77,7 @@ startWithJavaAgent
 closeAppStartedWithJavaAgent
 	[Arguments]	${lib}
 	comment	Two steps below fails test faster in case the env is not ok
-	Variable Should Exist	${JAVA_AGENT_JAR}
+	Variable Should Exist	\${JAVA_AGENT_JAR}
 	checkPolicyFileAllowLibraryUse
 	runKeyword	${lib}.closeApplication
 
