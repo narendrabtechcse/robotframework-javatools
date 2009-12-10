@@ -2,6 +2,7 @@
 variables	variables.py
 library	OperatingSystem
 library	PythonpathHelper.py
+Resource	webstart.tsv
 
 
 *** Variable ***

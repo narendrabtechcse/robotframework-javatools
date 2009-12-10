@@ -13,6 +13,11 @@ Start Application
 	RemoteApplications.Start Application	${name}
 	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}	${JAVA_AGENT_JAR}
 
+Start Web Start Application
+	[Arguments]	${name}	${jnlp}=${jnlpWithMainClassUrl}
+	RemoteApplications.Start Application	${name}
+	...	javaws ${jnlp}	${JAVA_AGENT_JAR}	${JAR DIR}
+
 Application Should Be In Use
 	[Arguments]	${name}
 	${is running} =	applicationIsRunning
