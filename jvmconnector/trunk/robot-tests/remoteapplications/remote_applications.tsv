@@ -7,7 +7,6 @@ Resource	remoteapps_resource.tsv
 
 Using Single Application
 	Start Application	App1
-	Application Started	App1
 	Take Library Into Use	${JVM CONNECTOR LIB}
 	Application Should Be In Use	App1
 	[Teardown]	Close Application	App1
@@ -23,7 +22,6 @@ Using Two Applications
 
 Using Multiple Libraries
 	Start Application	App1
-	Application Started	App1
 	Take Library Into Use	${JVM CONNECTOR LIB}
 	Take Library Into Use	JavaTools
 	Application Should Be In Use	App1

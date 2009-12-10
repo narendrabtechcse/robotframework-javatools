@@ -6,12 +6,12 @@ Resource	../resources/common.tsv
 Take Application Into Use
 	[Arguments]	${name}
 	Start Application	${name}
-	Application Started	${name}
 	Take Libraries Into Use	${JVM CONNECTOR LIB}	JavaTools
 
 Start Application
 	[Arguments]	${name}
-	Start With Java Agent	"java -Dproperty.name=""${name}"" ${APPLICATION} ${name}"
+	RemoteApplications.Start Application	${name}
+	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}	${JAVA_AGENT_JAR}
 
 Application Should Be In Use
 	[Arguments]	${name}

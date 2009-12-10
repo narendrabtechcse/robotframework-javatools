@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 import tempfile
@@ -7,6 +8,7 @@ from robot.utils import NormalizedDict, timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.namespace import IMPORTER
 from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.OperatingSystem import OperatingSystem
 
 from org.springframework.beans.factory import BeanCreationException
 from org.springframework.remoting import RemoteAccessException
@@ -59,16 +61,16 @@ class RemoteApplication:
     def __init__(self):
         self._libs = []
         self._rmi_client = None
-        self._name = None
+        self._alias = None
 
-    def application_started(self, name=None, timeout='60 seconds', rmi_url=None):
+    def application_started(self, alias=None, timeout='60 seconds', rmi_url=None):
         if self._rmi_client:
             raise RuntimeError("Application already connected")
-        self._name = name
+        self._alias = alias
         timeout = timestr_to_secs(timeout or '60 seconds')
-        self._rmi_client = self._connect_to_base_rmi_service(name, timeout, rmi_url)
+        self._rmi_client = self._connect_to_base_rmi_service(alias, timeout, rmi_url)
 
-    def _connect_to_base_rmi_service(self, name, timeout, rmi_url): 
+    def _connect_to_base_rmi_service(self, alias, timeout, rmi_url): 
         start_time = time.time()
         while time.time() - start_time < timeout:
             url = self._retrieve_base_rmi_url(rmi_url)
@@ -78,7 +80,7 @@ class RemoteApplication:
             except (BeanCreationException, RemoteAccessException,
                     InvalidURLException):
                 time.sleep(2)
-        self._could_not_connect(name)
+        self._could_not_connect(alias)
 
     def _retrieve_base_rmi_url(self, url):
         #TODO: Get from started apps DB
@@ -99,9 +101,9 @@ class RemoteApplication:
         if os.path.exists(DATABASE):
             os.remove(DATABASE)
 
-    def _could_not_connect(self, name):
-        name = name or ''
-        raise RuntimeError("Could not connect to application %s" % name)
+    def _could_not_connect(self, alias):
+        alias = alias or ''
+        raise RuntimeError("Could not connect to application %s" % alias)
 
     def take_libraries_into_use(self, *library_names):
         for name in library_names:
@@ -124,7 +126,7 @@ class RemoteApplication:
         try:
             return self._rmi_client.getObject().importLibrary(library_name)
         except (BeanCreationException, RemoteAccessException):
-            self._could_not_connect(self._name)
+            self._could_not_connect(self._alias)
 
     def close_application(self):
         self._check_connection()
@@ -148,34 +150,99 @@ class RemoteApplication:
 
 
 class RemoteApplicationsConnector:
-    _kws = ['applicationstarted', 'switchtoapplication', 'closeallapplications',
-            'closeapplication', 'takelibrariesintouse', 'takelibraryintouse']
+    """Library for handling multiple remote applications.
 
-    def __init__(self):
+    RemoteApplications are 
+    Mechanism used to start can be e.g. . However, you need to 
+    """
+
+    _kws = ['startapplication', 'applicationstarted', 'switchtoapplication',
+            'closeallapplications', 'closeapplication', 'takelibrariesintouse',
+            'takelibraryintouse']
+
+    def __init__(self, timeout='60 seconds'):
+        self._timeout = timeout
         self._initialize()
 
     def _initialize(self):
         self._apps = NormalizedDict()
         self._active_app = None
 
-    def application_started(self, name, timeout='60 seconds', rmi_url=None):
-        """Makes active"""
-        if self._apps.has_key(name):
-            raise RuntimeError("Application with name '%s' already in use" % name)
+    def start_application(self, alias, command, jvm_connector_jar, lib_dir=None, 
+                          port=None):
+        """Starts the application, connects to it and makes it active application.
+        `command` is the command used to start the application from the command
+        line. It can be any command that finally starts JVM. TODO: Add examples.
+        `jvm_connector_jar` is the path to the jar file containing the
+        jvm_connector.
+        `libdir` is needed always when Java process is started with Java Web 
+        Start or in case libraries are not in the CLASSPATH. It is path to the 
+        directory containing jar files which are required for running the tests.
+        In another words these jar files should contain libraries that you want
+        to remotely take into use (packaged in jars). In case you are using 1.5
+        Java, you should package all these libraries to the `jvm_connector_jar`.
+        `port` is port where the SUT starts server which provides taking
+        libraries into use and executing the keywords. *Note:* If the 
+        application is used to start other applications, port should NOT be used.
+        """
+        self._alias_in_use(alias)
+        os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(jvm_connector_jar,
+                                                                lib_dir, port)
+        OperatingSystem().start_process(command)
+        os.environ['JAVA_TOOL_OPTIONS'] = ''
+        rmi_url = port and 'rmi://localhost:%s/robotrmiservice' % port or None
+        self.application_started(alias, self._timeout, rmi_url)
+
+    def _alias_in_use(self, alias):
+        if self._apps.has_key(alias):
+            raise RuntimeError("Application with alias '%s' already in use" % alias)
+
+    def _get_java_agent(self, jvm_connector_jar, lib_dir, port):
+        jars = glob.glob('%s%s*.jar' % (lib_dir, os.path.sep))
+        print "*TRACE* found following library jars: %s" % (jars)
+        port = port and ['PORT=%s' % port] or []
+        return '-javaagent:%s=%s' % (jvm_connector_jar, 
+                                     os.path.pathsep.join(port + jars))
+
+    def application_started(self, alias, timeout='60 seconds', rmi_url=None):
+        """Connects to started application and switches to it.
+        `alias` is the alias name for the application. When using multiple 
+        applications alias is used to switch between them with keyword `Switch 
+        To Application`.
+        `timeout` is the time to wait the application to be started to the point
+        where the testing capabilities are initialized and the connection between
+        RemoteApplications and SUT can be established.
+        `rmi_url` is url that can be used to connect to the SUT. When used
+        locally there is usually no need to give the `rmi_url`. However, when
+        the SUT is running on other machine, the normal mechanism used to find
+        the SUT is not enough and you need to provide the `rmi_url`. In case
+        port is not configured on remote side, you can find the `rmi_url` after
+        started the SUT using the javaagent explained in TODO.
+        
+        """
+        self._alias_in_use(alias)
         app = RemoteApplication()
-        app.application_started(name, timeout, rmi_url)
-        self._apps[name] = app
+        app.application_started(alias, timeout, rmi_url)
+        self._apps[alias] = app
         self._active_app = app
 
-    def switch_to_application(self, name):
-        self._check_application_in_use(name)
-        self._active_app = self._apps[name]
+    def switch_to_application(self, alias):
+        """Changes the application where the keywords are executed.
+        
+        `alias` is the name of the application and it have been given to the
+        `Application Started` keyword."""
+        self._check_application_in_use(alias)
+        self._active_app = self._apps[alias]
 
-    def _check_application_in_use(self, name):
-        if not self._apps.has_key(name):
-            raise RuntimeError("No Application with name '%s' in use" % name)
+    def _check_application_in_use(self, alias):
+        if not self._apps.has_key(alias):
+            raise RuntimeError("No Application with alias '%s' in use" % alias)
 
     def take_libraries_into_use(self, *library_names):
+        """Takes the libraries into use at the remote application
+        
+        `library_names` contains all the libraries that you want to take into
+        use on the remote side. Note that you need to provide list of jar files """
         self._check_active_app()
         self._active_app.take_libraries_into_use(*library_names)
         self._update_keywords_to_robot()
@@ -211,32 +278,32 @@ class RemoteApplicationsConnector:
         self._update_keywords_to_robot()
 
     def close_all_applications(self):
-        for name in self._apps.keys():
+        for alias in self._apps.keys():
             try:
-                self._apps[name].close_application()
+                self._apps[alias].close_application()
             except RuntimeError:
-                print "*WARN* Could not close application '%s'" % (name)
+                print "*WARN* Could not close application '%s'" % (alias)
         self._initialize()
 
-    def close_application(self, name=None):
-        name = name or self._get_active_app_name()
-        print "*TRACE* Closing application '%s'" % name
-        self._check_application_in_use(name)
-        if self._apps[name] == self._active_app:
+    def close_application(self, alias=None):
+        alias = alias or self._get_active_app_alias()
+        print "*TRACE* Closing application '%s'" % alias
+        self._check_application_in_use(alias)
+        if self._apps[alias] == self._active_app:
             self._active_app = None
         try:
-            self._apps[name].close_application()
-            print "Closed application '%s'" % (name)
+            self._apps[alias].close_application()
+            print "Closed application '%s'" % (alias)
         finally:
             print self._apps
             #TODO: Robot normalize
-            del(self._apps[name.lower().replace(' ', '').replace('_', '')])
+            del(self._apps[alias.lower().replace(' ', '').replace('_', '')])
 
-    def _get_active_app_name(self):
+    def _get_active_app_alias(self):
         self._check_active_app()
-        for name, app in self._apps.items():
+        for alias, app in self._apps.items():
             if app == self._active_app:
-                return name
+                return alias
 
     def get_keyword_names(self):
         #FIXME: Handle dublicate kw names
