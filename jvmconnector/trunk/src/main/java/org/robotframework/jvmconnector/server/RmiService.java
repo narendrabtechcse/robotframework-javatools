@@ -20,11 +20,14 @@ package org.robotframework.jvmconnector.server;
 public class RmiService {
     private final Class<LibraryImporter> serviceInterface = LibraryImporter.class;
     private RmiServicePublisher rmiPublisher = new RmiServicePublisher();
-    
+
     public void start(final String pathToRmiStorage) {
-        int rmiPort = new FreePortFinder().findFreePort();
-        RemoteLibraryImporter libraryImporter = new RemoteLibraryImporter(rmiPort, rmiPublisher);
-        String rmiInfo = rmiPublisher.publish("robotrmiservice", serviceInterface, libraryImporter, rmiPort);
+        String rmiInfo = start(new FreePortFinder().findFreePort());
         new RmiInfoStorage(pathToRmiStorage).store(rmiInfo);
+    }
+
+    public String start(int rmiPort) {
+        RemoteLibraryImporter libraryImporter = new RemoteLibraryImporter(rmiPort, rmiPublisher);
+        return rmiPublisher.publish("robotrmiservice", serviceInterface, libraryImporter, rmiPort);
     }
 }

@@ -6,6 +6,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -22,19 +23,19 @@ import org.laughingpanda.beaninject.Inject;
 public class RmiServiceAgentIntegrationSpec extends Specification<Void> {
     private static String agentArguments = JarSpecUtil.jarDir + JarSpecUtil.pathSep + 
                                            JarSpecUtil.jarDir + JarSpecUtil.fileSep + "helper-keywords.jar";
-    
+    private static List<String> agentArgumentsList = Arrays.asList(agentArguments.split(JarSpecUtil.pathSep));
+
     public class Any {
         public void addsJarsToClassPath() throws Exception {
             FakeInstrumentation instrumentation = new FakeInstrumentation();
-            RmiServiceAgent.setClasspath(agentArguments, instrumentation);
+            RmiServiceAgent.setClasspath(agentArgumentsList, instrumentation);
             List<String> expectedJars = getExpectedJars("helper-keywords.jar");
-            
             specify(expectedJars, instrumentation.appendedJars);
         }
         
         public void doesNothingWhenNoArgumentsAreGiven() {
             FakeInstrumentation instrumentation = new FakeInstrumentation();
-            RmiServiceAgent.setClasspath(null, instrumentation);
+            RmiServiceAgent.setClasspath(new ArrayList<String>(), instrumentation);
             
             specify(instrumentation.appendedJars.isEmpty());
         }
@@ -52,7 +53,7 @@ public class RmiServiceAgentIntegrationSpec extends Specification<Void> {
                 atLeast(1).of(appender).appendToClasspath(with(any(JarFile.class)));
             }});
             
-            RmiServiceAgent.setClasspath(agentArguments, inst);
+            RmiServiceAgent.setClasspath(agentArgumentsList, inst);
         }
     }
     

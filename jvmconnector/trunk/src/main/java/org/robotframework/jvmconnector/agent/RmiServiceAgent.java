@@ -16,32 +16,29 @@
 
 package org.robotframework.jvmconnector.agent;
 
+import java.io.File;
 import java.lang.instrument.Instrumentation;
+import java.util.List;
 import java.util.jar.JarFile;
 
 import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiServiceAgent {
     private static String tmpDir = System.getProperty("java.io.tmpdir");
-    private static String pathSeparator = System.getProperty("path.separator");
-    private static String fileSeparator = System.getProperty("file.separator");
-    
+    private static String fileSeparator = File.separator;
+
     private static ClassPathAppenderFactory appenderFactory = new ClassPathAppenderFactory();
 
     public static void premain(String agentArguments, Instrumentation inst) {
-        setClasspath(agentArguments, inst);
-        startRmiService();
-	}
-
-    static void setClasspath(String agentArguments, final Instrumentation inst) {
-        for (String file : split(agentArguments)) {
-            addJarsToClasspath(inst, file);
-        }
+        AgentConfiguration conf = new AgentConfiguration(agentArguments);
+        setClasspath(conf.getJars(), inst);
+        startRmiService(conf.getPort());
     }
 
-    private static String[] split(String agentArguments) {
-        if (agentArguments == null) return new String[0];
-        return agentArguments.split(pathSeparator);
+    static void setClasspath(List<String> jars, final Instrumentation inst) {
+        for (String file : jars) {
+            addJarsToClasspath(inst, file);
+        }
     }
 
     private static void addJarsToClasspath(final Instrumentation inst, String file) {
@@ -51,7 +48,7 @@ public class RmiServiceAgent {
             }
         });
     }
-    
+
     private static void addToClassPath(Instrumentation inst, JarFile file) {
         classPathAppender(inst).appendToClasspath(file);
     }
@@ -60,7 +57,10 @@ public class RmiServiceAgent {
         return appenderFactory.create(inst);
     }
 
-    private static void startRmiService() {
-        new RmiService().start(tmpDir + fileSeparator + "launcher.txt");
+    private static void startRmiService(Integer port) {
+        if (port != null)
+            new RmiService().start(port);
+        else
+            new RmiService().start(tmpDir + fileSeparator + "launcher.txt");
     }
 }
