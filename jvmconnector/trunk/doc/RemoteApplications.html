@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>RemoteApplications - Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+  body {
+    background: white;
+    color: black;
+  }
+
+  /* Generic Table Styles */
+  table {
+    background: white;
+    border: 1px solid black;
+    border-collapse: collapse;
+    empty-cells: show;
+    margin: 0.3em 0em;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 0.2em;
+  }
+  th {
+    background: #C6C6C6;
+  }
+  td {
+    vertical-align: top;
+  }    
+
+  /* Columns */
+  td.kw {
+    font-weight: bold;
+  }
+  td.arg {
+    width: 300px;
+    font-style: italic;
+  }
+  td.doc {
+  }
+
+  /* Tables in documentation */
+  table.doc {
+    border: 1px solid gray;
+    background: transparent;
+    border-collapse: collapse;
+    empty-cells: show;
+    font-size: 0.85em;
+    font-family: arial,helvetica,sans-serif;
+  }
+  table.doc td {
+    border: 1px solid gray;
+    padding: 0.1em 0.3em;
+    height: 1.2em;
+  }
+
+  /* Paragraphs */
+  .libdoc, .links {
+    width: 800px;
+  }
+
+  /* Misc */
+  a.name, span.name {  
+    font-style: italic;
+    background: #f4f4f4;
+    text-decoration: none;
+  }
+  a:link, a:visited {
+    color: blue;
+  }
+  a:hover, a:active {
+    text-decoration: underline;
+    color: purple;
+  }
+  .footer {
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+<h1>RemoteApplications - Documentation</h1>
+
+<h2 id="introduction">Introduction</h2>
+<p class='libdoc'>Library for handling multiple remote applications.<br />
+<br />
+RemoteApplications are Mechanism used to start can be e.g. . However, you need to</p>
+
+
+<h2>Shortcuts</h2>
+<div class='links'>
+<a href="#Application Started" title="Connects to started application and switches to it.">Application&nbsp;Started</a>&nbsp;
+<a href="#Close All Applications" title="Closes all the applications">Close&nbsp;All&nbsp;Applications</a>&nbsp;
+<a href="#Close Application" title="Closes application">Close&nbsp;Application</a>&nbsp;
+<a href="#Start Application" title="Starts the application, connects to it and makes it active application.">Start&nbsp;Application</a>&nbsp;
+<a href="#Switch To Application" title="Changes the application where the keywords are executed.">Switch&nbsp;To&nbsp;Application</a>&nbsp;
+<a href="#Take Libraries Into Use" title="Takes the libraries into use at the remote application.">Take&nbsp;Libraries&nbsp;Into&nbsp;Use</a>&nbsp;
+<a href="#Take Library Into Use" title="Takes given library into use.">Take&nbsp;Library&nbsp;Into&nbsp;Use</a>&nbsp;
+</div>
+
+<h2>Keywords</h2>
+<table class="keywords">
+<tr>
+  <th class="kw">Keyword</th>
+  <th class="arg">Arguments</th>
+  <th class="doc">Documentation</th>
+</tr>
+<tr>
+  <td class="kw"><a name="Application Started"></a>Application Started</td>
+  <td class="arg">alias, timeout=60 seconds, rmi_url=None</td>
+  <td class="doc">Connects to started application and switches to it. <span class="name">alias</span> is the alias name for the application. When using multiple applications alias is used to switch between them with keyword <a href="#Switch To Application" class="name">Switch To Application</a>. <span class="name">timeout</span> is the time to wait the application to be started to the point where the testing capabilities are initialized and the connection between RemoteApplications and SUT can be established. <span class="name">rmi_url</span> is url that can be used to connect to the SUT. When used locally there is usually no need to give the <span class="name">rmi_url</span>. However, when the SUT is running on other machine, the normal mechanism used to find the SUT is not enough and you need to provide the <span class="name">rmi_url</span>. In case port is not configured on remote side, you can find the <span class="name">rmi_url</span> after started the SUT using the javaagent explained in <a href="#introduction" class="name">Introduction</a>.<br />
+</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Close All Applications"></a>Close All Applications</td>
+  <td class="arg"></td>
+  <td class="doc">Closes all the applications</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Close Application"></a>Close Application</td>
+  <td class="arg">alias=None</td>
+  <td class="doc">Closes application<br />
+<br />
+If <span class="name">alias</span> is given, closes application related to the alias. Otherwise closes the active application.</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Start Application"></a>Start Application</td>
+  <td class="arg">alias, command, jvm_connector_jar, timeout=60 seconds, lib_dir=None, port=None</td>
+  <td class="doc">Starts the application, connects to it and makes it active application. <span class="name">command</span> is the command used to start the application from the command line. It can be any command that finally starts JVM. TODO: Add examples. <span class="name">jvm_connector_jar</span> is the path to the jar file containing the jvm_connector. <span class="name">libdir</span> is needed always when Java process is started with Java Web Start or in case libraries are not in the CLASSPATH. It is path to the directory containing jar files which are required for running the tests. In another words these jar files should contain libraries that you want to remotely take into use (packaged in jars). In case you are using 1.5 Java, you should package all these libraries to the <span class="name">jvm_connector_jar</span>. <span class="name">port</span> is port where the SUT starts server which provides taking libraries into use and executing the keywords. <b>Note:</b> If the application is used to start other applications, port should NOT be used.<br />
+</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Switch To Application"></a>Switch To Application</td>
+  <td class="arg">alias</td>
+  <td class="doc">Changes the application where the keywords are executed.<br />
+<br />
+<span class="name">alias</span> is the name of the application and it have been given with the <a href="#Application Started" class="name">Application Started</a> keyword.</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Take Libraries Into Use"></a>Take Libraries Into Use</td>
+  <td class="arg">*library_names</td>
+  <td class="doc">Takes the libraries into use at the remote application.<br />
+<br />
+<span class="name">library_names</span> contains all the libraries that you want to take into use on the remote side. <b>Note:</b> See 'Start Application' for information how to provide library jar files.</td>
+</tr>
+<tr>
+  <td class="kw"><a name="Take Library Into Use"></a>Take Library Into Use</td>
+  <td class="arg">library_name</td>
+  <td class="doc">Takes given library into use.<br />
+<br />
+See <a href="#Take Libraries Into Use" class="name">Take Libraries Into Use</a> keyword for more details.<br />
+</td>
+</tr>
+</table>
+<p class="footer">
+Altogether 7 keywords.<br />
+Generated by <a href="http://code.google.com/p/robotframework/wiki/LibraryDocumentationTool">libdoc.py</a>
+on 2009-12-10 18:41:53.
+</p>
+</body>
+</html>
