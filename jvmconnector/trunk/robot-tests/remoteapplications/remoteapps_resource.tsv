@@ -16,7 +16,7 @@ Start Application
 Start Web Start Application
 	[Arguments]	${name}	${jnlp}=${jnlpWithMainClassUrl}
 	RemoteApplications.Start Application	${name}
-	...	javaws ${jnlp}	${JAVA_AGENT_JAR}	${JAR DIR}
+	...	javaws ${jnlp}	${JAVA_AGENT_JAR}	30 secs	${JAR DIR}
 
 Application Should Be In Use
 	[Arguments]	${name}
