@@ -1,7 +1,5 @@
 *** Setting ***
 library	org.robotframework.jvmconnector.util.FileServer	WITH NAME	FileServer
-library	JavaTools
-library	JvmconnectorKeywords
 
 *** Variable ***
 ${codeBase}	http://localhost:14563/test-app

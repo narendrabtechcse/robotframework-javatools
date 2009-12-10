@@ -1,6 +1,8 @@
 *** Setting ***
 library	Dependencies.py
 resource	applauncher_resource.tsv
+library	JavaTools
+library	JvmconnectorKeywords
 library	JnlpEnhancer	${TEMPDIR}/launcher.txt	${JAR DIR}
 library	ApplicationLauncher	javaagent	10 seconds	WITH NAME	javaagentLauncher
 suiteSetup	startWebstartService
