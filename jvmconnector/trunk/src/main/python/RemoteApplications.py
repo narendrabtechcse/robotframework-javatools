@@ -24,6 +24,29 @@ class InvalidURLException(Exception):
 
 DATABASE = os.path.join(tempfile.gettempdir(), 'launcher.txt')
 
+def get_arg_spec(method):
+    """Returns info about args in a tuple (args, defaults, varargs)
+
+    args     - tuple of all accepted arguments
+    defaults - tuple of default values
+    varargs  - name of the argument accepting varargs or None
+    """
+    # Code below is based on inspect module's getargs and getargspec 
+    # methods. See their documentation and/or source for more details. 
+    func = method.im_func
+    first_arg = 1        # this drops 'self' from methods' args
+    co = func.func_code
+    nargs = co.co_argcount
+    args = co.co_varnames[first_arg:nargs]
+    defaults = func.func_defaults
+    if defaults is None:
+        defaults = ()
+    if co.co_flags & 4:                      # 4 == CO_VARARGS
+        varargs =  co.co_varnames[nargs]
+    else:
+        varargs = None
+    return args, defaults, varargs
+
 
 class RemoteLibrary:
 
@@ -156,20 +179,19 @@ class RemoteApplicationsConnector:
     Mechanism used to start can be e.g. . However, you need to 
     """
 
-    _kws = ['startapplication', 'applicationstarted', 'switchtoapplication',
-            'closeallapplications', 'closeapplication', 'takelibrariesintouse',
-            'takelibraryintouse']
+    _kws = ['start_application', 'application_started', 'switch_to_application',
+            'close_all_applications', 'close_application', 
+            'take_libraries_into_use','take_library_into_use']
 
-    def __init__(self, timeout='60 seconds'):
-        self._timeout = timeout
+    def __init__(self):
         self._initialize()
 
     def _initialize(self):
-        self._apps = NormalizedDict()
+        self._apps = NormalizedDict(ignore=['_'])
         self._active_app = None
 
-    def start_application(self, alias, command, jvm_connector_jar, lib_dir=None, 
-                          port=None):
+    def start_application(self, alias, command, jvm_connector_jar,
+                          timeout='60 seconds', lib_dir=None, port=None):
         """Starts the application, connects to it and makes it active application.
         `command` is the command used to start the application from the command
         line. It can be any command that finally starts JVM. TODO: Add examples.
@@ -191,7 +213,7 @@ class RemoteApplicationsConnector:
         OperatingSystem().start_process(command)
         os.environ['JAVA_TOOL_OPTIONS'] = ''
         rmi_url = port and 'rmi://localhost:%s/robotrmiservice' % port or None
-        self.application_started(alias, self._timeout, rmi_url)
+        self.application_started(alias, timeout, rmi_url)
 
     def _alias_in_use(self, alias):
         if self._apps.has_key(alias):
@@ -217,7 +239,7 @@ class RemoteApplicationsConnector:
         the SUT is running on other machine, the normal mechanism used to find
         the SUT is not enough and you need to provide the `rmi_url`. In case
         port is not configured on remote side, you can find the `rmi_url` after
-        started the SUT using the javaagent explained in TODO.
+        started the SUT using the javaagent explained in `Introduction`.
         
         """
         self._alias_in_use(alias)
@@ -229,7 +251,7 @@ class RemoteApplicationsConnector:
     def switch_to_application(self, alias):
         """Changes the application where the keywords are executed.
         
-        `alias` is the name of the application and it have been given to the
+        `alias` is the name of the application and it have been given with the
         `Application Started` keyword."""
         self._check_application_in_use(alias)
         self._active_app = self._apps[alias]
@@ -239,10 +261,11 @@ class RemoteApplicationsConnector:
             raise RuntimeError("No Application with alias '%s' in use" % alias)
 
     def take_libraries_into_use(self, *library_names):
-        """Takes the libraries into use at the remote application
+        """Takes the libraries into use at the remote application.
         
         `library_names` contains all the libraries that you want to take into
-        use on the remote side. Note that you need to provide list of jar files """
+        use on the remote side. *Note:* See 'Start Application' for information
+        how to provide library jar files."""
         self._check_active_app()
         self._active_app.take_libraries_into_use(*library_names)
         self._update_keywords_to_robot()
@@ -273,11 +296,16 @@ class RemoteApplicationsConnector:
                 IMPORTER._libraries._libs.pop(index)
 
     def take_library_into_use(self, library_name):
+        """Takes given library into use.
+        
+        See `Take Libraries Into Use` keyword for more details.
+        """
         self._check_active_app()
         self._active_app.take_library_into_use(library_name)
         self._update_keywords_to_robot()
 
     def close_all_applications(self):
+        """Closes all the applications"""
         for alias in self._apps.keys():
             try:
                 self._apps[alias].close_application()
@@ -286,6 +314,10 @@ class RemoteApplicationsConnector:
         self._initialize()
 
     def close_application(self, alias=None):
+        """Closes application
+        
+        If `alias` is given, closes application related to the alias. 
+        Otherwise closes the active application."""
         alias = alias or self._get_active_app_alias()
         print "*TRACE* Closing application '%s'" % alias
         self._check_application_in_use(alias)
@@ -295,9 +327,7 @@ class RemoteApplicationsConnector:
             self._apps[alias].close_application()
             print "Closed application '%s'" % (alias)
         finally:
-            print self._apps
-            #TODO: Robot normalize
-            del(self._apps[alias.lower().replace(' ', '').replace('_', '')])
+            del(self._apps[alias])
 
     def _get_active_app_alias(self):
         self._check_active_app()
@@ -313,22 +343,48 @@ class RemoteApplicationsConnector:
         return kws + self._kws
 
     def run_keyword(self, name, args):
-        print "running keyword: ", name
-        if name in self._kws:
-            for method in dir(self):
-                if method.lower().replace('_', '') == name:
-                    return getattr(self, method)(*args)
+        method = self._get_method(name)
+        if method:
+            return method(*args)
         return self._active_app.run_keyword(name, args)
+
+    def _get_method(self, name):
+        if name in self._kws:
+            return getattr(self, name)
+        return None
+
+    def get_keyword_arguments(self, name):
+        method = self._get_method(name)
+        if method:
+            args, defaults, varargs = get_arg_spec(method)
+            arguments = list(args[:len(args)-len(defaults)])
+            defaults = [ '%s=%s' % (arg, default) for arg, default in zip(list(args[len(arguments):]), list(defaults)) ]
+            varargs = varargs and ['*%s' % varargs] or []
+            return arguments + defaults + varargs
+        return ['*args']
+
+    def get_keyword_documentation(self, name):
+        method = self._get_method(name)
+        if method:
+            return method.__doc__
+        return ''
 
 
 class RemoteApplications:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     _connector = RemoteApplicationsConnector()
+    __doc__ = _connector.__doc__
+
 
     def get_keyword_names(self):
         names = self._connector.get_keyword_names()
-        print "This library provides keywords: ", ', '.join(names)
         return names
 
     def run_keyword(self, name, args):
         return self._connector.run_keyword(name, args)
+
+    def get_keyword_arguments(self, name):
+        return self._connector.get_keyword_arguments(name)
+
+    def get_keyword_documentation(self, name):
+        return self._connector.get_keyword_documentation(name)
