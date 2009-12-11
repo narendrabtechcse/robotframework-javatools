@@ -4,7 +4,7 @@ import re
 import tempfile
 import time
 
-from robot.utils import NormalizedDict, timestr_to_secs
+from robot.utils import normalize, NormalizedDict, timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.namespace import IMPORTER
 from robot.libraries.BuiltIn import BuiltIn
@@ -175,9 +175,11 @@ class RemoteApplication:
 class RemoteApplicationsConnector:
     """Library for handling multiple remote applications.
 
-    RemoteApplications are 
-    Mechanism used to start can be e.g. . However, you need to 
     """
+    #TODO: Add generic information about 
+    #1) Starting Applications
+    #2) Finding and taking Libraries into use
+    #3) Starting Remote Applications
 
     _kws = ['start_application', 'application_started', 'switch_to_application',
             'close_all_applications', 'close_application', 
@@ -187,12 +189,13 @@ class RemoteApplicationsConnector:
         self._initialize()
 
     def _initialize(self):
-        self._apps = NormalizedDict(ignore=['_'])
+        self._apps = NormalizedDict()
         self._active_app = None
 
     def start_application(self, alias, command, jvm_connector_jar,
                           timeout='60 seconds', lib_dir=None, port=None):
         """Starts the application, connects to it and makes it active application.
+
         `command` is the command used to start the application from the command
         line. It can be any command that finally starts JVM. TODO: Add examples.
         `jvm_connector_jar` is the path to the jar file containing the
@@ -228,6 +231,7 @@ class RemoteApplicationsConnector:
 
     def application_started(self, alias, timeout='60 seconds', rmi_url=None):
         """Connects to started application and switches to it.
+
         `alias` is the alias name for the application. When using multiple 
         applications alias is used to switch between them with keyword `Switch 
         To Application`.
@@ -314,7 +318,7 @@ class RemoteApplicationsConnector:
         self._initialize()
 
     def close_application(self, alias=None):
-        """Closes application
+        """Closes application.
         
         If `alias` is given, closes application related to the alias. 
         Otherwise closes the active application."""
@@ -327,7 +331,7 @@ class RemoteApplicationsConnector:
             self._apps[alias].close_application()
             print "Closed application '%s'" % (alias)
         finally:
-            del(self._apps[alias])
+            del(self._apps[normalize(alias)])
 
     def _get_active_app_alias(self):
         self._check_active_app()
@@ -374,7 +378,6 @@ class RemoteApplications:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     _connector = RemoteApplicationsConnector()
     __doc__ = _connector.__doc__
-
 
     def get_keyword_names(self):
         names = self._connector.get_keyword_names()

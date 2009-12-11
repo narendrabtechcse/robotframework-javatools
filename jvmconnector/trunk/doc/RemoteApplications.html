@@ -81,16 +81,14 @@
 <h1>RemoteApplications - Documentation</h1>
 
 <h2 id="introduction">Introduction</h2>
-<p class='libdoc'>Library for handling multiple remote applications.<br />
-<br />
-RemoteApplications are Mechanism used to start can be e.g. . However, you need to</p>
+<p class='libdoc'>Library for handling multiple remote applications.</p>
 
 
 <h2>Shortcuts</h2>
 <div class='links'>
 <a href="#Application Started" title="Connects to started application and switches to it.">Application&nbsp;Started</a>&nbsp;
 <a href="#Close All Applications" title="Closes all the applications">Close&nbsp;All&nbsp;Applications</a>&nbsp;
-<a href="#Close Application" title="Closes application">Close&nbsp;Application</a>&nbsp;
+<a href="#Close Application" title="Closes application.">Close&nbsp;Application</a>&nbsp;
 <a href="#Start Application" title="Starts the application, connects to it and makes it active application.">Start&nbsp;Application</a>&nbsp;
 <a href="#Switch To Application" title="Changes the application where the keywords are executed.">Switch&nbsp;To&nbsp;Application</a>&nbsp;
 <a href="#Take Libraries Into Use" title="Takes the libraries into use at the remote application.">Take&nbsp;Libraries&nbsp;Into&nbsp;Use</a>&nbsp;
@@ -107,7 +105,9 @@ RemoteApplications are Mechanism used to start can be e.g. . However, you need t
 <tr>
   <td class="kw"><a name="Application Started"></a>Application Started</td>
   <td class="arg">alias, timeout=60 seconds, rmi_url=None</td>
-  <td class="doc">Connects to started application and switches to it. <span class="name">alias</span> is the alias name for the application. When using multiple applications alias is used to switch between them with keyword <a href="#Switch To Application" class="name">Switch To Application</a>. <span class="name">timeout</span> is the time to wait the application to be started to the point where the testing capabilities are initialized and the connection between RemoteApplications and SUT can be established. <span class="name">rmi_url</span> is url that can be used to connect to the SUT. When used locally there is usually no need to give the <span class="name">rmi_url</span>. However, when the SUT is running on other machine, the normal mechanism used to find the SUT is not enough and you need to provide the <span class="name">rmi_url</span>. In case port is not configured on remote side, you can find the <span class="name">rmi_url</span> after started the SUT using the javaagent explained in <a href="#introduction" class="name">Introduction</a>.<br />
+  <td class="doc">Connects to started application and switches to it.<br />
+<br />
+<span class="name">alias</span> is the alias name for the application. When using multiple applications alias is used to switch between them with keyword <a href="#Switch To Application" class="name">Switch To Application</a>. <span class="name">timeout</span> is the time to wait the application to be started to the point where the testing capabilities are initialized and the connection between RemoteApplications and SUT can be established. <span class="name">rmi_url</span> is url that can be used to connect to the SUT. When used locally there is usually no need to give the <span class="name">rmi_url</span>. However, when the SUT is running on other machine, the normal mechanism used to find the SUT is not enough and you need to provide the <span class="name">rmi_url</span>. In case port is not configured on remote side, you can find the <span class="name">rmi_url</span> after started the SUT using the javaagent explained in <a href="#introduction" class="name">Introduction</a>.<br />
 </td>
 </tr>
 <tr>
@@ -118,14 +118,16 @@ RemoteApplications are Mechanism used to start can be e.g. . However, you need t
 <tr>
   <td class="kw"><a name="Close Application"></a>Close Application</td>
   <td class="arg">alias=None</td>
-  <td class="doc">Closes application<br />
+  <td class="doc">Closes application.<br />
 <br />
 If <span class="name">alias</span> is given, closes application related to the alias. Otherwise closes the active application.</td>
 </tr>
 <tr>
   <td class="kw"><a name="Start Application"></a>Start Application</td>
   <td class="arg">alias, command, jvm_connector_jar, timeout=60 seconds, lib_dir=None, port=None</td>
-  <td class="doc">Starts the application, connects to it and makes it active application. <span class="name">command</span> is the command used to start the application from the command line. It can be any command that finally starts JVM. TODO: Add examples. <span class="name">jvm_connector_jar</span> is the path to the jar file containing the jvm_connector. <span class="name">libdir</span> is needed always when Java process is started with Java Web Start or in case libraries are not in the CLASSPATH. It is path to the directory containing jar files which are required for running the tests. In another words these jar files should contain libraries that you want to remotely take into use (packaged in jars). In case you are using 1.5 Java, you should package all these libraries to the <span class="name">jvm_connector_jar</span>. <span class="name">port</span> is port where the SUT starts server which provides taking libraries into use and executing the keywords. <b>Note:</b> If the application is used to start other applications, port should NOT be used.<br />
+  <td class="doc">Starts the application, connects to it and makes it active application.<br />
+<br />
+<span class="name">command</span> is the command used to start the application from the command line. It can be any command that finally starts JVM. TODO: Add examples. <span class="name">jvm_connector_jar</span> is the path to the jar file containing the jvm_connector. <span class="name">libdir</span> is needed always when Java process is started with Java Web Start or in case libraries are not in the CLASSPATH. It is path to the directory containing jar files which are required for running the tests. In another words these jar files should contain libraries that you want to remotely take into use (packaged in jars). In case you are using 1.5 Java, you should package all these libraries to the <span class="name">jvm_connector_jar</span>. <span class="name">port</span> is port where the SUT starts server which provides taking libraries into use and executing the keywords. <b>Note:</b> If the application is used to start other applications, port should NOT be used.<br />
 </td>
 </tr>
 <tr>
@@ -154,7 +156,7 @@ See <a href="#Take Libraries Into Use" class="name">Take Libraries Into Use</a> 
 <p class="footer">
 Altogether 7 keywords.<br />
 Generated by <a href="http://code.google.com/p/robotframework/wiki/LibraryDocumentationTool">libdoc.py</a>
-on 2009-12-10 18:41:53.
+on 2009-12-11 05:46:56.
 </p>
 </body>
 </html>
