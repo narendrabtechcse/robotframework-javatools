@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import glob
 import unittest
 import os
 import sys
@@ -61,8 +62,19 @@ def add_dependencies_to_path():
 
     dependencies = [classes, test_classes] + open('dependencies.txt', 'rb').read().splitlines()
 
-    os.environ['CLASSPATH'] = os.pathsep.join(dependencies)
+
+    os.environ['CLASSPATH'] = os.pathsep.join(dependencies + [get_jvmconnector_jar()])
     os.environ['PYTHONPATH'] = os.pathsep.join(sys.path)
+
+def get_jvmconnector_jar():
+    pattern = os.path.join(os.path.dirname(__file__),
+                           'target', '*-jar-with-dependencies.jar')
+    paths = glob.glob(pattern)
+    if paths:
+        paths.sort()
+        return paths[-1]
+    else:
+        raise RuntimeError('Please run "mvn assembly:assembly first')
 
 def get_python_path():
     for path in sys.path:

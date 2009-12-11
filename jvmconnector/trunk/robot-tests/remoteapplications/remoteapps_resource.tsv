@@ -11,12 +11,12 @@ Take Application Into Use
 Start Application
 	[Arguments]	${name}
 	RemoteApplications.Start Application	${name}
-	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}	${JAVA_AGENT_JAR}
+	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}
 
 Start Web Start Application
 	[Arguments]	${name}	${jnlp}=${jnlpWithMainClassUrl}
 	RemoteApplications.Start Application	${name}
-	...	javaws ${jnlp}	${JAVA_AGENT_JAR}	30 secs	${JAR DIR}
+	...	javaws ${jnlp}	30 secs	${JAR DIR}
 
 Application Should Be In Use
 	[Arguments]	${name}

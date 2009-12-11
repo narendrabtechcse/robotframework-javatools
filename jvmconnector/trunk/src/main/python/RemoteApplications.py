@@ -4,6 +4,10 @@ import re
 import tempfile
 import time
 
+from java.util.jar import JarFile
+from java.util.zip import ZipException
+from java.io import IOException
+
 from robot.utils import normalize, NormalizedDict, timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.namespace import IMPORTER
@@ -50,7 +54,6 @@ def get_arg_spec(method):
 
 class RemoteLibrary:
 
-    #TODO: timeout?
     def __init__(self, uri):
         self._uri = uri
         self._open_connection()
@@ -61,21 +64,16 @@ class RemoteLibrary:
 
     def get_keyword_names(self):
         if self._keywords is None:
-            #FIXME: Normalize
             self._keywords = list(self._remote_lib.getKeywordNames())
         return self._keywords
 
     def has_keyword(self, name):
-        #FIXME: Normalize
         return name in self._keywords
 
     def run_keyword(self, name, args):
-        try:
-            return self._remote_lib.runKeyword(name, args)
-        except RemoteAccessException:
-            print '*DEBUG* Reconnecting to remote library.'
-            self._open_connection()
-            return self._remote_lib.runKeyword(name, args)
+        #TODO: Add polling to RemoteLibrary to make it easier to see whether 
+        #there is connection or not. If not,  reconnect.
+        return self._remote_lib.runKeyword(name, args)
 
 
 class RemoteApplication:
@@ -192,27 +190,26 @@ class RemoteApplicationsConnector:
         self._apps = NormalizedDict()
         self._active_app = None
 
-    def start_application(self, alias, command, jvm_connector_jar,
-                          timeout='60 seconds', lib_dir=None, port=None):
+    def start_application(self, alias, command, timeout='60 seconds', 
+                          lib_dir=None, port=None):
         """Starts the application, connects to it and makes it active application.
 
         `command` is the command used to start the application from the command
         line. It can be any command that finally starts JVM. TODO: Add examples.
-        `jvm_connector_jar` is the path to the jar file containing the
-        jvm_connector.
+        
         `libdir` is needed always when Java process is started with Java Web 
         Start or in case libraries are not in the CLASSPATH. It is path to the 
         directory containing jar files which are required for running the tests.
         In another words these jar files should contain libraries that you want
         to remotely take into use (packaged in jars). In case you are using 1.5
         Java, you should package all these libraries to the `jvm_connector_jar`.
+        
         `port` is port where the SUT starts server which provides taking
         libraries into use and executing the keywords. *Note:* If the 
         application is used to start other applications, port should NOT be used.
         """
         self._alias_in_use(alias)
-        os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(jvm_connector_jar,
-                                                                lib_dir, port)
+        os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(lib_dir, port)
         OperatingSystem().start_process(command)
         os.environ['JAVA_TOOL_OPTIONS'] = ''
         rmi_url = port and 'rmi://localhost:%s/robotrmiservice' % port or None
@@ -222,12 +219,32 @@ class RemoteApplicationsConnector:
         if self._apps.has_key(alias):
             raise RuntimeError("Application with alias '%s' already in use" % alias)
 
-    def _get_java_agent(self, jvm_connector_jar, lib_dir, port):
+    def _get_java_agent(self, lib_dir, port):
         jars = glob.glob('%s%s*.jar' % (lib_dir, os.path.sep))
         print "*TRACE* found following library jars: %s" % (jars)
+        jvm_connector_jar = self._get_jvm_connector_jar()
         port = port and ['PORT=%s' % port] or []
         return '-javaagent:%s=%s' % (jvm_connector_jar, 
                                      os.path.pathsep.join(port + jars))
+
+    def _get_jvm_connector_jar(self):
+        for jar_file in self._get_jars_from_classpath():
+            try:
+                premain_class = JarFile(jar_file).getManifest().getMainAttributes().getValue('Premain-Class')
+            except ZipException, IOExcetion:
+                continue
+            if premain_class == 'org.robotframework.jvmconnector.agent.RmiServiceAgent':
+                print "*TRACE* Found jvm_connector jar '%s'" % jar_file
+                return jar_file
+        raise RuntimeError("Could not find jvmconnector jarfile from CLASSPATH")
+
+    def _get_jars_from_classpath(self):
+        jars = []
+        if os.environ.has_key('CLASSPATH'):
+            jars = jars + os.environ['CLASSPATH'].split(os.path.pathsep)
+        if os.environ.has_key('classpath'):
+            jars = jars + os.environ['classpath'].split(os.path.pathsep)
+        return jars
 
     def application_started(self, alias, timeout='60 seconds', rmi_url=None):
         """Connects to started application and switches to it.
@@ -235,9 +252,11 @@ class RemoteApplicationsConnector:
         `alias` is the alias name for the application. When using multiple 
         applications alias is used to switch between them with keyword `Switch 
         To Application`.
+        
         `timeout` is the time to wait the application to be started to the point
         where the testing capabilities are initialized and the connection between
         RemoteApplications and SUT can be established.
+        
         `rmi_url` is url that can be used to connect to the SUT. When used
         locally there is usually no need to give the `rmi_url`. However, when
         the SUT is running on other machine, the normal mechanism used to find
