@@ -28,6 +28,7 @@ class InvalidURLException(Exception):
 
 DATABASE = os.path.join(tempfile.gettempdir(), 'launcher.txt')
 
+
 def get_arg_spec(method):
     """Returns info about args in a tuple (args, defaults, varargs)
 
@@ -38,15 +39,12 @@ def get_arg_spec(method):
     # Code below is based on inspect module's getargs and getargspec 
     # methods. See their documentation and/or source for more details. 
     func = method.im_func
-    first_arg = 1        # this drops 'self' from methods' args
     co = func.func_code
-    nargs = co.co_argcount
-    args = co.co_varnames[first_arg:nargs]
-    defaults = func.func_defaults
-    if defaults is None:
-        defaults = ()
+    number_of_args = co.co_argcount
+    args = co.co_varnames[1:number_of_args] #drops 'self' from methods' args
+    defaults = func.func_defaults or ()
     if co.co_flags & 4:                      # 4 == CO_VARARGS
-        varargs =  co.co_varnames[nargs]
+        varargs =  co.co_varnames[number_of_args]
     else:
         varargs = None
     return args, defaults, varargs
@@ -171,20 +169,56 @@ class RemoteApplication:
 
 
 class RemoteApplicationsConnector:
-    """Library for handling multiple remote applications.
-
     """
-    #TODO: Add generic information about 
-    #1) Starting Applications
-    #2) Finding and taking Libraries into use
-    #3) Starting Remote Applications
 
-    _kws = ['start_application', 'application_started', 'switch_to_application',
-            'close_all_applications', 'close_application', 
-            'take_libraries_into_use','take_library_into_use']
+    RemoteApplications library is used for launching Java applications in a
+    separate process and taking Robot Framework (RF) libraries into use to
+    operate on them. This is useful when application does something that cannot
+    be tested with RF when running inside the same JVM. Such cases are when
+    System.exit is called in the SUT, when multiple applications running in
+    separate JVMs need to be tested in parallel or when application is started
+    using Java Web Start.
+
+    Using RemoteApplications requires that jvm_connector jar file is in
+    CLASSPATH environment variable before starting RF test execution. 
+    RemoteApplications works with Java 1.5 and newer. Following paragraphs 
+    contain generic information about RemoteApplications library. See also 
+    keywords' documentation for more detailed information.
+
+    Application can be started using RemoteApplications or any other way e.g.
+    using SeleniumLibrary to start Java Web Start application. When the
+    application is started using RemoteApplications, command used to start the
+    application JVM is given to `Start Application` keyword. In case application
+    is started otherwise, RemoteApplications needs to be informed about started
+    application so that it can establish connection to it. This is achieved
+    using `Application Started` keyword. `Application Started` keyword can be
+    also used to connect application started on remote machine.
+
+    After the application is started, there is need to take the needed test 
+    libraries into use. That is done using `Take Library Into Use` and `Take 
+    Libraries Into Use` keywords. After that, keywords are ready to be used.
+    Note that you need to take the libraries into use for every application.
+
+    In case multiple applications are started with RemoteApplications library,
+    `Switch To Application` keyword can be used to define which application is
+    currently active. Keywords handle always the currently active application.
+
+    `Close Application` is used to close the application. In case application is
+    closed using some other keyword, RemoteApplications library needs to be
+    informed by using `Close Application` keyword. In case you want to close all
+    applications, `Close All Applications` keyword can be used.
+
+    Note: RemoteApplications cannot be taken into use with 'WITH NAME'
+    functionality. However, there should not be need for that as the
+    RemoteApplications library can handle multiple applications. 
+    """
 
     def __init__(self):
         self._initialize()
+        rf_api_keywords = ['run_keyword', 'get_keyword_documentation',
+                           'get_keyword_arguments', 'get_keyword_names']
+        self._kws = [ attr for attr in dir(self) if not attr.startswith('_') \
+                     and attr not in rf_api_keywords ]
 
     def _initialize(self):
         self._apps = NormalizedDict()
@@ -195,18 +229,32 @@ class RemoteApplicationsConnector:
         """Starts the application, connects to it and makes it active application.
 
         `command` is the command used to start the application from the command
-        line. It can be any command that finally starts JVM. TODO: Add examples.
+        line. It can be any command that finally starts JVM e.g. 'java -jar
+        my_application.jar', javaws http://my.domain.fi/my_application.jnlp or 
+        'start_my_app.bat'.
+
+        `lib_dir` is path to the directory containing all the test library jar
+        files which are required for running the tests. `lib_dir` is needed in
+        case libraries are not in the CLASSPATH. When application is started
+        using Java Web Start and Java version is 1.6 or higher, `lib_dir` is 
+        mandatory. In case you are using 1.5 Java, you should package all these
+        libraries to the `jvm_connector_jar` which is set to CLASSPATH before
+        starting the test execution.
+
+        When Java Web Start is used to start the application, there is need to
+        allow permissions for the testing capabilities. Easiest way to do that
+        is to add file .java.policy with following content to $HOME directory or
+        %USERPROFILE% directory on Windows:
+        | _grant {_
+        |     _permission java.security.AllPermission;_
+        | _};_
         
-        `libdir` is needed always when Java process is started with Java Web 
-        Start or in case libraries are not in the CLASSPATH. It is path to the 
-        directory containing jar files which are required for running the tests.
-        In another words these jar files should contain libraries that you want
-        to remotely take into use (packaged in jars). In case you are using 1.5
-        Java, you should package all these libraries to the `jvm_connector_jar`.
-        
-        `port` is port where the SUT starts server which provides taking
-        libraries into use and executing the keywords. *Note:* If the 
-        application is used to start other applications, port should NOT be used.
+        `port` defines the port in which the testing capabilities are started
+        on the application. By default port is selected randomly from available
+        ports. *NOTE:* If the application is used to start other applications
+        and those applications should be controlled with RemoteApplications, 
+        port should NOT be given.
+
         """
         self._alias_in_use(alias)
         os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(lib_dir, port)
@@ -262,8 +310,7 @@ class RemoteApplicationsConnector:
         the SUT is running on other machine, the normal mechanism used to find
         the SUT is not enough and you need to provide the `rmi_url`. In case
         port is not configured on remote side, you can find the `rmi_url` after
-        started the SUT using the javaagent explained in `Introduction`.
-        
+        started the SUT using the javaagent. TODO: More details needed.
         """
         self._alias_in_use(alias)
         app = RemoteApplication()
@@ -287,7 +334,7 @@ class RemoteApplicationsConnector:
         """Takes the libraries into use at the remote application.
         
         `library_names` contains all the libraries that you want to take into
-        use on the remote side. *Note:* See 'Start Application' for information
+        use on the remote side. *NOTE:* See 'Start Application' for information
         how to provide library jar files."""
         self._check_active_app()
         self._active_app.take_libraries_into_use(*library_names)
@@ -339,7 +386,7 @@ class RemoteApplicationsConnector:
     def close_application(self, alias=None):
         """Closes application.
         
-        If `alias` is given, closes application related to the alias. 
+        If `alias` is given, closes application related to the alias.
         Otherwise closes the active application."""
         alias = alias or self._get_active_app_alias()
         print "*TRACE* Closing application '%s'" % alias
