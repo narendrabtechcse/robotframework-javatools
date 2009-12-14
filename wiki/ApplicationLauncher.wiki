@@ -115,7 +115,7 @@ Robot Agent works both with java webstart applications and standalone java appli
 
 *N.B:* Under java 1.5 you have to package the jvmconnector.jar and all your testing dependencies into one big jar, you cannot provide the testing jars as arguments to the agent due to a limitation in java 1.5's api.
 
-2. When testing java webstart applications a [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/robot-tests/allow_libraries.policy permission file that allows the agent to be used] must be copied to *%HOME%\.java.policy*
+2. When testing java webstart applications a [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/robot-tests/resources/allow_libraries.policy permission file that allows the agent to be used] must be copied to *%HOME%\.java.policy*
 
 3. Start testing.
 
