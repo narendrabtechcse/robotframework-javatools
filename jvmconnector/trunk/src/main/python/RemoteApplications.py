@@ -180,7 +180,7 @@ class RemoteApplicationsConnector:
     using Java Web Start.
 
     Using RemoteApplications requires that jvm_connector jar file is in
-    CLASSPATH environment variable before starting RF test execution. 
+    _CLASSPATH_ environment variable before starting RF test execution. 
     RemoteApplications works with Java 1.5 and newer. Following paragraphs 
     contain generic information about RemoteApplications library. See also 
     keywords' documentation for more detailed information.
@@ -208,9 +208,36 @@ class RemoteApplicationsConnector:
     informed by using `Close Application` keyword. In case you want to close all
     applications, `Close All Applications` keyword can be used.
 
-    Note: RemoteApplications cannot be taken into use with 'WITH NAME'
+    *NOTE:* RemoteApplications cannot be taken into use with _WITH NAME_
     functionality. However, there should not be need for that as the
     RemoteApplications library can handle multiple applications. 
+
+
+    *ROBOT AGENT*
+
+    Sometimes you cannot start the application locally from command line. In
+    that case you need to use Robot Agent which will start testing capabilities
+    to the started JVM. Robot Agent works both with java webstart applications
+    and standalone java applications. It is taken into use by setting
+    environment variable _JAVA_TOOL_OPTIONS_ with value
+    _-javaagent:${jvmconnector.jar}=${testing_dependencies_dir}[:PORT=${port}]_
+    where _${jvmconnector.jar}_ is the path to the jvmconnector package and
+    _${testing_dependencies_dir}_ is the path to the directory containing the
+    test library jars. Optionally you can give the _:PORT=${port}_ where the
+    _:PORT=_ is separator, and _${port}_ defines the port number where the
+    service providing the testing capabilities is started.
+
+    When Robot Agent is used (RemoteApplications uses it internally) and the
+    port parameter is not given, rmi_url from where the testing capabilities
+    can be accessed is written to file
+    _%HOME/.robotframework/jvmconnector/launched.txt_ or to file
+    _%APPDATA%\\RobotFramework\\jvmconnector\\launched.txt_ on Windows. In case
+    application is started on remote machine, this rmi_url needs to be given to
+    `Application Started` keyword.
+
+    *NOTE:* Under java 1.5 you have to package the jvmconnector.jar and all your
+    testing dependencies into one big jar, you cannot provide the testing jars
+    as arguments to the agent due to a limitation in Java 1.5's API.
     """
 
     def __init__(self):
@@ -251,15 +278,17 @@ class RemoteApplicationsConnector:
         
         `port` defines the port in which the testing capabilities are started
         on the application. By default port is selected randomly from available
-        ports. *NOTE:* If the application is used to start other applications
+        ports.
+        
+        *NOTE:* If the application is used to start other applications
         and those applications should be controlled with RemoteApplications, 
         port should NOT be given.
-
         """
         self._alias_in_use(alias)
+        orig_java_tool_options = self._get_java_tool_options()
         os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(lib_dir, port)
         OperatingSystem().start_process(command)
-        os.environ['JAVA_TOOL_OPTIONS'] = ''
+        os.environ['JAVA_TOOL_OPTIONS'] = orig_java_tool_options
         rmi_url = port and 'rmi://localhost:%s/robotrmiservice' % port or None
         self.application_started(alias, timeout, rmi_url)
 
@@ -267,13 +296,17 @@ class RemoteApplicationsConnector:
         if self._apps.has_key(alias):
             raise RuntimeError("Application with alias '%s' already in use" % alias)
 
+    def _get_java_tool_options(self):
+        if os.environ.has_key('JAVA_TOOL_OPTIONS'):
+            return os.environ['JAVA_TOOL_OPTIONS']
+        return ''
+
     def _get_java_agent(self, lib_dir, port):
-        jars = glob.glob('%s%s*.jar' % (lib_dir, os.path.sep))
-        print "*TRACE* found following library jars: %s" % (jars)
+        lib_dir = lib_dir or ''
         jvm_connector_jar = self._get_jvm_connector_jar()
         port = port and ['PORT=%s' % port] or []
         return '-javaagent:%s=%s' % (jvm_connector_jar, 
-                                     os.path.pathsep.join(port + jars))
+                                     os.path.pathsep.join(port + [lib_dir]))
 
     def _get_jvm_connector_jar(self):
         for jar_file in self._get_jars_from_classpath():
@@ -300,17 +333,18 @@ class RemoteApplicationsConnector:
         `alias` is the alias name for the application. When using multiple 
         applications alias is used to switch between them with keyword `Switch 
         To Application`.
-        
+
         `timeout` is the time to wait the application to be started to the point
-        where the testing capabilities are initialized and the connection between
-        RemoteApplications and SUT can be established.
-        
-        `rmi_url` is url that can be used to connect to the SUT. When used
-        locally there is usually no need to give the `rmi_url`. However, when
-        the SUT is running on other machine, the normal mechanism used to find
-        the SUT is not enough and you need to provide the `rmi_url`. In case
-        port is not configured on remote side, you can find the `rmi_url` after
-        started the SUT using the javaagent. TODO: More details needed.
+        where the testing capabilities are initialized and the connection to
+        application can be established.
+
+        `rmi_url` is url that can be used to connect to the application. When
+        used locally there is usually no need to give the `rmi_url`. However,
+        when the application is running on remote machine, the file based
+        mechanism used to find the application is not enough and you need to
+        provide the `rmi_url`. Format of the `rmi_url` is 
+        'rmi://host:port/robotrmiservice'. See from `Introduction` about
+        Robot Agent.
         """
         self._alias_in_use(alias)
         app = RemoteApplication()
