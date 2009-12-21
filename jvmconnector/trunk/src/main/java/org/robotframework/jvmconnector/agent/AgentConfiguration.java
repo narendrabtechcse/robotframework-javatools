@@ -17,7 +17,6 @@
 
 package org.robotframework.jvmconnector.agent;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class AgentConfiguration {
     }
 
     private void parse(String arguments) {
-        for (String item : arguments.split(File.pathSeparator)) {
+        for (String item : arguments.split(":")) {
             if (item.toLowerCase().contains("port"))
                 port = Integer.valueOf(item.substring(5));
             else

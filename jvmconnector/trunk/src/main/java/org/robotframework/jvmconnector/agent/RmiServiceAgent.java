@@ -16,17 +16,15 @@
 
 package org.robotframework.jvmconnector.agent;
 
-import java.io.File;
 import java.lang.instrument.Instrumentation;
 import java.util.List;
 import java.util.jar.JarFile;
 
+import org.robotframework.jvmconnector.common.DataBasePaths;
 import org.robotframework.jvmconnector.server.RmiService;
 
 public class RmiServiceAgent {
-    private static String tmpDir = System.getProperty("java.io.tmpdir");
-    private static String fileSeparator = File.separator;
-
+    private static String launched = new DataBasePaths(true).getLaunchedFile();
     private static ClassPathAppenderFactory appenderFactory = new ClassPathAppenderFactory();
 
     public static void premain(String agentArguments, Instrumentation inst) {
@@ -61,6 +59,6 @@ public class RmiServiceAgent {
         if (port != null)
             new RmiService().start(port);
         else
-            new RmiService().start(tmpDir + fileSeparator + "launcher.txt");
+            new RmiService().start(launched);
     }
 }
