@@ -11,4 +11,4 @@ Start Application
 	[Arguments]	${name}
 	Start Simple Application	${name}
 	Take Libraries Into Use	${JVM CONNECTOR LIB}	JavaTools
-	Application Should Have Property	${name}
+	Application Should Be In Use	${name}

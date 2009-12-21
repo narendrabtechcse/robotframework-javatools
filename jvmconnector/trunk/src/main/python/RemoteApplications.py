@@ -4,7 +4,7 @@ import time
 
 from java.util.jar import JarFile
 from java.util.zip import ZipException
-from java.io import IOException
+from java.io import IOException, FileNotFoundException
 
 from robot.utils import eq, normalize, NormalizedDict, timestr_to_secs
 from robot.running import NAMESPACES
@@ -402,9 +402,11 @@ class RemoteApplicationsConnector:
 
     def _get_jvm_connector_jar(self):
         for jar_file in self._get_jars_from_classpath():
+            if not os.path.exists(jar_file):
+                continue
             try:
                 premain_class = JarFile(jar_file).getManifest().getMainAttributes().getValue('Premain-Class')
-            except ZipException, IOException:
+            except (ZipException, IOException, FileNotFoundException):
                 continue
             if premain_class == 'org.robotframework.jvmconnector.agent.RmiServiceAgent':
                 print "*TRACE* Found jvm_connector jar '%s'" % jar_file

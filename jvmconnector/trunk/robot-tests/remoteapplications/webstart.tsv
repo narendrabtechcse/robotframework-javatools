@@ -25,8 +25,8 @@ Select Application's Main Window
 	waitUntilKeywordSucceeds	5	0.2	selectMainWindow
 
 Close Both Webstart Applications
-	Close	Web Start 1
 	Close	Web Start 2
+	Close	Web Start 1
 
 Close	[Arguments]	${name}
 	Switch To Application	${name}
