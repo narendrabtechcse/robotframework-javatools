@@ -1,0 +1,21 @@
+*** Settings ***
+Library	OperatingSystem
+Suite Setup	Run Tests	_start_applications
+
+
+*** Variables ***
+${RUNNER}	${CURDIR}${/}..${/}..${/}run_tests.py
+
+
+*** Test Cases ***
+
+Connect To Previously Started Application/Applications Using Start Application Keyword & Application Started Keyword
+	Run Tests	_connect_to_previously_started_application
+
+*** Keywords ***
+Run Tests
+	[Arguments]	${suite}
+	${rc}	${output} =	Run And Return Rc And Output	${RUNNER} --log ${suite}_log.html --report ${suite}_report.html --output ${suite}_output.xml ${CURDIR}${/}${suite}.tsv
+	Log	${output}
+	Should Be Equal As Numbers	${rc}	0	Running tests failed, see log for more details.	no values
+	

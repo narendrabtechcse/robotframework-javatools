@@ -3,27 +3,28 @@ Library	RemoteApplications
 Resource	../resources/common.tsv
 
 *** Keyword ***
-Take Application Into Use
-	[Arguments]	${name}
-	Start Application	${name}
-	Take Libraries Into Use	${JVM CONNECTOR LIB}	JavaTools
-
-Start Application
-	[Arguments]	${name}
+Start Simple Application
+	[Arguments]	${name}	${port}=
 	RemoteApplications.Start Application	${name}
-	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}
+	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}	5 secs	${port}
 
 Start Web Start Application
 	[Arguments]	${name}	${jnlp}=${jnlpWithMainClassUrl}
 	RemoteApplications.Start Application	${name}
 	...	javaws ${jnlp}	30 secs	${JAR DIR}
 
-Application Should Be In Use
+Application Should Be Running
 	[Arguments]	${name}
-	${is running} =	applicationIsRunning
+	Take Library Into Use	${JVM CONNECTOR LIB}
+	${is running} =	Application Is Running
 	Should Be True	${is running}	Application '${name}' is not running
 
-Application Should Have Property
+Application Should Not Be Running
+	[Arguments]	${name}
+	Run Keyword And Expect Error	No application selected	Application Is Running
+
+Application Should Be In Use
 	[Arguments]	${expected Name}
+	Take Library Into Use	JavaTools
 	${actual name} =	Get System Property	property.name
 	Should Be Equal	${expected name}	${actual name}

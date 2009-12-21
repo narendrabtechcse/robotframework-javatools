@@ -1,6 +1,6 @@
 *** Setting ***
 
-Suite Setup	Take Application Into Use	App1
+Suite Setup	Start Simple Application	App1
 Resource	remoteapps_resource.tsv
 
 
