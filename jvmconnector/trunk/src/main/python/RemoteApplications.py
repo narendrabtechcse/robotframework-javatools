@@ -360,6 +360,11 @@ class RemoteApplicationsConnector:
         *NOTE:* If the application is used to start other applications
         and those applications should be controlled with RemoteApplications, 
         port should NOT be given.
+        
+        To access application started in previous test run, you can set
+        `connect_to_previously_launched_applications` when `Importing` library.
+        If the application is available, this keyword connects to it and does
+        NOT run the command for starting it.
         """
         self._alias_in_use(alias)
         self._clear_launched_apps_db(port)
@@ -439,6 +444,11 @@ class RemoteApplicationsConnector:
         provide the `rmi_url`. Format of the `rmi_url` is 
         'rmi://host:port/robotrmiservice'. See from `Introduction` about
         Robot Agent.
+
+        To access application started in previous test run, you can set
+        `connect_to_previously_launched_applications` when `Importing` library.
+        If the previously started application is available, this keyword 
+        connects to it in case the 'rmi_url' is not given.
         """
         self._alias_in_use(alias)
         app = RemoteApplication()
@@ -583,9 +593,17 @@ class RemoteApplications:
         applications that were started in previous test execution. By default 
         this feature is not in use. It can be taken into use by giving any value
         to library initialization like shown in below examples:
-        
+
         | Library | RemoteApplications | # Does not connect to previously started applications |
         | Library | RemoteApplications | Reconnect | # Connects to previously started applications |
+
+        Setting `connect_to_previously_launched_applications` fastens the test
+        case development as you can open the application once, and after that,
+        re-execute the test against the opened application without restarting
+        it. Obviously, you need to disable closing the application to achieve
+        this. Reconnecting can also be achieved by using fixed `rmi_url`, either
+        by giving `port` argument to `Start Application` keyword or `rmi_url` to
+        `Application Started` keyword.
         """
         self._connector.connect(connect_to_previously_launched_applications)
 
