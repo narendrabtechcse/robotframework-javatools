@@ -22,6 +22,7 @@ from org.springframework.remoting.rmi import RmiProxyFactoryBean
 from org.robotframework.jvmconnector.server import *
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 from org.robotframework.jvmconnector.launch.jnlp import JnlpEnhancer
+from org.robotframework.jvmconnector.common import DataBasePaths
 
 from robot.libraries.OperatingSystem import OperatingSystem
 from robot.libraries.BuiltIn import BuiltIn
@@ -61,7 +62,7 @@ class RmiWrapper:
 class InvalidURLException(Exception):
     pass
 
-DATABASE = path.join(gettempdir(), 'launcher.txt')
+DATABASE = DataBasePaths().getLaunchedFile()
 
 class ApplicationLauncher:
     """A library for starting java application or Java Webstart application and importing
