@@ -442,7 +442,7 @@ class RemoteApplicationsConnector:
         when the application is running on remote machine, the file based
         mechanism used to find the application is not enough and you need to
         provide the `rmi_url`. Format of the `rmi_url` is 
-        'rmi://host:port/robotrmiservice'. See from `Introduction` about
+        'rmi://host:port/robotrmiservice'. See from `Introduction` info about
         Robot Agent.
 
         To access application started in previous test run, you can set
