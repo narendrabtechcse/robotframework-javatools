@@ -1,14 +1,12 @@
-import glob
 import os
 import re
-import tempfile
 import time
 
 from java.util.jar import JarFile
 from java.util.zip import ZipException
 from java.io import IOException
 
-from robot.utils import normalize, NormalizedDict, timestr_to_secs
+from robot.utils import eq, normalize, NormalizedDict, timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.namespace import IMPORTER
 from robot.libraries.BuiltIn import BuiltIn
@@ -20,13 +18,10 @@ from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 from org.robotframework.jvmconnector.server import RmiInfoStorage, LibraryImporter
-
+from org.robotframework.jvmconnector.common import DataBasePaths
 
 class InvalidURLException(Exception):
     pass
-
-
-DATABASE = os.path.join(tempfile.gettempdir(), 'launcher.txt')
 
 
 def get_arg_spec(method):
@@ -70,24 +65,99 @@ class RemoteLibrary:
 
     def run_keyword(self, name, args):
         #TODO: Add polling to RemoteLibrary to make it easier to see whether 
-        #there is connection or not. If not,  reconnect.
+        #there is connection or not. If not, reconnect.
         return self._remote_lib.runKeyword(name, args)
+
+
+class Applications:
+    _database = DataBasePaths(True).getConnectedFile()
+
+    def __init__(self):
+        self._apps = NormalizedDict()
+        self._old_apps = NormalizedDict()
+        for alias, url in self._get_aliases_and_urls_from_db():
+            self._old_apps[alias] = url
+
+    def _get_aliases_and_urls_from_db(self):
+        items = []
+        for connection in self._read_lines(): 
+            items.append(connection.split('\t'))
+        return items
+
+    def _read_lines(self):
+        if os.path.exists(self._database):
+            f = open(self._database, 'rb')
+            data = f.read().splitlines()
+            f.close()
+            return data
+        return []
+
+    def add(self, alias, app):
+        self._apps[alias] = app
+        self._old_apps[alias] = app.rmi_url
+        self._store()
+
+    def _store(self):
+        data = ['%s\t%s' % (alias, url) for alias, url in self._old_apps.items()]
+        self._write('\n'.join(data))
+        print "*TRACE* Stored to connected applications database: ", data
+
+    def _write(self, data):
+        f = open(self._database, 'wb')
+        f.write(data)
+        f.close()
+
+    def has_connected_to_application(self, alias):
+        return self._apps.has_key(alias)
+
+    def get_application(self, alias):
+        return self._apps[alias]
+
+    def get_applications(self):
+        return self._apps.values()
+
+    def get_aliases(self):
+        return self._apps.keys()
+
+    def delete(self, alias):
+        del(self._apps[normalize(alias)])
+        del(self._old_apps[normalize(alias)])
+        self._store()
+
+    def delete_all_connected(self):
+        for alias in self._apps.keys():
+            self.delete(alias)
+
+    def get_alias_for(self, application):
+        for alias, app in self._apps.items():
+            if app == application:
+                return alias
+        return None
+
+    def get_url(self, alias):
+        for name, url in self._get_aliases_and_urls_from_db():
+            if eq(name, alias):
+                return url
+        return None
 
 
 class RemoteApplication:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    _database = DataBasePaths().getLaunchedFile()
 
     def __init__(self):
         self._libs = []
+        self.rmi_url = None
         self._rmi_client = None
-        self._alias = None
+        self.alias = None
 
     def application_started(self, alias=None, timeout='60 seconds', rmi_url=None):
         if self._rmi_client:
             raise RuntimeError("Application already connected")
-        self._alias = alias
+        self.alias = alias
         timeout = timestr_to_secs(timeout or '60 seconds')
         self._rmi_client = self._connect_to_base_rmi_service(alias, timeout, rmi_url)
+        print "*INFO* Connected to remote service at '%s'" % self.rmi_url
 
     def _connect_to_base_rmi_service(self, alias, timeout, rmi_url): 
         start_time = time.time()
@@ -102,8 +172,7 @@ class RemoteApplication:
         self._could_not_connect(alias)
 
     def _retrieve_base_rmi_url(self, url):
-        #TODO: Get from started apps DB
-        return url or RmiInfoStorage(DATABASE).retrieve()
+        return url or RmiInfoStorage(self._database).retrieve()
 
     def _create_rmi_client(self, url):
         if not re.match('rmi://[^:]+:\d{1,5}/.*', url):
@@ -116,9 +185,9 @@ class RemoteApplication:
         return rmi_client
 
     def _save_base_url_and_clean_db(self, url):
-        self._rmi_url = url
-        if os.path.exists(DATABASE):
-            os.remove(DATABASE)
+        self.rmi_url = url
+        if os.path.exists(self._database):
+            os.remove(self._database)
 
     def _could_not_connect(self, alias):
         alias = alias or ''
@@ -138,14 +207,15 @@ class RemoteApplication:
 
     def _check_connection(self):
         if self._rmi_client is None:
-            raise RuntimeError("No connection established. Use keyword " +
-                               "'Application Started' before this keyword.")
+            raise RuntimeError("No connection established. Use keyword " + 
+                               "'Start Application' or 'Application Started' " +
+                               "before this keyword.")
 
     def _import_remote_library(self, library_name): 
         try:
             return self._rmi_client.getObject().importLibrary(library_name)
         except (BeanCreationException, RemoteAccessException):
-            self._could_not_connect(self._alias)
+            self._could_not_connect(self.alias)
 
     def close_application(self):
         self._check_connection()
@@ -159,6 +229,7 @@ class RemoteApplication:
     def get_keyword_names(self):
         kws = []
         for lib in self._libs:
+            #FIXME: Handle duplicate keyword names
             kws.extend(lib.get_keyword_names())
         return kws
 
@@ -239,17 +310,23 @@ class RemoteApplicationsConnector:
     testing dependencies into one big jar, you cannot provide the testing jars
     as arguments to the agent due to a limitation in Java 1.5's API.
     """
+    _database = DataBasePaths().getLaunchedFile()
 
     def __init__(self):
         self._initialize()
-        rf_api_keywords = ['run_keyword', 'get_keyword_documentation',
-                           'get_keyword_arguments', 'get_keyword_names']
+        ignore_methods = ['run_keyword', 'get_keyword_documentation',
+                           'get_keyword_arguments', 'get_keyword_names',
+                           'connect']
         self._kws = [ attr for attr in dir(self) if not attr.startswith('_') \
-                     and attr not in rf_api_keywords ]
+                     and attr not in ignore_methods ]
+        self._use_previously_launched = False
 
     def _initialize(self):
-        self._apps = NormalizedDict()
+        self._apps = Applications()
         self._active_app = None
+
+    def connect(self, connect_to_previously_started_applications):
+        self._use_previously_launched = connect_to_previously_started_applications
 
     def start_application(self, alias, command, timeout='60 seconds', 
                           lib_dir=None, port=None):
@@ -285,16 +362,26 @@ class RemoteApplicationsConnector:
         port should NOT be given.
         """
         self._alias_in_use(alias)
-        orig_java_tool_options = self._get_java_tool_options()
-        os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(lib_dir, port)
-        OperatingSystem().start_process(command)
-        os.environ['JAVA_TOOL_OPTIONS'] = orig_java_tool_options
-        rmi_url = port and 'rmi://localhost:%s/robotrmiservice' % port or None
+        self._clear_launched_apps_db(port)
+        if not (self._use_previously_launched and self._apps.get_url(alias)):
+            self._run_command_with_java_tool_options(command, lib_dir, port)
+        rmi_url = self._get_rmi_url(alias, port)
         self.application_started(alias, timeout, rmi_url)
 
     def _alias_in_use(self, alias):
-        if self._apps.has_key(alias):
+        if self._apps.has_connected_to_application(alias):
             raise RuntimeError("Application with alias '%s' already in use" % alias)
+
+    def _clear_launched_apps_db(self, port):
+        if not port and os.path.exists(self._database):
+            os.remove(self._database)
+
+    def _run_command_with_java_tool_options(self, command, lib_dir, port):
+        orig_java_tool_options = self._get_java_tool_options()
+        os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(lib_dir, port)
+        print "*INFO* Starting process with command '%s'" % (command)
+        OperatingSystem().start_process(command)
+        os.environ['JAVA_TOOL_OPTIONS'] = orig_java_tool_options
 
     def _get_java_tool_options(self):
         if os.environ.has_key('JAVA_TOOL_OPTIONS'):
@@ -312,7 +399,7 @@ class RemoteApplicationsConnector:
         for jar_file in self._get_jars_from_classpath():
             try:
                 premain_class = JarFile(jar_file).getManifest().getMainAttributes().getValue('Premain-Class')
-            except ZipException, IOExcetion:
+            except ZipException, IOException:
                 continue
             if premain_class == 'org.robotframework.jvmconnector.agent.RmiServiceAgent':
                 print "*TRACE* Found jvm_connector jar '%s'" % jar_file
@@ -326,6 +413,13 @@ class RemoteApplicationsConnector:
         if os.environ.has_key('classpath'):
             jars = jars + os.environ['classpath'].split(os.path.pathsep)
         return jars
+
+    def _get_rmi_url(self, alias, port):
+        url = port and 'rmi://localhost:%s/robotrmiservice' % port or None
+        if self._use_previously_launched:
+            url = url or self._apps.get_url(alias)
+            "*DEBUG* Found url '%s' from previously started applications" % url
+        return url
 
     def application_started(self, alias, timeout='60 seconds', rmi_url=None):
         """Connects to started application and switches to it.
@@ -348,8 +442,10 @@ class RemoteApplicationsConnector:
         """
         self._alias_in_use(alias)
         app = RemoteApplication()
+        if self._use_previously_launched:
+            rmi_url = rmi_url or self._apps.get_url(alias)
         app.application_started(alias, timeout, rmi_url)
-        self._apps[alias] = app
+        self._apps.add(alias, app)
         self._active_app = app
 
     def switch_to_application(self, alias):
@@ -357,11 +453,11 @@ class RemoteApplicationsConnector:
         
         `alias` is the name of the application and it have been given with the
         `Application Started` keyword."""
-        self._check_application_in_use(alias)
-        self._active_app = self._apps[alias]
+        self._check_application_is_in_use(alias)
+        self._active_app = self._apps.get_application(alias)
 
-    def _check_application_in_use(self, alias):
-        if not self._apps.has_key(alias):
+    def _check_application_is_in_use(self, alias):
+        if not self._apps.has_connected_to_application(alias):
             raise RuntimeError("No Application with alias '%s' in use" % alias)
 
     def take_libraries_into_use(self, *library_names):
@@ -383,8 +479,9 @@ class RemoteApplicationsConnector:
         # update following code to use that approach. See RF issue 293.
         lib_name = os.path.splitext(os.path.basename(__file__))[0]
         self._remove_lib_from_current_namespace(lib_name)
-        self._remove_lib_from_importer(lib_name, [])
-        BuiltIn().import_library(lib_name)
+        args = self._use_previously_launched and [self._use_previously_launched] or []
+        self._remove_lib_from_importer(lib_name, args)
+        BuiltIn().import_library(lib_name, *args)
 
     def _remove_lib_from_current_namespace(self, name):
         testlibs = NAMESPACES.current._testlibs
@@ -404,45 +501,45 @@ class RemoteApplicationsConnector:
         
         See `Take Libraries Into Use` keyword for more details.
         """
-        self._check_active_app()
-        self._active_app.take_library_into_use(library_name)
-        self._update_keywords_to_robot()
+        #TODO: Add support for arguments
+        self.take_libraries_into_use(library_name)
 
     def close_all_applications(self):
         """Closes all the applications"""
-        for alias in self._apps.keys():
+        for alias in self._apps.get_aliases():
             try:
-                self._apps[alias].close_application()
+                app = self._apps.get_application(alias)
+                if app:
+                    app.close_application()
             except RuntimeError:
                 print "*WARN* Could not close application '%s'" % (alias)
+        self._apps.delete_all_connected()
         self._initialize()
 
     def close_application(self, alias=None):
-        """Closes application.
+        """Closes application.            url = self._apps.get_url(alias)
+
         
         If `alias` is given, closes application related to the alias.
         Otherwise closes the active application."""
         alias = alias or self._get_active_app_alias()
         print "*TRACE* Closing application '%s'" % alias
-        self._check_application_in_use(alias)
-        if self._apps[alias] == self._active_app:
+        self._check_application_is_in_use(alias)
+        if self._apps.get_application(alias) == self._active_app:
             self._active_app = None
         try:
-            self._apps[alias].close_application()
-            print "Closed application '%s'" % (alias)
+            self._apps.get_application(alias).close_application()
+            print "*INFO* Closed application '%s'" % (alias)
         finally:
-            del(self._apps[normalize(alias)])
+            self._apps.delete(alias)
 
     def _get_active_app_alias(self):
         self._check_active_app()
-        for alias, app in self._apps.items():
-            if app == self._active_app:
-                return alias
+        return self._apps.get_alias_for(self._active_app)
 
     def get_keyword_names(self):
-        #FIXME: Handle dublicate kw names
         kws = []
-        for app in self._apps.values():
+        for app in self._apps.get_applications():
             kws.extend(app.get_keyword_names())
         return kws + self._kws
 
@@ -450,6 +547,7 @@ class RemoteApplicationsConnector:
         method = self._get_method(name)
         if method:
             return method(*args)
+        self._check_active_app()
         return self._active_app.run_keyword(name, args)
 
     def _get_method(self, name):
@@ -479,9 +577,20 @@ class RemoteApplications:
     _connector = RemoteApplicationsConnector()
     __doc__ = _connector.__doc__
 
+    def __init__(self, connect_to_previously_launched_applications=''):
+        """
+        `connect_to_previously_launched_applications` defines whether to connect
+        applications that were started in previous test execution. By default 
+        this feature is not in use. It can be taken into use by giving any value
+        to library initialization like shown in below examples:
+        
+        | Library | RemoteApplications | # Does not connect to previously started applications |
+        | Library | RemoteApplications | Reconnect | # Connects to previously started applications |
+        """
+        self._connector.connect(connect_to_previously_launched_applications)
+
     def get_keyword_names(self):
-        names = self._connector.get_keyword_names()
-        return names
+        return self._connector.get_keyword_names()
 
     def run_keyword(self, name, args):
         return self._connector.run_keyword(name, args)
