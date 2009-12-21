@@ -96,7 +96,7 @@ if __name__ == '__main__':
         if len(sys.argv[1:]) > 0:
             runner = os.path.join(python_path, 'robot', 'runner.py')
             args_as_string = ' '.join(sys.argv[1:])
-            command = 'jython -Dpython.path="%s" "%s" --loglevel TRACE --noncritical javaagent --outputdir %s %s' % (python_path, runner, gettempdir(), args_as_string)
+            command = 'jython -Dpython.path="%s" "%s" --debugfile debug.txt --loglevel TRACE --noncritical javaagent --outputdir %s %s' % (python_path, runner, gettempdir(), args_as_string)
             rc = os.system(command)
         else:
             rc = os.system('jython -Dpython.path=%s %s' % (python_path, __file__))
