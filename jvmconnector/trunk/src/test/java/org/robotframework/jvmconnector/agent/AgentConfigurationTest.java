@@ -2,7 +2,6 @@ package org.robotframework.jvmconnector.agent;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,8 +39,7 @@ public class AgentConfigurationTest{
     }
 
     private void testParser(String input, Integer port, String jars) {
-        AgentConfiguration conf = new AgentConfiguration(input.replaceAll(":", 
-                File.pathSeparator));
+        AgentConfiguration conf = new AgentConfiguration(input);
         assertEquals(port, conf.getPort());
         List<String> expected = Arrays.asList(jars.split(":"));
         assertEquals(expected, conf.getJars());
