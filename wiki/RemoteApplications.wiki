@@ -1,6 +1,6 @@
 !RemoteApplications library is used for launching Java applications in a separate process and taking [http://robotframework.org Robot Framework] (RF) libraries into use to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT, when multiple applications running in separate JVMs need to be tested in parallel or when application is started using Java Web Start. RemoteApplications replaces ApplicationLauncher library, which is needed only if you are using Java version 1.4. 
 
-Library is documented in [http://code.google.com/p/robotframework-javatools/source/browse/jvmconnector/trunk/doc/RemoteApplications.html library documentation.]
+Library is documented in [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation.]
 
 ===Examples===
 
