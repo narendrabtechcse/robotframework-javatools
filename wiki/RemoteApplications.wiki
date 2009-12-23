@@ -1,0 +1,47 @@
+!RemoteApplications library is used for launching Java applications in a separate process and taking Robot Framework (RF) libraries into use to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT, when multiple applications running in separate JVMs need to be tested in parallel or when application is started using Java Web Start.
+
+Library is documented in [http://code.google.com/p/robotframework-javatools/source/browse/jvmconnector/trunk/doc/RemoteApplications.html library documentation.]
+
+===Examples===
+
+Examples contains standalone and Java Web Start application.
+
+*Prerequisites for running the examples:*
+ * You'll need java, javaws and jybot in the path.
+ * Download the [http://robotframework-javatools.googlecode.com/files/remote_applications_example-2009-12-23.zip remote_applications_example.zip]
+ * Unzip it and chdir to example directory
+
+*Running Standalone example:*
+ * From command line, run `./run.py standalone_application.tsv`
+
+*Running Java Web Start example:*
+ * Configure your proxy settings to Java Web Start if necessary.
+ * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary. 
+ * If you are behind a firewall, you'll need to set the proxy properties. To do this, edit the `javaws_application.tsv` file and uncomment the _Suite Setup_ line from the settings table *and* set the correct values for you in the _Set Proxy_ user keyword:
+|| *Set Proxy* ||Set System Property||_http.proxyHost_||yourproxyhost||
+||         ||Set System Property||_http.proxyPort_||yourproxyport||
+ * Last, from command line, run `./run.py javaws_application.tsv`
+
+The Java Web Start test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
+
+===Usage===
+
+Download !RemoteApplications.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF UserGuide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
+
+===Troubleshooting===
+
+*Problem:* You get the following exception when trying to launch your application:
+
+{{{
+  SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
+  unable to find valid certification path to requested target
+}}}
+
+*Cause:* Your application is probably using [http://en.wikipedia.org/wiki/Https https] and a [http://en.wikipedia.org/wiki/Self_signed_certificate self signed certificate].
+
+*Solution:* Create your own truststore using the instructions found here: http://blogs.sun.com/andreas/entry/no_more_unable_to_find and set the correspondig system properties:
+
+|| *Set System Property* || _javax.net.ssl.trustStore_ || C:/truststore/jssecacerts || # change this to point to your truststore ||
+|| *Set System Property* || _javax.net.ssl.trustStorePassword_ || changeit || ||
+
+*Set System Property* keyword is found in the JavaTools library.
