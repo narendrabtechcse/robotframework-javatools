@@ -20,6 +20,7 @@ Examples contains examples of testing standalone and Java Web Start application.
  * If you are behind a firewall, you'll need to set the proxy properties. To do this, edit the `javaws_application.tsv` file and uncomment the _Suite Setup_ line from the settings table *and* set the correct values for you in the _Set Proxy_ user keyword:
 || *Set Proxy* ||Set System Property||_http.proxyHost_||yourproxyhost||
 ||         ||Set System Property||_http.proxyPort_||yourproxyport||
+
  * If you are using Java 1.5, there is need to insert all the testing libraries to jvmconnector.jar. Tool for that will be provided before 1.0 release.
  * Last, from command line, run `./run.py javaws_application.tsv`
 
