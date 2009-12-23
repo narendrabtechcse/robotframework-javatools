@@ -41,6 +41,10 @@ public class RemoteLibraryImporter implements LibraryImporter {
         return rmiPublisher.publish(serviceName, RobotRmiService.class, service, rmiPort);
     }
 
+    public boolean ping() {
+        return true;
+    }
+
     private RobotJavaLibrary instantiateLibrary(String libraryName) {
         try {
             return (RobotJavaLibrary) Class.forName(libraryName).newInstance();

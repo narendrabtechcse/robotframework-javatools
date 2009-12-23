@@ -43,4 +43,9 @@ public interface RobotRmiService {
 	 * @see KeywordExecutionResult
 	 */
 	KeywordExecutionResult runKeyword(String keywordName, Object[] keywordArguments);
+	
+	/**
+	 * Used to see if the connection is alive.
+	 */
+	boolean ping();
 }

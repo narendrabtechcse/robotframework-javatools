@@ -70,4 +70,8 @@ public class SimpleRobotRmiService implements RobotRmiService {
         keywordExecutionResult.setStdStreams(streamRedirecter);
         return keywordExecutionResult;
     }
+    
+    public boolean ping() {
+        return true;
+    }
 }

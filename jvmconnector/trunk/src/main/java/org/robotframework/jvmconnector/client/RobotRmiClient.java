@@ -65,4 +65,8 @@ public class RobotRmiClient implements RobotJavaLibrary {
     private void setService(BeanFactory beanFactory) {
         service = (RobotRmiService) beanFactory.getBean("robotRmiService");
     }
+
+    public boolean ping() {
+        return service.ping();
+    }
 }

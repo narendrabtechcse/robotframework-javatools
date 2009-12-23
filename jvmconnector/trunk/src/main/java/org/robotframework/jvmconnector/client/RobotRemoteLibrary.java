@@ -34,6 +34,7 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class RobotRemoteLibrary implements RobotJavaLibrary {
     private RobotJavaLibrary robotLibraryClient;
+	private RobotRmiClient rmiClient;
     
     public RobotRemoteLibrary() {
         this("rmi://localhost:1099/jvmConnector");
@@ -51,10 +52,15 @@ public class RobotRemoteLibrary implements RobotJavaLibrary {
         return robotLibraryClient.runKeyword(keywordName, args);
     }
 
+    public boolean ping(){
+        return rmiClient.ping();
+    }
+
     RobotJavaLibrary createRobotLibraryClient(String uri) {
         ConfigurableListableBeanFactory beanFactory = createBeanFactory();
         overrideRmiURL(beanFactory, uri);
-        return new RobotRmiClient(beanFactory);
+        rmiClient = new RobotRmiClient(beanFactory);
+        return rmiClient;
     }
 
     PropertyOverrider createPropertyOverrider() {

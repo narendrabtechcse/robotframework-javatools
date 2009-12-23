@@ -20,4 +20,5 @@ package org.robotframework.jvmconnector.server;
 public interface LibraryImporter {
     String importLibrary(String libraryName);
     void closeService();
+    boolean ping();
 }

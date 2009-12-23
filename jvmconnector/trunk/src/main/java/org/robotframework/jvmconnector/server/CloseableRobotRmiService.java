@@ -37,15 +37,18 @@ public class CloseableRobotRmiService implements RobotRmiService {
         if (isSystemExit(keywordName)) {
             System.exit(0);
         }
-        
         return wrappedService.runKeyword(keywordName, keywordArguments);
     }
 
     public void setLibrary(RobotJavaLibrary library) {
         wrappedService.setLibrary(library);
     }
-    
+
     private boolean isSystemExit(String keywordName) {
         return new KeywordNameNormalizer().normalize(keywordName).equals("systemexit");
+    }
+
+    public boolean ping() {
+       return wrappedService.ping();
     }
 }
