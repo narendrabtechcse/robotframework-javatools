@@ -64,8 +64,11 @@ class RemoteLibrary:
         return name in self._keywords
 
     def run_keyword(self, name, args):
-        #TODO: Add polling to RemoteLibrary to make it easier to see whether 
-        #there is connection or not. If not, reconnect.
+        try:
+            self._remote_lib.ping()
+        except RemoteAccessException:
+            print "*DEBUG* Reconnecting"
+            self._open_connection()
         return self._remote_lib.runKeyword(name, args)
 
 
@@ -151,7 +154,7 @@ class RemoteApplication:
         self._rmi_client = None
         self.alias = None
 
-    def application_started(self, alias=None, timeout='60 seconds', rmi_url=None):
+    def application_started(self, alias, timeout='60 seconds', rmi_url=None):
         if self._rmi_client:
             raise RuntimeError("Application already connected")
         self.alias = alias
@@ -168,7 +171,7 @@ class RemoteApplication:
                 return self._create_rmi_client(url)
             except (BeanCreationException, RemoteAccessException,
                     InvalidURLException):
-                time.sleep(2)
+                time.sleep(timeout/100.0)
         self._could_not_connect(alias)
 
     def _retrieve_base_rmi_url(self, url):
@@ -225,6 +228,12 @@ class RemoteApplication:
             self._rmi_client = None
             return
         raise RuntimeError('Could not close application.')
+
+    def is_connection_alive(self):
+        try:
+            return self._rmi_client.getObject().ping()
+        except RemoteAccessException:
+            return False
 
     def get_keyword_names(self):
         kws = []
@@ -529,9 +538,8 @@ class RemoteApplicationsConnector:
         self._initialize()
 
     def close_application(self, alias=None):
-        """Closes application.            url = self._apps.get_url(alias)
+        """Closes application.
 
-        
         If `alias` is given, closes application related to the alias.
         Otherwise closes the active application."""
         alias = alias or self._get_active_app_alias()
@@ -548,6 +556,29 @@ class RemoteApplicationsConnector:
     def _get_active_app_alias(self):
         self._check_active_app()
         return self._apps.get_alias_for(self._active_app)
+
+    def application_should_be_connected(self):
+        """Checks is there connection to the active application."""
+        self._check_active_app()
+        if not self._active_app.is_connection_alive():
+            raise AssertionError("Could not connect to the application '%s'."
+                                 % self._active_app.alias)
+
+    def application_should_not_be_connected(self, timeout="2 seconds"):
+        """Checks that there is no connection to the active application.
+        
+        `timeout` is time that the application is waited to be closed. Sometimes
+        closing application takes some time and therefore it might take while
+        before it is really closed."""
+        self._check_active_app()
+        timeout = timestr_to_secs(timeout)
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            if not self._active_app.is_connection_alive():
+                return
+            time.sleep(timeout/100.0)
+        raise AssertionError("There is connection to the application '%s'."
+                             % self._active_app.alias)
 
     def get_keyword_names(self):
         kws = []
