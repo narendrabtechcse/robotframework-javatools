@@ -4,7 +4,7 @@ Library is documented in [http://robotframework-javatools.googlecode.com/svn/jvm
 
 ===Examples===
 
-Examples contains standalone and Java Web Start application.
+Examples contains examples of testing standalone and Java Web Start application.
 
 *Prerequisites for running the examples:*
  * You'll need java, javaws and jybot in the path.
