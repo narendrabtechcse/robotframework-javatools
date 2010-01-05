@@ -35,3 +35,7 @@ When Hudson is up and running, the installed plugin can be enabled in the job's 
 =Reports=
 
 The plugin adds links to the generated Robot Framework reports into Hudson's left side tool panel. On the top level the link points to the latest report and on build level they point to the build specific version.
+
+=Screenshot=
+
+http://robotframework-javatools.googlecode.com/svn/wiki/images/hudsonplugin.png
