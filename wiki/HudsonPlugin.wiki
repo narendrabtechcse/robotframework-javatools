@@ -1,3 +1,4 @@
+#labels Featured
 =Robotframework Hudson Plugin=
 
 [http://robotframework.org Robot Framework] Hudson Plugin provides a way to integrate [http://robotframework.org Robot Framework] test reports into the [http://hudson-ci.org/ Hudson Continuous Integration server].
