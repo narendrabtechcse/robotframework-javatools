@@ -41,7 +41,7 @@ public class JvmconnectorKeywords extends AnnotationLibrary {
     
     @RobotKeyword
     public String getEnhancedJnlp(String libraryResourceDir, String jnlpUrl) throws Exception {
-        JnlpEnhancer jnlpRunner = new JnlpEnhancer(tmpDir + "/launcher.txt", libraryResourceDir);
+        JnlpEnhancer jnlpRunner = new JnlpEnhancer(libraryResourceDir);
         String pathToJnlp = jnlpRunner.createRmiEnhancedJnlp(jnlpUrl);
         return FileUtils.readFileToString(new File(pathToJnlp), "UTF-8");
     }

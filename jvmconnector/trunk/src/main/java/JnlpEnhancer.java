@@ -20,7 +20,13 @@ import javax.net.ssl.SSLSession;
 
 public class JnlpEnhancer extends org.robotframework.jvmconnector.launch.jnlp.JnlpEnhancer {
     public JnlpEnhancer(String pathToRmiStorage, String resourceDir) {
-        super(pathToRmiStorage, resourceDir);
+        super(resourceDir);
+        disableHostNameVerifier();
+        System.out.println("\n*WARN* JnlpEnhancer with two arguments is deprecated. Give only resourceDir.\n");
+    }
+
+    public JnlpEnhancer(String resourceDir) {
+        super(resourceDir);
         disableHostNameVerifier();
     }
 

@@ -17,7 +17,12 @@
 
 package org.robotframework.jvmconnector.launch.jnlp;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +31,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FilenameUtils;
+import org.robotframework.jvmconnector.common.DataBasePaths;
 import org.robotframework.jvmconnector.launch.RMILauncher;
 import org.robotframework.jvmconnector.xml.Document;
 import org.robotframework.jvmconnector.xml.Document.MyElement;
@@ -34,8 +40,8 @@ public class JnlpEnhancer {
     private final String resourceDir;
     private final String pathToRmiStorage;
 
-    public JnlpEnhancer(String pathToRmiStorage, String resourceDir) {
-        this.pathToRmiStorage = pathToRmiStorage;
+    public JnlpEnhancer(String resourceDir) {
+        this.pathToRmiStorage = new DataBasePaths().getLaunchedFile();
         this.resourceDir = resourceDir;
     }
     

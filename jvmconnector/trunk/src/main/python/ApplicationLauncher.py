@@ -165,7 +165,7 @@ class ApplicationLauncher:
 
     def _create_command(self, args, jvm_args):
         if (self._is_jnlp_application()):
-            jnlp = JnlpEnhancer(DATABASE, self.libdir).createRmiEnhancedJnlp(self.application)
+            jnlp = JnlpEnhancer(self.libdir).createRmiEnhancedJnlp(self.application)
             return 'javaws %s %s'  % (jvm_args, jnlp)
         else:
             pythonpath = self._get_python_path()
