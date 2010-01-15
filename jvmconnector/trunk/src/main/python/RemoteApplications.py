@@ -24,27 +24,6 @@ class InvalidURLException(Exception):
     pass
 
 
-def get_arg_spec(method):
-    """Returns info about args in a tuple (args, defaults, varargs)
-
-    args     - tuple of all accepted arguments
-    defaults - tuple of default values
-    varargs  - name of the argument accepting varargs or None
-    """
-    # Code below is based on inspect module's getargs and getargspec 
-    # methods. See their documentation and/or source for more details. 
-    func = method.im_func
-    co = func.func_code
-    number_of_args = co.co_argcount
-    args = co.co_varnames[1:number_of_args] #drops 'self' from methods' args
-    defaults = func.func_defaults or ()
-    if co.co_flags & 4:                      # 4 == CO_VARARGS
-        varargs =  co.co_varnames[number_of_args]
-    else:
-        varargs = None
-    return args, defaults, varargs
-
-
 class RemoteLibrary:
 
     def __init__(self, uri):
@@ -601,12 +580,28 @@ class RemoteApplicationsConnector:
     def get_keyword_arguments(self, name):
         method = self._get_method(name)
         if method:
-            args, defaults, varargs = get_arg_spec(method)
-            arguments = list(args[:len(args)-len(defaults)])
-            defaults = [ '%s=%s' % (arg, default) for arg, default in zip(list(args[len(arguments):]), list(defaults)) ]
+            args, defaults, varargs = self._get_arg_spec(method)
+            arguments = args[:len(args)-len(defaults)]
+            defaults = [ '%s=%s' % (arg, default) for arg, default in zip(args[len(arguments):], defaults) ]
             varargs = varargs and ['*%s' % varargs] or []
             return arguments + defaults + varargs
         return ['*args']
+
+    def _get_arg_spec(self, method):
+        """Returns info about args in a tuple (args, defaults, varargs)
+
+        args     - list of all accepted arguments
+        defaults - list of default values
+        varargs  - name of the argument accepting varargs or None
+        """
+        co = method.im_func.func_code
+        number_of_args = co.co_argcount
+        args = co.co_varnames[1:number_of_args] #drops 'self' from methods' args
+        defaults = method.im_func.func_defaults or ()
+        varargs = None
+        if co.co_flags & 4:                      # 4 == CO_VARARGS
+            varargs =  co.co_varnames[number_of_args]
+        return list(args), list(defaults), varargs
 
     def get_keyword_documentation(self, name):
         method = self._get_method(name)
