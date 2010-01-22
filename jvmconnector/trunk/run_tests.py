@@ -8,6 +8,8 @@ import re
 from tempfile import gettempdir
 
 base = os.path.abspath(os.path.normpath(os.path.split(sys.argv[0])[0]))
+python_main = os.path.join('src', 'main', 'python')
+python_test = os.path.join('src', 'test', 'python')
 testfile = re.compile('^test_.*\.py$', re.IGNORECASE)          
 
 def get_tests(directory):
@@ -37,10 +39,8 @@ def sh(command):
     return output
 
 def add_dependencies_to_path():
-    main = os.path.join('src', 'main', 'python')
-    test = os.path.join('src', 'test', 'python')
-    for path in [ main, test ]:
-        path = os.path.join(base, path.replace('/', os.sep))
+    for path in [ python_main, python_test ]:
+        path = os.path.join(base, path)
         if path not in sys.path:
             sys.path.insert(0, path)
 
@@ -61,7 +61,6 @@ def add_dependencies_to_path():
         sh('mvn test-compile')
 
     dependencies = [classes, test_classes] + open('dependencies.txt', 'rb').read().splitlines()
-
 
     os.environ['CLASSPATH'] = os.pathsep.join(dependencies + [get_jvmconnector_jar()])
     os.environ['PYTHONPATH'] = os.pathsep.join(sys.path)
@@ -84,7 +83,8 @@ def get_python_path():
 if __name__ == '__main__':
     rc = 0
     if os.name == 'java':
-        tests = get_tests('.')
+        sys.path.append(python_main)
+        tests = get_tests(os.path.join(base, 'src','test', 'python'))
         suite = unittest.TestSuite(tests)
         runner = unittest.TextTestRunner(descriptions=0, verbosity=1)
         result = runner.run(suite)
