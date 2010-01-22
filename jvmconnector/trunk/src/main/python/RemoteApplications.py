@@ -6,7 +6,7 @@ from java.util.jar import JarFile
 from java.util.zip import ZipException
 from java.io import IOException, FileNotFoundException
 
-from robot.utils import eq, normalize, NormalizedDict, timestr_to_secs
+from robot.utils import eq, normalize, NormalizedDict, seq2str, timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.namespace import IMPORTER
 from robot.libraries.BuiltIn import BuiltIn
@@ -26,7 +26,8 @@ class InvalidURLException(Exception):
 
 class RemoteLibrary:
 
-    def __init__(self, uri):
+    def __init__(self, name, uri):
+        self.name = name
         self._uri = uri
         self._open_connection()
         self._keywords = None
@@ -129,6 +130,7 @@ class RemoteApplication:
 
     def __init__(self):
         self._libs = []
+        self._keywords = {}
         self.rmi_url = None
         self._rmi_client = None
         self.alias = None
@@ -182,10 +184,15 @@ class RemoteApplication:
     def take_library_into_use(self, library_name):
         #TODO: Add support for arguments
         self._check_connection()
+        if self._library_already_in_use(library_name):
+            print "*INFO* Library '%s' is already in use" % (library_name)
+            return []
         library_url = self._import_remote_library(library_name)
-        library = RemoteLibrary(library_url)
+        library = RemoteLibrary(library_name, library_url)
         self._libs.append(library)
-        return library.get_keyword_names()
+
+    def _library_already_in_use(self, library_name):
+        return library_name in [lib.name for lib in self._libs ]
 
     def _check_connection(self):
         if self._rmi_client is None:
@@ -215,16 +222,37 @@ class RemoteApplication:
             return False
 
     def get_keyword_names(self):
-        kws = []
+        self._keywords = self._get_keywords_with_related_libraries()
+        self._add_long_names_for_duplicates()
+        keyword_names = self._keywords.keys()
+        keyword_names.sort()
+        return keyword_names
+
+    def _get_keywords_with_related_libraries(self):
+        keywords = {}
         for lib in self._libs:
-            #FIXME: Handle duplicate keyword names
-            kws.extend(lib.get_keyword_names())
-        return kws
+            for keyword_name in lib.get_keyword_names():
+                if keywords.has_key(keyword_name):
+                    keywords[keyword_name].append(lib)
+                else:
+                    keywords[keyword_name] = [lib]
+        return keywords
+
+    def _add_long_names_for_duplicates(self):
+        for kw, libs in self._keywords.items():
+            if len(libs) > 1:
+                for lib in libs:
+                    self._keywords['%s.%s' % (lib.name, kw)] = [lib]
 
     def run_keyword(self, name, args):
-        for lib in self._libs:
-            if lib.has_keyword(name):
-                return lib.run_keyword(name, args)
+        if len(self._keywords[name]) == 1:
+            return self._keywords[name][0].run_keyword(name, args)
+        self._raise_error_from_duplicate_keywords(name, self._keywords[name])
+        
+
+    def _raise_error_from_duplicate_keywords(self, name, libs):
+        kw_names = ['%s.%s' % (lib.name, name) for lib in libs]
+        raise RuntimeError("Keyword '%s' available from multiple remote libraries. Use: %s" % (name, seq2str(kw_names, lastsep=' or ')))
 
 
 class RemoteApplicationsConnector:
