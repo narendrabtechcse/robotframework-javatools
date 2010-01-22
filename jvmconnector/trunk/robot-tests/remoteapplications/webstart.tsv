@@ -22,7 +22,7 @@ Starting Webstart Application From Webstart Application
 *** Keyword ***
 Select Application's Main Window
 	Take Library Into Use	SwingLibrary
-	waitUntilKeywordSucceeds	5	0.2	selectMainWindow
+	waitUntilKeywordSucceeds	15	0.2	selectMainWindow
 
 Close Both Webstart Applications
 	Close	Web Start 2

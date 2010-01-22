@@ -6,7 +6,7 @@ Resource	../resources/common.tsv
 Start Simple Application
 	[Arguments]	${name}	${port}=
 	RemoteApplications.Start Application	${name}
-	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}	5 secs	${port}
+	...	java -Dproperty.name=""${name}"" ${APPLICATION} ${name}	5 secs	${JAR DIR}	${port}
 
 Start Web Start Application
 	[Arguments]	${name}	${jnlp}=${jnlpWithMainClassUrl}
