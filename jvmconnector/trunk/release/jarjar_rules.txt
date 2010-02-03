@@ -1,0 +1,12 @@
+rule com.thoughtworks.** org.robotframework.@0
+rule edu.emory.** org.robotframework.@0
+rule javax.** org.robotframework.@0
+rule junit.** org.robotframework.@0
+rule org.aopalliance.** org.robotframework.@0
+rule org.apache.** org.robotframework.@0
+rule org.hamcrest.** org.robotframework.@0
+rule org.junit.** org.robotframework.@0
+rule org.laughingpanda.** org.robotframework.@0
+rule org.springframework.** org.robotframework.@0
+rule org.w3c.** org.robotframework.@0
+rule org.xml.sax.** org.robotframework.@0
