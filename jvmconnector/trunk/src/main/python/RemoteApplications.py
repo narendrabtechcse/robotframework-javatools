@@ -201,10 +201,7 @@ class RemoteApplication:
                                "before this keyword.")
 
     def _import_remote_library(self, library_name): 
-        try:
-            return self._rmi_client.getObject().importLibrary(library_name)
-        except (BeanCreationException, RemoteAccessException):
-            self._could_not_connect(self.alias)
+        return self._rmi_client.getObject().importLibrary(library_name)
 
     def close_application(self):
         self._check_connection()
