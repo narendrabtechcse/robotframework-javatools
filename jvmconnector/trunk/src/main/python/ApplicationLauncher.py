@@ -14,10 +14,10 @@ from robot.utils import timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.importer import Importer
 
-from org.springframework.remoting import RemoteAccessException
-from org.springframework.beans.factory import BeanCreationException
-from org.springframework.remoting.rmi import RmiServiceExporter
-from org.springframework.remoting.rmi import RmiProxyFactoryBean
+from org.robotframework.org.springframework.remoting import RemoteAccessException
+from org.robotframework.org.springframework.beans.factory import BeanCreationException
+from org.robotframework.org.springframework.remoting.rmi import RmiServiceExporter
+from org.robotframework.org.springframework.remoting.rmi import RmiProxyFactoryBean
 
 from org.robotframework.jvmconnector.server import *
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
