@@ -12,9 +12,9 @@ from robot.running.namespace import IMPORTER
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.OperatingSystem import OperatingSystem
 
-from org.robotframework.org.springframework.beans.factory import BeanCreationException
-from org.robotframework.org.springframework.remoting import RemoteAccessException
-from org.robotframework.org.springframework.remoting.rmi import RmiProxyFactoryBean
+from org.springframework.beans.factory import BeanCreationException
+from org.springframework.remoting import RemoteAccessException
+from org.springframework.remoting.rmi import RmiProxyFactoryBean
 
 from org.robotframework.jvmconnector.client import RobotRemoteLibrary
 from org.robotframework.jvmconnector.server import RmiInfoStorage, LibraryImporter
