@@ -32,6 +32,7 @@ rule org.apache.xmlrpc.** org.robotframework.@0
 rule org.springframework.ui.** org.robotframework.@0
 rule org.springframework.aop.** org.robotframework.@0
 rule org.springframework.asm.** org.robotframework.@0
+rule org.springframework.beans.** org.robotframework.@0
 rule org.springframework.ejb.access.** org.robotframework.@0
 rule org.springframework.ejb.config.** org.robotframework.@0
 rule org.springframework.ejb.support.** org.robotframework.@0
@@ -48,3 +49,6 @@ rule org.springframework.stereotype.** org.robotframework.@0
 rule org.springframework.scripting.** org.robotframework.@0
 rule org.springframework.scheduling.** org.robotframework.@0
 rule javax.servlet.** org.robotframework.@0
+zap org.w3c.dom.** org.robotframework.@0
+zap org.xml.sax.** org.robotframework.@0
+zap javax.xml.** org.robotframework.@0

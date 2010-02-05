@@ -65,7 +65,7 @@ def add_dependencies_to_classpath():
 
 def get_test_deps():
     deps = open('dependencies.txt', 'rb').read().splitlines()
-    return [ dep for dep in deps if 'org/robotframework/' in dep or 'org/mortbay' in dep]
+    return [ dep for dep in deps if 'org/robotframework/' in dep or 'org/mortbay' in dep or 'log4j' in dep ]
 
 def get_jvmconnector_jar():
     pattern = os.path.join(os.path.dirname(__file__),
@@ -112,4 +112,4 @@ if __name__ == '__main__':
             rc = run_robot_tests(sys.argv[1:])
         else:
             rc = run_unit_tests_with_jython()
-    sys.exit(rc)
+    sys.exit(rc >> 8)
