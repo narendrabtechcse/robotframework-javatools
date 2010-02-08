@@ -52,3 +52,5 @@ rule javax.servlet.** org.robotframework.@0
 zap org.w3c.dom.** org.robotframework.@0
 zap org.xml.sax.** org.robotframework.@0
 zap javax.xml.** org.robotframework.@0
+rule org.springframework.remoting.soap.** org.robotframework.@0
+rule org.springframework.remoting.* org.robotframework.@0
