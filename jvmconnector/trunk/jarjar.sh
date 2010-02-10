@@ -1,18 +1,21 @@
 #!/bin/bash 
-
 target=`pwd`/target
 
-echo rm -rf $target
+set -o verbose
 rm -rf target
-echo mvn assembly:assembly
 mvn assembly:assembly
 jar=`echo $target/jvmconnector-*-SNAPSHOT-jar-with-dependencies.jar`
 jarjar=${jar%.*}-jarjar.jar
-echo java -jar ${target}/../release/jarjar-1.0.jar process ${target}/../release/jarjar_rules.txt $jar $jarjar
 java -jar ${target}/../release/jarjar-1.0.jar process ${target}/../release/jarjar_rules.txt $jar $jarjar
-echo unzip -d $target $jar META-INF/MANIFEST.MF
 unzip -d $target $jar META-INF/MANIFEST.MF
-echo jar ufm $jarjar $target/META-INF/MANIFEST.MF
-jar ufm $jarjar $target/META-INF/MANIFEST.MF
-echo mv $jarjar $jar
+
+tmpdir=$target/tmp
+mkdir $tmpdir
+unzip -d $tmpdir $jarjar
+rmic -verbose -classpath $tmpdir -d $tmpdir org.robotframework.org.springframework.remoting.rmi.RmiInvocationWrapper
+rmic -verbose -iiop -always -classpath $tmpdir -d $tmpdir org.robotframework.org.springframework.remoting.rmi.RmiInvocationWrapper
+rm $jarjar
+jar -cfm $jarjar $target/META-INF/MANIFEST.MF -C $tmpdir .
 mv $jarjar $jar
+rm -rf $tmpdir
+rm -rf $target/META-INF
