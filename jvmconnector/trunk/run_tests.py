@@ -65,7 +65,7 @@ def add_dependencies_to_classpath():
 
 def get_test_deps():
     deps = open('dependencies.txt', 'rb').read().splitlines()
-    return [ dep for dep in deps if 'org/robotframework/' in dep or 'org/mortbay' in dep or 'log4j' in dep ]
+    return [ dep for dep in deps if 'swinglibrary' in dep or 'org/mortbay' in dep ]
 
 def get_jvmconnector_jar():
     pattern = os.path.join(os.path.dirname(__file__),
