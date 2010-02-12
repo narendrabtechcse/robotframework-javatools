@@ -35,7 +35,7 @@ Download !RemoteApplications.py from [http://code.google.com/p/robotframework-ja
 
 = Troubleshooting =
 
-Best way to start trouble shooting is to run above from RemoteApplications. In case those work, the environment should not be the problem.
+Best way to start trouble shooting is to run the above examples. In case those work, then environent variables, Java version, proxy settings in case of Java Web Start should not be the problem.
 
 
 == Application Does Not Start ==
@@ -46,25 +46,23 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 
 *Cause:* There are spaces in the program that should be started
 
-*Solution:* This is known issue in RemoteApplications, see issue 36 for more details.
+*Solution:* This is known issue in RemoteApplications, see issue 36 for more details and workarounds.
 
 
 == Application Hangs ==
 
-*Cause:* _JAVA_OPTIONS environment variable have settings that affect JVM e.g. Quick Test Pro (QTP) related settings.
+*Cause:* `_JAVA_OPTIONS` environment variable have settings that affect JVM e.g. Quick Test Pro (QTP) related settings.
 
-*Solution:* Remove the _JAVA_OPTIONS environment variable or set it empty in test data
+*Solution:* Remove the `_JAVA_OPTIONS` environment variable or set it empty in test data.
 
 
 == Test Execution Hangs ==
 
 *Cause:* Multiple Java processes are started with one command and RemoteApplications library accesses wrong JVM
 
-*Debugging:* See that there are no urls in launched.txt in <jvmconnector directory> after the connection to the application is created and/or use [https://visualvm.dev.java.net/ visualvm] tool to monitor the started processes when running the tests.
+*Debugging:* See that there are no urls in launched.txt after the connection to the application is created and/or use [https://visualvm.dev.java.net/ visualvm] tool to monitor the started processes when running the tests.
 
 *Solution 1:* Change the command to start only one process
-
-*Solution 2:* Use "Application Started" keyword to get access to the all started JVMs.
 
 
 == Connection Cannot Be Established to the Application ==
@@ -73,11 +71,13 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 
 *Cause:* Testing capabilies are not started when the application is started
 
-*Debugging:* Check is there URL in launched.txt (see [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] ) remove the file and rerun the test cases.
+*Debugging:* Check is there URL in launched.txt (see file location from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] ).
 
-*Solution 1:* 
+*Solution 1:* Remove the file and rerun the test cases. If problem persist, see solutions below.
 
-*Solution 2:* In case you are using "Start Application" keyword and application is started, please submit an issue.
+*Solution 2:* In case you are setting the javaagent, see that it has proper values. Add "2 > error.txt" to end of the command you are using to start your application and you should see message "Picked up JAVA_TOOL_OPTIONS: -javaagent:/path/to/jvmconnector.jar=/path/to/lib/" in the error.txt if everything goes fine. If not, there should be reason for the failure.
+
+*Solution 3:* In case you are using "Start Application" keyword and application is started, please submit an issue.
 
 
 == Library Cannot Be Taken Into Use ==
