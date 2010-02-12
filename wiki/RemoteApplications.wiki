@@ -46,7 +46,7 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 
 *Cause:* There are spaces in the program that should be started
 
-*Solution:* This is known issue in RemoteApplications, see issue36 for more details.
+*Solution:* This is known issue in RemoteApplications, see issue 36 for more details.
 
 
 == Application Hangs ==
