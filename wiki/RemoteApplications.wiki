@@ -1,4 +1,4 @@
-#summary RemoteApplications library for operating Java applications from separate JVM
+#summary Library for operating Java applications from separate JVM
 
 <wiki:toc/>
 
@@ -6,7 +6,7 @@
 
 Library is documented in [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation.]
 
-=== Examples ===
+== Examples ==
 
 Examples contains examples of testing standalone and Java Web Start application.
 
@@ -27,16 +27,16 @@ Examples contains examples of testing standalone and Java Web Start application.
 
 The Java Web Start test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-=== Usage ===
+== Usage ==
 
 Download !RemoteApplications.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF UserGuide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
 
-=== Troubleshooting ===
+== Troubleshooting ==
 
 Best way to start trouble shooting is to run above from RemoteApplications. In case those work, the environment should not be the problem.
 
 
-==== Application Does Not Start ====
+=== Application Does Not Start ===
 
 *Cause:* The command starting the application is wrong
 
@@ -47,14 +47,14 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 *Solution:* This is known issue in RemoteApplications, see issue36 for more details.
 
 
-==== Application Hangs ====
+=== Application Hangs ===
 
 *Cause:* _JAVA_OPTIONS environment variable have settings that affect JVM e.g. Quick Test Pro (QTP) related settings.
 
 *Solution:* Remove the _JAVA_OPTIONS environment variable or set it empty in test data
 
 
-==== Test Execution Hangs ====
+=== Test Execution Hangs ===
 
 *Cause:* Multiple Java processes are started with one command and RemoteApplications library accesses wrong JVM
 
@@ -65,7 +65,7 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 *Solution 2:* Use "Application Started" keyword to get access to the all started JVMs.
 
 
-==== Connection Cannot Be Established to the Application ====
+=== Connection Cannot Be Established to the Application ===
 
 *Problem:* Could not connect to application XXX
 
@@ -78,15 +78,15 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 *Solution 2:* In case you are using "Start Application" keyword and application is started, please submit an issue.
 
 
-==== Library Cannot Be Taken Into Use ====
+=== Library Cannot Be Taken Into Use ===
 
 *Problem:* Take Librar(y/ies) Into Use" keyword fails for ClassNotFoundException 
 
-*Cause:* 
+*Cause:* The library is not available on the application JVM
 
 *Solution 1:* Check that you are giving correct directory to "Start Application" keyword's lib_dir argument
 
 *Solution 2:* In case you are starting the application without using Remote Applications, check that you are giving correct path to the TODO
 
 *Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar TODO: Add link
-  
+ 
