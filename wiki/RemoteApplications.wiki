@@ -58,7 +58,7 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 
 *Cause:* Multiple Java processes are started with one command and RemoteApplications library accesses wrong JVM
 
-*Debugging:* See that there are no urls in launched.txt in [jvmconnector directory] after the connection to the application is created and/or use [https://visualvm.dev.java.net/ visualvm] tool to monitor the started processes when running the tests.
+*Debugging:* See that there are no urls in launched.txt in <jvmconnector directory> after the connection to the application is created and/or use [https://visualvm.dev.java.net/ visualvm] tool to monitor the started processes when running the tests.
 
 *Solution 1:* Change the command to start only one process
 
@@ -71,16 +71,16 @@ Best way to start trouble shooting is to run above from RemoteApplications. In c
 
 *Cause:* Testing capabilies are not started when the application is started
 
-*Debugging:* See is there url in launched.txt in [jvmconnector directory]
+*Debugging:* See is there url in launched.txt in <jvmconnector directory>
 
-*Solution 1:* 
+*Solution 1:* TODO
 
 *Solution 2:* In case you are using "Start Application" keyword and application is started, please submit an issue.
 
 
 === Library Cannot Be Taken Into Use ===
 
-*Problem:* Take Librar(y/ies) Into Use" keyword fails for ClassNotFoundException 
+*Problem:* Take Librar(y/ies) Into Use" keyword fails for !ClassNotFoundException 
 
 *Cause:* The library is not available on the application JVM
 
