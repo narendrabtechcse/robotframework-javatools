@@ -1,8 +1,12 @@
+#summary RemoteApplications library for operating Java applications from separate JVM
+
+<wiki:toc/>
+
 !RemoteApplications library is used for launching Java applications in a separate process and taking [http://robotframework.org Robot Framework] (RF) libraries into use to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT, when multiple applications running in separate JVMs need to be tested in parallel or when application is started using Java Web Start. RemoteApplications replaces ApplicationLauncher library, which is needed only if you are using Java version 1.4. 
 
 Library is documented in [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation.]
 
-===Examples===
+=== Examples ===
 
 Examples contains examples of testing standalone and Java Web Start application.
 
@@ -17,33 +21,72 @@ Examples contains examples of testing standalone and Java Web Start application.
 *Running Java Web Start example:*
  * Configure your proxy settings to Java Web Start if necessary.
  * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary. 
- * If you are behind a firewall, you'll need to set the proxy properties. To do this, edit the `javaws_application.tsv` file and uncomment the _Suite Setup_ line from the settings table *and* set the correct values for you in the _Set Proxy_ user keyword:
-|| *Set Proxy* ||Set System Property||_http.proxyHost_||yourproxyhost||
-||         ||Set System Property||_http.proxyPort_||yourproxyport||
 
  * If you are using Java 1.5, there is need to insert all the testing libraries to jvmconnector.jar. Tool for that will be provided before 1.0 release.
  * Last, from command line, run `./run.py javaws_application.tsv`
 
 The Java Web Start test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-===Usage===
+=== Usage ===
 
 Download !RemoteApplications.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF UserGuide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
 
-===Troubleshooting===
+=== Troubleshooting ===
 
-*Problem:* You get the following exception when trying to launch your application:
+Best way to start trouble shooting is to run above from RemoteApplications. In case those work, the environment should not be the problem.
 
-{{{
-  SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
-  unable to find valid certification path to requested target
-}}}
 
-*Cause:* Your application is probably using [http://en.wikipedia.org/wiki/Https https] and a [http://en.wikipedia.org/wiki/Self_signed_certificate self signed certificate].
+==== Application Does Not Start ====
 
-*Solution:* Create your own truststore using the instructions found here: http://blogs.sun.com/andreas/entry/no_more_unable_to_find and set the correspondig system properties:
+*Cause:* The command starting the application is wrong
 
-|| *Set System Property* || _javax.net.ssl.trustStore_ || C:/truststore/jssecacerts || # change this to point to your truststore ||
-|| *Set System Property* || _javax.net.ssl.trustStorePassword_ || changeit || ||
+*Solution:* By adding "2 > error.txt" at the end of the command you get possible errors to error.txt which is located on the directory where tests are executed. Based on the error, you need to fix the command.
 
-*Set System Property* keyword is found in the JavaTools library.
+*Cause:* There are spaces in the program that should be started
+
+*Solution:* This is known issue in RemoteApplications, see issue36 for more details.
+
+
+==== Application Hangs ====
+
+*Cause:* _JAVA_OPTIONS environment variable have settings that affect JVM e.g. Quick Test Pro (QTP) related settings.
+
+*Solution:* Remove the _JAVA_OPTIONS environment variable or set it empty in test data
+
+
+==== Test Execution Hangs ====
+
+*Cause:* Multiple Java processes are started with one command and RemoteApplications library accesses wrong JVM
+
+*Debugging:* See that there are no urls in launched.txt in [jvmconnector directory] after the connection to the application is created and/or use [https://visualvm.dev.java.net/ visualvm] tool to monitor the started processes when running the tests.
+
+*Solution 1:* Change the command to start only one process
+
+*Solution 2:* Use "Application Started" keyword to get access to the all started JVMs.
+
+
+==== Connection Cannot Be Established to the Application ====
+
+*Problem:* Could not connect to application XXX
+
+*Cause:* Testing capabilies are not started when the application is started
+
+*Debugging:* See is there url in launched.txt in [jvmconnector directory]
+
+*Solution 1:* 
+
+*Solution 2:* In case you are using "Start Application" keyword and application is started, please submit an issue.
+
+
+==== Library Cannot Be Taken Into Use ====
+
+*Problem:* Take Librar(y/ies) Into Use" keyword fails for ClassNotFoundException 
+
+*Cause:* 
+
+*Solution 1:* Check that you are giving correct directory to "Start Application" keyword's lib_dir argument
+
+*Solution 2:* In case you are starting the application without using Remote Applications, check that you are giving correct path to the TODO
+
+*Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar TODO: Add link
+  
