@@ -261,7 +261,9 @@ class RemoteApplicationsConnector:
     be tested with RF when running inside the same JVM. Such cases are when
     System.exit is called in the SUT, when multiple applications running in
     separate JVMs need to be tested in parallel or when application is started
-    using Java Web Start.
+    using Java Web Start. RemoteApplications library is also suitable when
+    application use embedded JVMs (meaning they use the JNI Invocation API to
+    start the JVM), or when the startup is deeply nested in scripts. 
 
     Using RemoteApplications requires that jvm_connector jar file is in
     _CLASSPATH_ environment variable before starting RF test execution. 
@@ -294,18 +296,18 @@ class RemoteApplicationsConnector:
 
     *NOTE:* RemoteApplications cannot be taken into use with _WITH NAME_
     functionality. However, there should not be need for that as the
-    RemoteApplications library can handle multiple applications. 
+    RemoteApplications library can handle multiple applications.
 
 
     *ROBOT AGENT*
 
     Sometimes you cannot start the application locally from command line. In
     that case you need to use Robot Agent which will start testing capabilities
-    to the started JVM. Robot Agent works both with java webstart applications
+    to the started JVM. Robot Agent works both with Java Web Start applications
     and standalone java applications. It is taken into use by setting
     environment variable _JAVA_TOOL_OPTIONS_ with value
     _-javaagent:${jvmconnector.jar}=${testing_dependencies_dir}[:PORT=${port}]_
-    where _${jvmconnector.jar}_ is the path to the jvmconnector package and
+    where _${jvmconnector.jar}_ is the path to the jvmconnector.jar and
     _${testing_dependencies_dir}_ is the path to the directory containing the
     test library jars. Optionally you can give the _:PORT=${port}_ where the
     _:PORT=_ is separator, and _${port}_ defines the port number where the
@@ -319,9 +321,16 @@ class RemoteApplicationsConnector:
     application is started on remote machine, this rmi_url needs to be given to
     `Application Started` keyword.
 
-    *NOTE:* Under java 1.5 you have to package the jvmconnector.jar and all your
-    testing dependencies into one big jar, you cannot provide the testing jars
-    as arguments to the agent due to a limitation in Java 1.5's API.
+    *NOTE:* With Java 1.5 you have to include all your testing dependencies into
+    the jvmconnector.jar file's MANIFEST.MF. This can be done with command
+    `jar ufm jvmconnector.jar manifest.txt`. The line below is an example of
+    manifest.txt file's content which includes two test library jars to the
+    jvmconnector.jar file's MANIFEST.MF. Paths to the test libraries have to be
+    relative to the jvmconnector.jar and line needs to end with new line character.
+
+    Class-Path: ../relative/path/to/test_library.jar path/to/another_test_library.jar
+
+    See more from http://java.sun.com/docs/books/tutorial/deployment/jar/downman.html
     """
     _database = DataBasePaths().getLaunchedFile()
 
@@ -369,11 +378,15 @@ class RemoteApplicationsConnector:
         `port` defines the port in which the testing capabilities are started
         on the application. By default port is selected randomly from available
         ports.
-        
+
+        Examples:
+        | Start Application | App1 | java -jar my_application.jar | 30 seconds | \${CURDIR}${/}libs |
+        | Start Application | App2 | my_application.exe |  | \${CURDIR}${/}libs | 12345 |
+
         *NOTE:* If the application is used to start other applications
         and those applications should be controlled with RemoteApplications, 
         port should NOT be given.
-        
+
         To access application started in previous test run, you can set
         `connect_to_previously_launched_applications` when `Importing` library.
         If the application is available, this keyword connects to it and does
@@ -464,6 +477,10 @@ class RemoteApplicationsConnector:
         `connect_to_previously_launched_applications` when `Importing` library.
         If the previously started application is available, this keyword 
         connects to it in case the 'rmi_url' is not given.
+
+        Examples:
+        | Application Started | App1 |  |  |
+        | Application Started | App2 | 2 minutes | rmi://localhost:7000/robotrmiservice |
         """
         self._alias_in_use(alias)
         app = RemoteApplication()
@@ -475,9 +492,16 @@ class RemoteApplicationsConnector:
 
     def switch_to_application(self, alias):
         """Changes the application where the keywords are executed.
-        
+
         `alias` is the name of the application and it have been given with the
-        `Application Started` keyword."""
+        `Application Started` keyword.
+
+        Example:
+        | Switch To Application | App2 |
+        | Do Something          | # Keyword operates App2 |
+        | Switch To Application | App1 |
+        | Do Something          | # Keyword operates App1 |
+        """
         self._check_application_is_in_use(alias)
         self._active_app = self._apps.get_application(alias)
 
@@ -487,10 +511,15 @@ class RemoteApplicationsConnector:
 
     def take_libraries_into_use(self, *library_names):
         """Takes the libraries into use at the remote application.
-        
+
         `library_names` contains all the libraries that you want to take into
         use on the remote side. *NOTE:* See 'Start Application' for information
-        how to provide library jar files."""
+        how to provide library jar files.
+
+        Example:
+        | Start Application | App1 | java -jar my_application.jar | 2 min | \${CURDIR}${/}libs |
+        | Take Libraries Into Use | MyLibrary | SwingLibrary |
+        """
         self._check_active_app()
         self._active_app.take_libraries_into_use(*library_names)
         self._update_keywords_to_robot()
@@ -530,7 +559,7 @@ class RemoteApplicationsConnector:
         self.take_libraries_into_use(library_name)
 
     def close_all_applications(self):
-        """Closes all the applications"""
+        """Closes all the applications."""
         for alias in self._apps.get_aliases():
             try:
                 app = self._apps.get_application(alias)
