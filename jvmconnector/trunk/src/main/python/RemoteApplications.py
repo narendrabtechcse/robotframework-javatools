@@ -410,7 +410,6 @@ class RemoteApplicationsConnector:
     def _run_command_with_java_tool_options(self, command, lib_dir, port):
         orig_java_tool_options = self._get_java_tool_options()
         os.environ['JAVA_TOOL_OPTIONS'] =  self._get_java_agent(lib_dir, port)
-        print "*INFO* Starting process with command '%s'" % (command)
         OperatingSystem().start_process(command)
         os.environ['JAVA_TOOL_OPTIONS'] = orig_java_tool_options
 
