@@ -37,7 +37,7 @@ Download !RemoteApplications.py from [http://code.google.com/p/robotframework-ja
 
 = Troubleshooting =
 
-Best way to start trouble shooting is to run the above examples. In case those work, then environent variables, Java version, proxy settings in case of Java Web Start should not be the problem.
+Best way to start trouble shooting is to run the above examples. In case those work, then environment variables, Java version and Java Web Start proxy settings should not be the problem.
 
 
 == Application Does Not Start ==
@@ -49,6 +49,10 @@ Best way to start trouble shooting is to run the above examples. In case those w
 *Cause:* There are spaces in the program that should be started
 
 *Solution:* This is known issue in RemoteApplications, see issue 36 for more details and workarounds.
+
+*Cause:* Proxy settings are incorrect with Java Web Start
+
+*Solution:* Run command "javaws -viewer" and modify the proxy settings.
 
 
 == Application Hangs ==
@@ -62,7 +66,7 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Cause:* Multiple Java processes are started with one command and RemoteApplications library accesses wrong JVM
 
-*Debugging:* See that there are no urls in launched.txt after the connection to the application is created and/or use [https://visualvm.dev.java.net/ visualvm] tool to monitor the started processes when running the tests.
+*Debugging:* See that there are no urls in launched.txt after the connection to the application is created and/or monitor the started processes when running the tests i.e. with [https://visualvm.dev.java.net/ visualvm] tool
 
 *Solution 1:* Change the command to start only one process
 
