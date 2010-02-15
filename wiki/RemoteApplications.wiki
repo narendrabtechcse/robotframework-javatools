@@ -77,7 +77,7 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Cause:* Testing capabilies are not started when the application is started
 
-*Debugging:* Check is there URL in launched.txt (see file location from [RemoteApplications#Documentation library documentation]).
+*Debugging:* Check is there URL in launched.txt (see file location from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation]).
 
 *Solution 1:* Remove the file and rerun the test cases. If problem persist, see solutions below.
 
@@ -96,4 +96,4 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Solution 2:* In case you are starting the application without using Remote Applications, check that you are giving correct path to the javaagent
 
-*Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar. See [RemoteApplications#Documentation library documentation] for the details how to insert test libraries to jvmconnector.jar.
+*Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for the details how to insert test libraries to jvmconnector.jar.
