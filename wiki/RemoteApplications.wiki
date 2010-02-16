@@ -18,22 +18,22 @@ Examples contains examples of testing standalone and Java Web Start application.
 == Prerequisites for Running the Examples ==
  * You'll need java, javaws and jybot in the path.
  * Download the [http://robotframework-javatools.googlecode.com/files/remote_applications_example-2009-12-23.zip remote_applications_example.zip]
- * Unzip it and chdir to example directory
+ * Unzip it and open command line to example directory
 
 == Running Standalone Example ==
- * From command line, run `./run.py standalone_application.tsv`
+ * Run `run.py standalone_application.tsv`
 
 == Running Java Web Start Example ==
- * Configure your proxy settings to Java Web Start if necessary.
+ * Configure Java Web Start proxy settings if necessary.
  * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary. 
- * If you are using Java 1.5, there is need to insert all the testing libraries to jvmconnector.jar. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for the details how to insert test libraries to jvmconnector.jar.
- * Last, from command line, run `./run.py javaws_application.tsv`
+ * If you are using Java 1.5, there is need to insert test libraries to jvmconnector.jar. That can be done by running command `jar ufm lib\jvmconnector-1.0-jar-with-dependencies.jar lib\manifest.txt` from command line. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for more details.
+ * Last, run `run.py javaws_application.tsv`
 
 The Java Web Start test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
 = Usage =
 
-Download !RemoteApplications.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page]. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF UserGuide] or examples below on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
+Download !RemoteApplications-version.py from [http://code.google.com/p/robotframework-javatools/downloads/list the download page] and rename it as !RemoteApplications.py. It depends on jvmconnector which can be downloaded from the same page. See [http://robotframework.googlecode.com/svn/tags/robotframework-2.1/doc/userguide/RobotFrameworkUserGuide.html#taking-test-libraries-into-use RF UserGuide] or examples above on how to take it into use. Jvmconnector needs to be added to CLASSPATH before starting RF.
 
 = Troubleshooting =
 
@@ -81,7 +81,7 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Solution 1:* Remove the file and rerun the test cases. If problem persist, see solutions below.
 
-*Solution 2:* In case you are setting the javaagent, see that it has proper values. Add "2 > error.txt" to end of the command you are using to start your application and you should see message "Picked up JAVA_TOOL_OPTIONS: -javaagent:/path/to/jvmconnector.jar=/path/to/lib/" in the error.txt if everything goes fine. If not, there should be reason for the failure.
+*Solution 2:* In case you are using Robot agent, see that -javaagent has proper values (see details from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation]). Add "2 > error.txt" to end of the command you are using to start your application and you should see message "Picked up JAVA_TOOL_OPTIONS: -javaagent:/path/to/jvmconnector.jar=/path/to/lib/" in the error.txt if everything goes fine. If not, there should be reason for the failure.
 
 *Solution 3:* In case you are using "Start Application" keyword and application is started, please submit an issue.
 
@@ -94,6 +94,6 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Solution 1:* Check that you are giving correct directory to "Start Application" keyword's lib_dir argument
 
-*Solution 2:* In case you are starting the application without using Remote Applications, check that you are giving correct path to the javaagent
+*Solution 2:* In case you are starting the application without using Remote Applications, check that you are giving correct path to the Robot Agent (see details from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation]).
 
 *Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for the details how to insert test libraries to jvmconnector.jar.
