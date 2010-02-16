@@ -1,6 +1,5 @@
 *** Settings ***
 Library	RemoteApplications
-#Suite Setup	Set Proxy
 
 *** Variables ***
 ${JNLP URL}	http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp
@@ -23,8 +22,3 @@ Use Application
 	Select From Main Menu	Test Menu|Show Dialog
 	selectDialog	Message
 	pushButton	OK
-
-Set Proxy
-	Take Library Into Use	JavaTools
-	setSystemProperty	http.proxyHost	10.159.32.155
-	setSystemProperty	http.proxyPort	8080
