@@ -27,7 +27,7 @@ http://robotframework-javatools.googlecode.com/svn/wiki/images/jvmconnection.png
 
 RemoteApplications is used for launching java and javaws applications in a separate process.
 
-===!ApplicationLauncher===
+===!ApplicationLauncher (deprecated)===
 
 ApplicationLauncher is used for launching java and javaws applications in a separate process.
 
