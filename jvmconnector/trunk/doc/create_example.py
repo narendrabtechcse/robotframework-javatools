@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import glob
 import os
 import shutil
@@ -15,15 +17,14 @@ REMOTE_LIBRARY = os.path.join(ROOT, 'src', 'main', 'python', 'RemoteApplications
 def main():
     _create_jar()
     _copy_libraries()
-    success = _run_tests()
-    if not success:
+    if _run_tests() != 0:
         print "Failed to run the tests."
         sys.exit(1)
     zip_example()
 
 def _create_jar():
     os.chdir(ROOT)
-    os.system('mvn assembly:assembly')
+    os.system('bash jarjar.sh')
 
 def _copy_libraries():
     shutil.copy(REMOTE_LIBRARY, LIB)
@@ -32,7 +33,7 @@ def _copy_libraries():
 
 def _run_tests():
     runner = os.path.join(EXAMPLE, 'run.py')
-    return os.system('python %s %s' % (runner, EXAMPLE)) == 0
+    return os.system('python %s %s' % (runner, EXAMPLE)) >> 8
 
 def remove(path):
     if os.path.exists(path):
