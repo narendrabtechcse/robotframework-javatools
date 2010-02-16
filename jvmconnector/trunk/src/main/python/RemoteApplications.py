@@ -310,17 +310,17 @@ class RemoteApplicationsConnector:
     to the started application's JVM. Robot Agent works with Java Web Start 
     applications and standalone java applications. It is taken into use by 
     setting the _JAVA_TOOL_OPTIONS_ environment variable with value:
-    
+
     _-javaagent:${jvmconnector.jar}=${testing_dependencies_dir}[:PORT=${port}]_
-    
+
     where _${jvmconnector.jar}_ is the path to the jvmconnector.jar and
     _${testing_dependencies_dir}_ is the path to the directory containing the
     test library jars. The optional _:PORT=${port}_ setting can be provided, 
     where the _:PORT=_ is separator, and _${port}_ defines the port number where 
     the service providing the testing capabilities is started.
-    
+
     Examples of the setting command:
-    
+
     _-javaagent:jvmconnector-1.0.jar=c:\\some\\testing\\lib_
     _-javaagent:~/some/testing/lib/jvmconnector-1.0.jar=~/some/testing/lib:PORT=12345_
 
@@ -332,16 +332,22 @@ class RemoteApplicationsConnector:
     application is started on remote machine, this rmi_url needs to be given to
     `Application Started` keyword.
 
-    *NOTE:* With Java 1.5 all of the testing dependencies needs to be included 
-    in the jvmconnector.jar file's MANIFEST.MF. The manifest can then be updated 
-    into the jar with command:
-    
-     `jar ufm jvmconnector.jar manifest.txt`
-    
+    *NOTE:* With Java 1.5 the testing dependencies cannot be added to the
+    application's JVM with the Robot Agent. Therefore the test libraries need
+    to be added to the classpath with some other means. Often it is possible to
+    just add the needed jars to CLASSPATH environment variable. However, in case
+    application's startup script clears the CLASSPATH or if application is 
+    started using Java Web Start, setting CLASSPATH environment variable is not
+    enough. In such situations the test libraries need to be included into the
+    jvmconnector.jar file's classpath. This can be achieved by updating the
+    jvmconnector.jar file's MANIFEST.MF file with command:
+
+    `jar ufm jvmconnector.jar manifest.txt`
+
     For example, insert following line to the manifest.txt:
-    
+
     Class-Path: ../relative/path/to/test_library.jar path/to/another_test_library.jar
-    
+
     This example entry in the manifest.txt includes two test library jars to the 
     jvmconnector.jar file's MANIFEST.MF. Paths to the test libraries have to be 
     relative to the jvmconnector.jar and line needs to end with new line 
