@@ -18,7 +18,7 @@ Examples contains examples of testing standalone and Java Web Start application.
 
 == Prerequisites for Running the Examples ==
  * You'll need java, javaws and jybot in the path.
- * Download the [http://robotframework-javatools.googlecode.com/files/remote_applications_example-2009-12-23.zip remote_applications_example.zip]
+ * Download the [http://robotframework-javatools.googlecode.com/files/remote_applications_example-1.0.zip remote_applications_example.zip]
  * Unzip it and open command line to example directory
 
 == Running Standalone Example ==
