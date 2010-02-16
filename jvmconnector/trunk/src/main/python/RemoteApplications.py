@@ -285,37 +285,44 @@ class RemoteApplicationsConnector:
 
     After the application is started, the needed test libraries must be taken 
     into use. That is done using `Take Library Into Use` and `Take Libraries 
-    Into Use` keywords. After that, keywords are ready to be used.
-    Note that you need to take the libraries separately into use for each 
-    application.
+    Into Use` keywords. After that, keywords are ready to be used. Note that the 
+    libraries needs to be taken into use separately for each application.
 
-    In case multiple applications are started with RemoteApplications library,
+    If multiple applications are started with RemoteApplications library,
     `Switch To Application` keyword can be used to define which application is
-    currently active. Keywords handle always the currently active application.
+    currently active. Keywords always handle the currently active application.
 
-    `Close Application` is used to close the application. In case application is
-    closed using some other keyword, RemoteApplications library needs to be
-    informed by using `Close Application` keyword. In case you want to close all
-    applications, `Close All Applications` keyword can be used.
+    The application is closed using the keyword `Close Application`. Even if the 
+    application is closed using some other keyword, RemoteApplications library 
+    still needs to be informed about it, using the `Close Application` keyword. 
+    The `Close All Applications` keyword can be used to close all the 
+    applications.
 
     *NOTE:* RemoteApplications cannot be taken into use with _WITH NAME_
-    functionality. However, there should not be need for that as the
+    functionality. However, there should not be a need for that as the
     RemoteApplications library can handle multiple applications.
 
 
     *ROBOT AGENT*
 
-    Sometimes you cannot start the application locally from command line. In
-    that case you need to use Robot Agent which will start testing capabilities
-    to the started JVM. Robot Agent works both with Java Web Start applications
-    and standalone java applications. It is taken into use by setting
-    environment variable _JAVA_TOOL_OPTIONS_ with value
+    Sometimes the application cannot be started locally from command line. In
+    that case the Robot Agent needs to be used. It will start testing capabilities
+    to the started application's JVM. Robot Agent works with Java Web Start 
+    applications and standalone java applications. It is taken into use by 
+    setting the _JAVA_TOOL_OPTIONS_ environment variable with value:
+    
     _-javaagent:${jvmconnector.jar}=${testing_dependencies_dir}[:PORT=${port}]_
+    
     where _${jvmconnector.jar}_ is the path to the jvmconnector.jar and
     _${testing_dependencies_dir}_ is the path to the directory containing the
-    test library jars. Optionally you can give the _:PORT=${port}_ where the
-    _:PORT=_ is separator, and _${port}_ defines the port number where the
-    service providing the testing capabilities is started.
+    test library jars. The optional _:PORT=${port}_ setting can be provided, 
+    where the _:PORT=_ is separator, and _${port}_ defines the port number where 
+    the service providing the testing capabilities is started.
+    
+    Examples of the setting command:
+    
+    _-javaagent:jvmconnector-1.0.jar=c:\\some\\testing\\lib_
+    _-javaagent:~/some/testing/lib/jvmconnector-1.0.jar=~/some/testing/lib:PORT=12345_
 
     When Robot Agent is used (RemoteApplications uses it internally) and the
     port parameter is not given, rmi_url from where the testing capabilities
@@ -325,16 +332,21 @@ class RemoteApplicationsConnector:
     application is started on remote machine, this rmi_url needs to be given to
     `Application Started` keyword.
 
-    *NOTE:* With Java 1.5 you have to include all your testing dependencies into
-    the jvmconnector.jar file's MANIFEST.MF. This can be done with command
-    `jar ufm jvmconnector.jar manifest.txt`. The line below is an example of
-    manifest.txt file's content which includes two test library jars to the
-    jvmconnector.jar file's MANIFEST.MF. Paths to the test libraries have to be
-    relative to the jvmconnector.jar and line needs to end with new line character.
-
+    *NOTE:* With Java 1.5 all of the testing dependencies needs to be included 
+    in the jvmconnector.jar file's MANIFEST.MF. The manifest can then be updated 
+    into the jar with command:
+    
+     `jar ufm jvmconnector.jar manifest.txt`
+    
+    For example, insert following line to the manifest.txt:
+    
     Class-Path: ../relative/path/to/test_library.jar path/to/another_test_library.jar
-
-    See more from http://java.sun.com/docs/books/tutorial/deployment/jar/downman.html
+    
+    This example entry in the manifest.txt includes two test library jars to the 
+    jvmconnector.jar file's MANIFEST.MF. Paths to the test libraries have to be 
+    relative to the jvmconnector.jar and line needs to end with new line 
+    character. See more from 
+    http://java.sun.com/docs/books/tutorial/deployment/jar/downman.html
     """
     _database = DataBasePaths().getLaunchedFile()
 
