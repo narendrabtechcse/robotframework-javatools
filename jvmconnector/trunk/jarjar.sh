@@ -4,7 +4,7 @@ target=`pwd`/target
 set -o verbose
 rm -rf target
 mvn assembly:assembly
-jar=`echo $target/jvmconnector-*-SNAPSHOT-jar-with-dependencies.jar`
+jar=`echo $target/jvmconnector-*-jar-with-dependencies.jar`
 jarjar=${jar%.*}-jarjar.jar
 java -jar ${target}/../release/jarjar-1.0.jar process ${target}/../release/jarjar_rules.txt $jar $jarjar
 unzip -d $target $jar META-INF/MANIFEST.MF
