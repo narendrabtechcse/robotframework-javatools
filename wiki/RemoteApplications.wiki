@@ -26,7 +26,7 @@ Examples contains examples of testing standalone and Java Web Start application.
 == Running Java Web Start Example ==
  * Configure Java Web Start proxy settings if necessary.
  * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary. 
- * If you are using Java 1.5, there is need to insert test libraries to jvmconnector.jar. That can be done by running command `jar ufm lib\jvmconnector-1.0-jar-with-dependencies.jar lib\manifest.txt` from command line. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for more details.
+ * If you are using Java 1.5, test libraries needs to be inserted to jvmconnector.jar. That can be done by running command `jar ufm lib\jvmconnector-1.0-jar-with-dependencies.jar lib\manifest.txt` from command line. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for more details.
  * Last, run `run.py javaws_application.tsv`
 
 The Java Web Start test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
