@@ -30,7 +30,16 @@ public class AgentConfiguration {
     }
 
     private void parse(String arguments) {
-        for (String item : arguments.split(":")) {
+    	String driveLetter = "";
+    	for (String item : arguments.split(":")) {
+        	if (item.length() == 1) {
+        		driveLetter = item;
+        	    continue;
+        	}
+        	if (driveLetter.length() == 1) {
+        		item = driveLetter + ":" + item;
+        	}
+    		driveLetter = "";
             if (item.toLowerCase().contains("port"))
                 port = Integer.valueOf(item.substring(5));
             else
