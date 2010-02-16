@@ -66,7 +66,7 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Cause:* Multiple Java processes are started with one command and RemoteApplications library accesses wrong JVM
 
-*Debugging:* See that there are no urls in launched.txt after the connection to the application is created and/or monitor the started processes when running the tests i.e. with [https://visualvm.dev.java.net/ visualvm] tool
+*Debugging:* See that there are no urls in launched.txt after the connection to the application is created and/or monitor the started processes when running the tests e.g. with [https://visualvm.dev.java.net/ visualvm] tool
 
 *Solution 1:* Change the command to start only one process
 
