@@ -271,14 +271,17 @@ class RemoteApplicationsConnector:
     contain generic information about RemoteApplications library. See also 
     keywords' documentation for more detailed information.
 
-    Application can be started using RemoteApplications or any other way e.g.
-    using SeleniumLibrary to start Java Web Start application. When the
-    application is started using RemoteApplications, command used to start the
-    application JVM is given to `Start Application` keyword. In case application
-    is started otherwise, RemoteApplications needs to be informed about started
-    application so that it can establish connection to it. This is achieved
-    using `Application Started` keyword. `Application Started` keyword can be
-    also used to connect application started on remote machine.
+	A Java application that can be started via command line, can be started 
+	using the RemoteApplications library's `Start Application` keyword. Such 
+	cases include starting a Java and Java Web Start processes, for example:
+    - java -jar myapp.jar
+    - jawaws http://robotframework.org/myapp.jnlp
+    - myapp.exe
+    
+    Otherwise the robot agent (see the chapter below) and `Application Started` 
+    keyword must be used to enable the testing capabilities. Such cases include:
+    - starting Java Web Start application from a web page
+    - running application remotely
 
     After the application is started, there is need to take the needed test 
     libraries into use. That is done using `Take Library Into Use` and `Take 
