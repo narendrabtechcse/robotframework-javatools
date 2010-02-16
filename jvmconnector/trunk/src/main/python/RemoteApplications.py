@@ -283,10 +283,11 @@ class RemoteApplicationsConnector:
     - starting Java Web Start application from a web page
     - running application remotely
 
-    After the application is started, there is need to take the needed test 
-    libraries into use. That is done using `Take Library Into Use` and `Take 
-    Libraries Into Use` keywords. After that, keywords are ready to be used.
-    Note that you need to take the libraries into use for every application.
+    After the application is started, the needed test libraries must be taken 
+    into use. That is done using `Take Library Into Use` and `Take Libraries 
+    Into Use` keywords. After that, keywords are ready to be used.
+    Note that you need to take the libraries separately into use for each 
+    application.
 
     In case multiple applications are started with RemoteApplications library,
     `Switch To Application` keyword can be used to define which application is
