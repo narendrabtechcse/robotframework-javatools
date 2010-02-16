@@ -322,6 +322,7 @@ class RemoteApplicationsConnector:
     Examples of the setting command:
 
     _-javaagent:jvmconnector-1.0.jar=c:\\some\\testing\\lib_
+
     _-javaagent:~/some/testing/lib/jvmconnector-1.0.jar=~/some/testing/lib:PORT=12345_
 
     When Robot Agent is used (RemoteApplications uses it internally) and the
