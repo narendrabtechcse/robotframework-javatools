@@ -1,6 +1,8 @@
 ﻿== Jvmconnector 1.0 ==
 
-This release introduces the new RemoteApplications library, which replaces the olde ApplicationLauncher library. The RemoteApplications library works only on Java 1.5 or higher. Release contains also fix for issue 35, hiding the 3rd party dependencies to avoid collision with SUT dependencies.  
+This release introduces the new RemoteApplications library, which replaces the olde ApplicationLauncher library. The RemoteApplications library works only on Java 1.5 or higher. Release contains also fix for issue 35, hiding the 3rd party dependencies to avoid collision with SUT dependencies.
+
+Version 1.0 was released on Tuesday, 16th of February, 2010 
 
 || *ID* || *Type* || *Priority* || *Summary* ||
 || Issue 30 || Enhancement || Critical || RemoteApplications library to handle multiple remote applications  ||
