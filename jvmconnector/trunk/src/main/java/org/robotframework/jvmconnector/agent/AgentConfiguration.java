@@ -26,26 +26,48 @@ public class AgentConfiguration {
     private List<String> jars = new ArrayList<String>();
 
     public AgentConfiguration(String arguments) {
-        parse(arguments);
+        parseJarsAndPossiblePortFrom(arguments);
     }
 
-    private void parse(String arguments) {
-    	String driveLetter = "";
-    	for (String item : arguments.split(":")) {
-        	if (item.length() == 1) {
-        		driveLetter = item;
-        	    continue;
-        	}
-        	if (driveLetter.length() == 1) {
-        		item = driveLetter + ":" + item;
-        	}
-    		driveLetter = "";
+    private void parseJarsAndPossiblePortFrom(String arguments) {
+        for (String item : split(arguments)) {
             if (item.toLowerCase().contains("port"))
                 port = Integer.valueOf(item.substring(5));
             else
                 jars.add(item);
         }
-        
+    }
+
+    private List<String> split(String arguments) {
+        List<String> args = new ArrayList<String>();
+        for (String item : arguments.split(":")) {
+            if (driveLetterIsLastAppenededItemIn(args)) {
+                appendItemToDriveLetter(args, item);
+            } else {
+                args.add(item);
+            }
+        }
+        return args;
+    }
+
+    private void appendItemToDriveLetter(List<String> items, String item) {
+        String letter = getLastItemFrom(items);
+        removeLastItemFrom(items);
+        items.add(letter + ":" + item);
+    }
+
+    private String removeLastItemFrom(List<String> items) {
+        return items.remove(items.size()-1);
+    }
+
+    private boolean driveLetterIsLastAppenededItemIn(List<String> items) {
+        if (!items.isEmpty() && getLastItemFrom(items).length() == 1 ) 
+            return true;
+        return false;
+    }
+
+    private String getLastItemFrom(List<String> items) {
+        return items.get(items.size()-1);
     }
 
     public Integer getPort() {
