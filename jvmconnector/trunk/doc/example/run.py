@@ -11,7 +11,8 @@ def main(args):
     os.environ['CLASSPATH'] = os.pathsep.join(jars)
     os.environ['PYTHONPATH'] = lib
     outputdir = os.path.join(dir, 'results')
-    os.system('jybot --loglevel TRACE --outputdir "%s" %s' % (outputdir, ' '.join(args)))
+    rc = os.system('jybot --loglevel TRACE --outputdir "%s" %s' % (outputdir, ' '.join(args))) >> 8
+    sys.exit(rc)
 
 if __name__ == '__main__':
     main(sys.argv[1:])

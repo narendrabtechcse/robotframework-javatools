@@ -4,27 +4,21 @@ import glob
 import os
 import shutil
 import sys
+import subprocess
 import zipfile
 
-CURDIR = os.path.abspath(os.path.dirname(__file__))
-EXAMPLE = os.path.join(CURDIR, 'example')
-ROOT = os.path.join(CURDIR, '..')
-TARGET = os.path.join(ROOT, 'target')
+_ROOT = os.path.abspath(os.path.dirname(__file__))
+DOC = os.path.join(_ROOT, 'doc')
+EXAMPLE = os.path.join(DOC, 'example')
+TARGET = os.path.join(_ROOT, 'target')
 LIB = os.path.join(EXAMPLE, 'lib')
-REMOTE_LIBRARY = os.path.join(ROOT, 'src', 'main', 'python', 'RemoteApplications.py')
+REMOTE_LIBRARY = os.path.join(_ROOT, 'src', 'main', 'python', 'RemoteApplications.py')
 
 
 def main():
-    _create_jar()
     _copy_libraries()
-    if _run_tests() != 0:
-        print "Failed to run the tests."
-        sys.exit(1)
-    zip_example()
-
-def _create_jar():
-    os.chdir(ROOT)
-    os.system('bash jarjar.sh')
+    _run_tests()
+    _zip_example()
 
 def _copy_libraries():
     shutil.copy(REMOTE_LIBRARY, LIB)
@@ -32,20 +26,25 @@ def _copy_libraries():
     shutil.copy(sorted(jars)[-1], LIB)
 
 def _run_tests():
+    rc = _run()
+    if rc != 0:
+        print "Failed to run the tests."
+        sys.exit(1)
+
+def _run():
     runner = os.path.join(EXAMPLE, 'run.py')
-    return os.system('python %s %s' % (runner, EXAMPLE)) >> 8
+    return subprocess.call(['python', runner, EXAMPLE])
 
-def remove(path):
-    if os.path.exists(path):
-        os.remove(path)
-
-def zip_example():
-    zip_path = os.path.join(CURDIR, 'remote_applications_example.zip')
-    zip = zipfile.ZipFile(zip_path, 'w')
+def _zip_example():
+    zip_target_path = os.path.join(TARGET, 'remote_applications_example.zip')
+    zip = zipfile.ZipFile(zip_target_path, 'w')
     paths = _get_paths([(LIB, '*.jar'), (LIB, '*.py'), (EXAMPLE, '*.*')])
+    print 'Zipping files...'
     for path in paths:
-        zip.write(path, path.replace(CURDIR, ''))
-    print "Created zip file '%s'" % (zip_path)
+    	path_in_zip_file = path.replace(DOC, '')
+    	print '  %s' % (path_in_zip_file)
+        zip.write(path, path_in_zip_file)
+    print "Created zip file '%s'." % (zip_target_path)
 
 def _get_paths(patterns):
     paths = []
