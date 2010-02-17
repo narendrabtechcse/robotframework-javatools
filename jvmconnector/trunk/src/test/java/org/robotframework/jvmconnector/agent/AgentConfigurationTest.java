@@ -40,13 +40,9 @@ public class AgentConfigurationTest{
                    "C:\\foo\\bar\\zip.jar;foo.jar;E:\\some\\package\\foo.jar", ";");
     }
 
-    @Test
+    @Test(expected=NumberFormatException.class)
     public void parseWithInvalidPort() {
-        try {
-            testParser("zip.jar:port=abcd:foo.jar", null, "zip.jar:foo.jar");
-            throw new AssertionError("Not numeric port should fail");
-        }
-        catch (NumberFormatException error) {}
+        testParser("zip.jar:port=abcd:foo.jar", null, "zip.jar:foo.jar");
     }
 
     private void testParser(String input, Integer port, String jars, String splitter) {
