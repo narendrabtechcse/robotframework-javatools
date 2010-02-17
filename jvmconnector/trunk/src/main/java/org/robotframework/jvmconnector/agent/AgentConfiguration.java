@@ -26,16 +26,28 @@ public class AgentConfiguration {
     private List<String> jars = new ArrayList<String>();
 
     public AgentConfiguration(String arguments) {
-        parseJarsAndPossiblePortFrom(arguments);
+        List<String> splittedArguments = split(arguments);
+        parsePort(splittedArguments);
+        parseJars(splittedArguments);
     }
 
-    private void parseJarsAndPossiblePortFrom(String arguments) {
-        for (String item : split(arguments)) {
-            if (item.toLowerCase().contains("port"))
+    private void parsePort(List<String> arguments) {
+        for (String item : arguments) {
+            if (isPort(item)) {
                 port = Integer.valueOf(item.substring(5));
-            else
-                jars.add(item);
+                return;
+            }
         }
+    }
+
+    private void parseJars(List<String> arguments) {
+        for (String item : arguments)
+            if (!isPort(item))
+                jars.add(item);
+    }
+
+    private boolean isPort(String item) {
+        return item.toLowerCase().contains("port");
     }
 
     private List<String> split(String arguments) {
@@ -108,6 +120,4 @@ public class AgentConfiguration {
             return false;
         return true;
     }
-
-    
 }
