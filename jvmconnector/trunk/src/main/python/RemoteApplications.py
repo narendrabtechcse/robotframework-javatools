@@ -453,7 +453,11 @@ class RemoteApplicationsConnector:
             if not os.path.exists(jar_file):
                 continue
             try:
-                premain_class = JarFile(jar_file).getManifest().getMainAttributes().getValue('Premain-Class')
+                manifest = JarFile(jar_file).getManifest()
+                if not manifest:
+                    continue
+                main_attributes = manifest.getMainAttributes()
+                premain_class = main_attributes.getValue('Premain-Class')
             except (ZipException, IOException, FileNotFoundException):
                 continue
             if premain_class == 'org.robotframework.jvmconnector.agent.RmiServiceAgent':
