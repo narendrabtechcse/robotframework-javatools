@@ -30,18 +30,33 @@ public class AgentConfigurationTest{
     }
 
     @Test
+    public void parseWithWindowsDriveLetter() {
+        testParser("C:\\zip.jar:D:\\foo.jar", null, "C:\\zip.jar;D:\\foo.jar", ";");
+    }
+
+    @Test
+    public void parseWithWindowsDriveLetterComplex() {
+        testParser("C:\\foo\\bar\\zip.jar:foo.jar:E:\\some\\package\\foo.jar", null, 
+                   "C:\\foo\\bar\\zip.jar;foo.jar;E:\\some\\package\\foo.jar", ";");
+    }
+
+    @Test
     public void parseWithInvalidPort() {
         try {
-        	testParser("zip.jar:port=abcd:foo.jar", null, "zip.jar:foo.jar");
-        	throw new AssertionError("Not numeric port should fail");
+            testParser("zip.jar:port=abcd:foo.jar", null, "zip.jar:foo.jar");
+            throw new AssertionError("Not numeric port should fail");
         }
         catch (NumberFormatException error) {}
     }
 
-    private void testParser(String input, Integer port, String jars) {
+    private void testParser(String input, Integer port, String jars, String splitter) {
         AgentConfiguration conf = new AgentConfiguration(input);
         assertEquals(port, conf.getPort());
-        List<String> expected = Arrays.asList(jars.split(":"));
+        List<String> expected = Arrays.asList(jars.split(splitter));
         assertEquals(expected, conf.getJars());
+    }
+
+    private void testParser(String input, Integer port, String jars) {
+        testParser(input, port, jars, ":");
     }
 }
