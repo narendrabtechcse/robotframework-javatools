@@ -306,10 +306,10 @@ class RemoteApplicationsConnector:
     *ROBOT AGENT*
 
     Sometimes the application cannot be started locally from command line. In
-    that case the Robot Agent needs to be used. It will start testing capabilities
-    to the started application's JVM. Robot Agent works with Java Web Start 
-    applications and standalone java applications. It is taken into use by 
-    setting the _JAVA_TOOL_OPTIONS_ environment variable with value:
+    that case the Robot Agent needs to be used. It will start testing
+    capabilities to the started application's JVM. Robot Agent works with Java
+    Web Start applications and standalone java applications. It is taken into
+    use by setting the _JAVA_TOOL_OPTIONS_ environment variable with value:
 
     _-javaagent:${jvmconnector.jar}=${testing_dependencies_dir}[:PORT=${port}]_
 
@@ -328,10 +328,15 @@ class RemoteApplicationsConnector:
     When Robot Agent is used (RemoteApplications uses it internally) and the
     port parameter is not given, rmi_url from where the testing capabilities
     can be accessed is written to file
-    _%HOME/.robotframework/jvmconnector/launched.txt_ or to file
-    _%APPDATA%\\RobotFramework\\jvmconnector\\launched.txt_ on Windows. In case
+    `%HOME/.robotframework/jvmconnector/launched.txt` or to file
+    `%APPDATA%\\RobotFramework\\jvmconnector\\launched.txt` on Windows. In case
     application is started on remote machine, this rmi_url needs to be given to
-    `Application Started` keyword.
+    `Application Started` keyword. When `Application Started` keyword
+    establishes connection to the application, `launched.txt` is cleared and the
+    active connection is added to `connected.txt` file (located in same
+    directory as `launched.txt`). This file is used to connect active
+    application in case the `connect_to_previously_launched_applications`
+    argument is given when `importing` RemoteApplications library.
 
     *NOTE:* With Java 1.5 the testing dependencies cannot be added to the
     application's JVM with the Robot Agent. Therefore the test libraries need
