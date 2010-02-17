@@ -32,35 +32,35 @@ public class AgentConfiguration {
     }
 
     private List<String> split(String arguments) {
-    	List<String> args = new ArrayList<String>();
-    	for (String item : arguments.split(":")) {
-    		if (driveLetterIsLastAppenededItemIn(args)) {
-    			appendItemToDriveLetter(args, item);
-    		} else {
-    			args.add(item);
-    		}
-    	}
-    	return args;
+        List<String> args = new ArrayList<String>();
+        for (String item : arguments.split(":")) {
+            if (driveLetterIsLastAppenededItemIn(args)) {
+                appendItemToDriveLetter(args, item);
+            } else {
+                args.add(item);
+            }
+        }
+        return args;
     }
 
     private boolean driveLetterIsLastAppenededItemIn(List<String> items) {
-    	if (!items.isEmpty() && getLastItemFrom(items).length() == 1 ) 
-    		return true;
-    	return false;
+        if (!items.isEmpty() && getLastItemFrom(items).length() == 1 ) 
+            return true;
+        return false;
     }
 
     private String getLastItemFrom(List<String> items) {
-    	return items.get(items.size()-1);
+        return items.get(items.size()-1);
     }
 
     private void appendItemToDriveLetter(List<String> items, String item) {
-    	String letter = getLastItemFrom(items);
-    	removeLastItemFrom(items);
-    	items.add(letter + ":" + item);
+        String letter = getLastItemFrom(items);
+        removeLastItemFrom(items);
+        items.add(letter + ":" + item);
     }
 
     private String removeLastItemFrom(List<String> items) {
-    	return items.remove(items.size()-1);
+        return items.remove(items.size()-1);
     }
 
     private void parsePort(List<String> arguments) {
@@ -73,7 +73,7 @@ public class AgentConfiguration {
     }
 
     private boolean isPort(String item) {
-    	return item.toLowerCase().contains("port");
+        return item.toLowerCase().contains("port");
     }
 
     private void parseJars(List<String> arguments) {
