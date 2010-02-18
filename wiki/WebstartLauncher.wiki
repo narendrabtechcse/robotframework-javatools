@@ -1,1 +1,1 @@
-﻿!WebstartLauncher is removed from the jvmconnector release 0.9 onwards. For testing Java Web Start applications see ApplicationLauncher.
+﻿!WebstartLauncher is removed from the jvmconnector release 0.9 onwards. For testing Java Web Start applications see RemoteApplications.
