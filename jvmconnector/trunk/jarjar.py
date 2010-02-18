@@ -7,6 +7,20 @@ import sys
 import zipfile
 import shutil
 
+def jarjar_dist_jar():
+    curdir = os.path.dirname(os.path.abspath(__file__))
+    targetdir = os.path.join(curdir, 'target')
+    jarpath = glob.glob(os.path.join(targetdir,
+                                    'jvmconnector-*-jar-with-dependencies.jar'))[0]
+    mf_path = extract_manifest(jarpath, targetdir)
+    jarjar(curdir, jarpath)
+    tmpdir = os.path.join(targetdir, 'tmp')
+    if os.path.exists(tmpdir):
+        shutil.rmtree(tmpdir) 
+    rmi_compile(jarpath, tmpdir)
+    rejar(jarpath, mf_path, tmpdir)
+    shutil.rmtree(tmpdir)
+    os.remove(mf_path)
 
 def call(cmd):
     print " ".join(cmd)
@@ -50,16 +64,4 @@ def rejar(jarpath, mf_path, dir):
     call(['jar', 'cfm', jarpath, mf_path, '-C', dir, '.'])
 
 if __name__ == '__main__':
-    curdir = os.path.dirname(os.path.abspath(__file__))
-    targetdir = os.path.join(curdir, 'target')
-    jarpath = glob.glob(os.path.join(targetdir,
-                                    'jvmconnector-*-jar-with-dependencies.jar'))[0]
-    mf_path = extract_manifest(jarpath, targetdir)
-    jarjar(curdir, jarpath)
-    tmpdir = os.path.join(targetdir, 'tmp')
-    if os.path.exists(tmpdir):
-        shutil.rmtree(tmpdir) 
-    rmi_compile(jarpath, tmpdir)
-    rejar(jarpath, mf_path, tmpdir)
-    shutil.rmtree(tmpdir)
-    os.remove(mf_path)
+    jarjar_dist_jar()
