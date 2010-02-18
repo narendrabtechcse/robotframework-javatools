@@ -44,7 +44,7 @@ def extract_manifest(jarpath, targetdir):
 
 def rmi_compile(jarpath, tmpdir):
     unzip_file_into_dir(jarpath, tmpdir)
-    class_name = 'org.robotframework.org.springframework.remoting.rmi.RmiInvocationWrapper'
+    class_name = 'org.robotframework.jvmconnector.org.springframework.remoting.rmi.RmiInvocationWrapper'
     call(['rmic', '-verbose', '-classpath', tmpdir, '-d', tmpdir, class_name])
     call(['rmic', '-verbose', '-iiop', '-always', '-classpath', tmpdir, '-d', 
           tmpdir, class_name])
