@@ -562,7 +562,7 @@ class RemoteApplicationsConnector:
     def _update_keywords_to_robot(self):
         # TODO: When Robot has better support for reimporting libraries,
         # update following code to use that approach. See RF issue 293.
-        lib_name = os.path.splitext(os.path.basename(__file__))[0]
+        lib_name = 'RemoteApplications'
         self._remove_lib_from_current_namespace(lib_name)
         args = self._use_previously_launched and [self._use_previously_launched] or []
         self._remove_lib_from_importer(lib_name, args)
