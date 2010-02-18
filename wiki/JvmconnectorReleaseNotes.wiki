@@ -1,4 +1,13 @@
-﻿== Jvmconnector 1.0 ==
+﻿== Jvmconnector 1.0.1 ==
+
+This minor release fixes a bug with jar with a missing manifest issue 37.
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 37 || Defect || High || RemoteApplications crashes if it encounters a jar with missing manifest before jvmconnector.jar in classpath ||
+
+Altogether 1 issues.
+
+== Jvmconnector 1.0 ==
 
 This release introduces the new RemoteApplications library, which replaces the olde ApplicationLauncher library. The RemoteApplications library works only on Java 1.5 or higher. Release contains also fix for issue 35, hiding the 3rd party dependencies to avoid collision with SUT dependencies.
 
