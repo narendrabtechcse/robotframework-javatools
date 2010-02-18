@@ -1,11 +1,13 @@
-﻿== Jvmconnector 1.0.1 ==
+﻿#labels Featured
+== Jvmconnector 1.0.1 ==
 
-This minor release fixes a bug with jar with a missing manifest issue 37.
+This minor release fixes a bug with jar with a missing manifest issue 37 and incompatibility with Jython 2.5.1.
 
-|| *ID* || *Type* || *Priority* || *Summary* ||
+|| ID || Type || Priority || Summary ||
 || Issue 37 || Defect || High || RemoteApplications crashes if it encounters a jar with missing manifest before jvmconnector.jar in classpath ||
+|| Issue 38 || Defect || Medium || RemoteApplications does not work with Jython 2.5.1 unless RemoteApplications$py.class file is removed ||
 
-Altogether 1 issues.
+Altogether 2 issues.
 
 == Jvmconnector 1.0 ==
 
