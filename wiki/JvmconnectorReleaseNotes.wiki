@@ -1,7 +1,7 @@
 ﻿#labels Featured
 == Jvmconnector 1.0.1 ==
 
-This minor release fixes a bug with jar with a missing manifest issue 37 and incompatibility with Jython 2.5.1.
+This minor release fixes a bug with jar with a missing manifest (issue 37) and incompatibility with Jython 2.5.1 issue (issue 38).
 
 Version 1.0.1 was released on Thursday, 18th of February, 2010 
 
