@@ -22,8 +22,7 @@ def extract_manifest(jarpath, targetdir):
     zfobj = zipfile.ZipFile(jarpath)
     for name in zfobj.namelist():
         if name == 'META-INF/MANIFEST.MF':
-            os.mkdir(os.path.join(targetdir, 'META-INF'), 0777)
-            mf_path = os.path.join(targetdir, name)
+            mf_path = os.path.join(targetdir, 'MANIFEST.MF')
             outfile = open(mf_path, 'wb')
             outfile.write(zfobj.read(name))
             outfile.close()
@@ -62,5 +61,5 @@ if __name__ == '__main__':
         shutil.rmtree(tmpdir) 
     rmi_compile(jarpath, tmpdir)
     rejar(jarpath, mf_path, tmpdir)
-    shutil.rmtree(tmpdir)    
+    shutil.rmtree(tmpdir)
     os.remove(mf_path)
