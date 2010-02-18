@@ -311,7 +311,7 @@ class RemoteApplicationsConnector:
     Web Start applications and standalone java applications. It is taken into
     use by setting the _JAVA_TOOL_OPTIONS_ environment variable with value:
 
-    _-javaagent:${jvmconnector.jar}=${testing_dependencies_dir}[:PORT=${port}]_
+    _-javaagent:"${jvmconnector.jar}"="${testing_dependencies_dir}"[:PORT=${port}]_
 
     where _${jvmconnector.jar}_ is the path to the jvmconnector.jar and
     _${testing_dependencies_dir}_ is the path to the directory containing the
@@ -321,9 +321,9 @@ class RemoteApplicationsConnector:
 
     Examples of the setting command:
 
-    _-javaagent:jvmconnector-1.0.jar=c:\\some\\testing\\lib_
+    _-javaagent:"jvmconnector-1.0.jar"="c:\\some\\testing\\lib"_
 
-    _-javaagent:~/some/testing/lib/jvmconnector-1.0.jar=~/some/testing/lib:PORT=12345_
+    _-javaagent:"~/some/testing/lib/jvmconnector-1.0.jar"="~/some/testing/lib":PORT=12345_
 
     When Robot Agent is used (RemoteApplications uses it internally) and the
     port parameter is not given, rmi_url from where the testing capabilities
@@ -450,8 +450,8 @@ class RemoteApplicationsConnector:
         lib_dir = lib_dir or ''
         jvm_connector_jar = self._get_jvm_connector_jar()
         port = port and ['PORT=%s' % port] or []
-        return '-javaagent:%s=%s' % (jvm_connector_jar, 
-                                     os.path.pathsep.join(port + [lib_dir]))
+        return '-javaagent:"%s"="%s"' % (jvm_connector_jar, 
+                                         os.path.pathsep.join(port + [lib_dir]))
 
     def _get_jvm_connector_jar(self):
         for jar_file in self._get_jars_from_classpath():
