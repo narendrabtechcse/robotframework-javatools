@@ -10,8 +10,8 @@
 = Documentation =
 
 The full library documentation by release is found below:
-  * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-1.0/doc/RemoteApplications.html 1.0 Version ]
-  * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html Development Version ]
+  * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-1.0.1/doc/RemoteApplications.html 1.0.1 Version ]
+/doc/RemoteApplications.html Development Version ]
 
 = Examples =
 
