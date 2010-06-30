@@ -11,7 +11,7 @@ The plugin is still a prototype and under development, but feel free to check it
 
 =Downloading=
 
-Currently the plugin code must be checked out from the [http://code.google.com/p/robotframework-javatools/source/browse/ version control]. Downloadable releases will created in the future when the plugin gets more mature.
+Please download the [http://robotframework-javatools.googlecode.com/files/robotframework.hpi Robot Framework Hudson Plugin] or check out the source code from [http://code.google.com/p/robotframework-javatools/source/browse/ version control] and build your own.
 
 =Building=
 
