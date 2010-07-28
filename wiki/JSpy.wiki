@@ -1,15 +1,33 @@
+#labels Featured
 *Java Spy tool to find swing application component properties.*
 
 = Introduction =
-JSpy is a tool can show the swing application (SUT) component properties in a easy move move.
+JSpy is a tool can show the swing application (SUT) component properties in a easy move move. Helpful for automating Swing applications by getting application details with out digging in to the application code.
 
 = Usage =
-* Download the JSpy.jar
-* Double click to run the spy application
-* Go to menu File->Launch and in the resultant dialog enter the command to launch the application (System Under Test)
-: (example: c:\app\myAppLauncher.exe | javaws http://myapp/launch.jnlp etc.)
-* Wait till the SUT to come up
+  * Download the JSpy.jar
+  * Double click to run the spy application
+  * Go to menu File->Launch and in the resultant dialog enter the command to launch the application (System Under Test)
+ example: c:\app\myAppLauncher.exe | javaws http://myapp/launch.jnlp etc
+ * Wait till the SUT to come up
+ * Now hover the mouse over the SUT components to view the properties
+ * Select SUT and Press "ctrl+alt+r" to re-index the component list (useful when few components added later in the window)
 
-* Now hover the mouse over the SUT components to view the properties
-* 
+
+*Properties displayed:*
+
+ # Component name
+ # Component Index
+ # Component Hierarchy
+ # Component base class
+ # Window title
+ # Other generic properties (width, height etc.)
+
+
+*Advantages:*
+
+ * Zero configuration required (just click to run)
+ * Need not specify any classpath settings of SUT to recognize
+
+
 
