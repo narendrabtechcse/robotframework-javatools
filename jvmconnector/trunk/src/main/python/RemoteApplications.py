@@ -9,6 +9,11 @@ from java.io import IOException, FileNotFoundException
 from robot.utils import eq, normalize, NormalizedDict, seq2str, timestr_to_secs
 from robot.running import NAMESPACES
 from robot.running.namespace import IMPORTER
+try:
+    from robot.running.testlibraries import TestLibrary
+except ImportError:
+    #Available only from RF 2.5 onwards. 
+    pass
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.OperatingSystem import OperatingSystem
 
@@ -577,9 +582,18 @@ class RemoteApplicationsConnector:
         if IMPORTER._libraries.has_key((name, tuple(args))):
             del(IMPORTER._libraries[(name, tuple(args))])
         elif IMPORTER._libraries.has_key((name, args)):
-                index = IMPORTER._libraries._keys.index((name, args))
-                IMPORTER._libraries._keys.pop(index)
-                IMPORTER._libraries._libs.pop(index)
+                self._delete_item_from_cache((name, args))
+        else:
+            #RF 2.5 support
+            lib = TestLibrary(name, args, None, create_handlers=False)
+            key = (name, lib.positional_args, lib.named_args)
+            if IMPORTER._libraries.has_key(key):
+                self._delete_item_from_cache(key)
+
+    def _delete_item_from_cache(self, key):
+        index = IMPORTER._libraries._keys.index(key)
+        IMPORTER._libraries._keys.pop(index)
+        IMPORTER._libraries._libs.pop(index)
 
     def take_library_into_use(self, library_name):
         """Takes given library into use.
