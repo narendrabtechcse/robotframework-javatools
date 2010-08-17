@@ -472,7 +472,7 @@ class RemoteApplicationsConnector:
                 continue
             if premain_class == 'org.robotframework.jvmconnector.agent.RmiServiceAgent':
                 print "*TRACE* Found jvm_connector jar '%s'" % jar_file
-                return jar_file
+                return os.path.abspath(jar_file)
         raise RuntimeError("Could not find jvmconnector jarfile from CLASSPATH")
 
     def _get_jars_from_classpath(self):
