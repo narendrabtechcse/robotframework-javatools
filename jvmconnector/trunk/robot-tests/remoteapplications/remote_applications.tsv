@@ -46,6 +46,14 @@ Application With Startup Script Which Clears CLASSPATH
 	Select Window	Other App
 	Close Application
 
+Application Started With Command Changing Directory and Startup Script Which Clears CLASSPATH 
+	Start Application	CD and Clean CLASSPATH App	cd ${CURDIR} && python start_simple_java_app.py
+	...	15 seconds	${JAR DIR}
+	Take Library Into Use	SwingLibrary
+	Select Window	Other App
+	Close Application
+
+
 Close Active Application
 	Take Applications Into Use	ClosedApp
 	Close Application
