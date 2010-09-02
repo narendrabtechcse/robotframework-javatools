@@ -69,7 +69,7 @@ class Applications:
     def _get_aliases_and_urls_from_db(self):
         items = []
         for connection in self._read_lines(): 
-            items.append(connection.split('\t'))
+            items.append(connection.rsplit('\t', 1))
         return items
 
     def _read_lines(self):
@@ -77,8 +77,11 @@ class Applications:
             f = open(self._database, 'rb')
             data = f.read().splitlines()
             f.close()
-            return data
+            return [line for line in data if self._is_valid_connection(line)]
         return []
+
+    def _is_valid_connection(self, line):
+        return len(line.rsplit('\t', 1)) == 2
 
     def add(self, alias, app):
         self._apps[alias] = app
@@ -87,8 +90,9 @@ class Applications:
 
     def _store(self):
         data = ['%s\t%s' % (alias, url) for alias, url in self._old_apps.items()]
-        self._write('\n'.join(data))
-        print "*TRACE* Stored to connected applications database: ", data
+        data_txt = '\n'.join(data)
+        self._write(data_txt)
+        print "*TRACE* Stored to connected applications database: \n%s" % data_txt
 
     def _write(self, data):
         f = open(self._database, 'wb')
