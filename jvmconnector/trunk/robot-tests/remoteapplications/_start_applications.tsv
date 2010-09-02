@@ -3,7 +3,7 @@ Resource	remoteapps_resource.tsv
 
 *** Test Cases ***
 Start Applications
-	:FOR	${i}	IN RANGE	1	7
+	:FOR	${i}	IN RANGE	1	8
 		Start Application	Separate${i}
 
 *** Keywords ***

@@ -5,31 +5,40 @@ Resource	../resources/common.tsv
 Test Teardown	Close All Applications
 
 
+*** Variables ***
+${APP} =	Separate
+
+
 *** Test Cases ***
 
 Connect To Previously Started Application Using Start Application Keyword
-	Use Start Application Keyword To Connect	Separate1
-	Application Should Be In Use	Separate1
+	Use Start Application Keyword To Connect	${APP}1
+	Application Should Be In Use	${APP}1
 
 Connect To Previously Started Application Using Application Started Keyword
-	Use Application Started Keyword To Connect	Separate2
-	Application Should Be In Use	Separate2
+	Use Application Started Keyword To Connect	${APP}2
+	Application Should Be In Use	${APP}2
 
 Connect To Previously Started Applications Using Start Application Keyword
-	Use Start Application Keyword To Connect	Separate3
-	Application Should Be In Use	Separate3
-	Use Start Application Keyword To Connect	Separate4
-	Application Should Be In Use	Separate4
-	Switch To Application	Separate3
-	Application Should Be In Use	Separate3
+	Use Start Application Keyword To Connect	${APP}3
+	Application Should Be In Use	${APP}3
+	Use Start Application Keyword To Connect	${APP}4
+	Application Should Be In Use	${APP}4
+	Switch To Application	${APP}3
+	Application Should Be In Use	${APP}3
 
 Connect To Previously Started Applications Using Application Started Keyword
-	Use Application Started Keyword To Connect	Separate5
-	Application Should Be In Use	Separate5
-	Use Application Started Keyword To Connect	Separate6
-	Application Should Be In Use	Separate6
-	Switch To Application	Separate5
-	Application Should Be In Use	Separate5
+	Use Application Started Keyword To Connect	${APP}5
+	Application Should Be In Use	${APP}5
+	Use Application Started Keyword To Connect	${APP}6
+	Application Should Be In Use	${APP}6
+	Switch To Application	${APP}5
+	Application Should Be In Use	${APP}5
+
+Invalid Connected File
+	[tags]	invalid
+	Use Start Application Keyword To Connect	${APP}7
+	Application Should Be In Use	${APP}7
 
 
 *** Keywords ***
