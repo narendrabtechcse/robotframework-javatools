@@ -10,7 +10,7 @@
 = Documentation =
 
 The full library documentation by release is found below:
-  * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-1.0.1/doc/RemoteApplications.html 1.0.1 Version ]
+  * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-1.1/doc/RemoteApplications.html 1.1 Version ]
   * [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html Development Version ]
 
 = Examples =
@@ -19,7 +19,7 @@ Examples contains examples of testing standalone and Java Web Start application.
 
 == Prerequisites for Running the Examples ==
  * You'll need java, javaws and jybot in the path.
- * Download the [http://robotframework-javatools.googlecode.com/files/remote_applications_example-1.0.1.zip remote_applications_example.zip]
+ * Download the [http://robotframework-javatools.googlecode.com/files/remote_applications_example-1.1.zip remote_applications_example.zip]
  * Unzip it and open command line to example directory
 
 == Running Standalone Example ==
@@ -28,7 +28,7 @@ Examples contains examples of testing standalone and Java Web Start application.
 == Running Java Web Start Example ==
  * Configure Java Web Start proxy settings if necessary.
  * [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/demo/lib/test-application.jnlp Start the application] manually and agree with the confirmation dialog if necessary. 
- * If you are using Java 1.5, test libraries needs to be inserted to jvmconnector.jar. That can be done by running command `jar ufm lib\jvmconnector-1.0-jar-with-dependencies.jar lib\manifest.txt` from command line. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for more details.
+ * If you are using Java 1.5, test libraries needs to be inserted to jvmconnector.jar. That can be done by running command `jar ufm lib\jvmconnector-1.1-jar-with-dependencies.jar lib\manifest.txt` from command line. See [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for more details.
  * Last, run `run.py javaws_application.tsv`
 
 The Java Web Start test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
