@@ -18,7 +18,7 @@ cd jvmconnector-$version
 
 == Update version ==
 
-update version inside <version> and <scm>
+update version inside !<version> and !<scm>
 
 {{{
 emacs pom.xml
@@ -37,7 +37,7 @@ python dists.py
     * Tags: Featured, Type-Source, OpSys-All
     * Summary: RemoteApplications library version x.y to handle multiple remote applications
   * jvmconnector-x.y-jar-with-dependencies.jar
-    * Tags: Featured, Type-Source, OpSys-All 
+    * Tags: Featured, OpSys-All 
     * Summary: JvmConnector x.y with all it's dependencies bundled in one jar for jre 1.5 and higher.
 
 = Update wiki =
