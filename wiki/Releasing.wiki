@@ -1,0 +1,55 @@
+#summary Instructions how to release projects
+
+= JVMConnector =
+
+== Create Tag ==
+
+{{{
+version=x.y
+svn copy -m "Initial $version tag" https://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk \
+    https://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-$version
+}}}
+
+== Checkout the Created Tag ==
+{{{
+https://robotframework-javatools.googlecode.com/svn/jvmconnector/tags/jvmconnector-$version
+cd jvmconnector-$version
+}}}
+
+== Update version ==
+
+update version inside <version> and <scm>
+
+{{{
+emacs pom.xml
+svn commit -m "version update"
+}}}
+
+== Create Packages, Demo and Documentation ==
+
+{{{
+python dists.py
+}}}
+
+== Upload ==
+
+  * RemoteApplications-x.y.py 
+    * Tags: Featured, Type-Source, OpSys-All
+    * Summary: RemoteApplications library version x.y to handle multiple remote applications
+  * jvmconnector-x.y-jar-with-dependencies.jar
+    * Tags: Featured, Type-Source, OpSys-All 
+    * Summary: JvmConnector x.y with all it's dependencies bundled in one jar for jre 1.5 and higher.
+
+= Update wiki =
+
+  * releasenotes
+{{{
+tools/get_issues.py notes mabot x.y
+}}}
+  * update main page
+  * update link to documentation at RemoteApplications page
+
+= Send emails =
+
+  * Public users and announcement mailing lists
+  * NSN internal users and announcement lists
