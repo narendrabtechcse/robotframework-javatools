@@ -1,4 +1,16 @@
 ﻿#labels Featured
+== Jvmconnector 1.1 ==
+
+This release supports RF 2.5 series. Fixed also two minor bugs listed below:
+
+|| *ID* || *Type* || *Priority* || *Summary* ||
+|| Issue 51 || Defect || Critical || RemoteApplications does not work with RF 2.5(.x) ||
+|| Issue 45 || Defect || Medium || RemoteApplications cannot work with invalid connection files ||
+|| Issue 52 || Defect || Medium || RemoteApplication cannot connect to application if working directory is changed ||
+
+Altogether 3 issues.
+
+
 == Jvmconnector 1.0.1 ==
 
 This minor release fixes following bugs in RemoteApplications library: missing manifest in jar causes Start Application keyword to fail (issue 37), incompatibility with Jython 2.5.1 (issue 38) and problem with spaces in paths (issue 39).
