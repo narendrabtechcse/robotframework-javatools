@@ -44,7 +44,7 @@ python dists.py
 
   * releasenotes
 {{{
-tools/get_issues.py notes mabot x.y
+tools/get_issues.py notes javatools x.y
 }}}
   * update main page
   * update link to documentation at RemoteApplications page
