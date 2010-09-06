@@ -1,87 +1,97 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>RemoteApplications - Documentation</title>
+<title>RemoteApplications</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<style>
-  body {
-    background: white;
-    color: black;
-  }
+<style media="all" type="text/css">
+body {
+  background: white;
+  color: black;
+  font-size: small;
+  font-family: sans-serif;
+  padding: 0.1em 0.5em;
+}
+a.name, span.name {
+  font-style: italic;
+}
+a, a:link, a:visited {
+  color: #c30;
+}
+a:hover, a:active {
+  text-decoration: underline;
+  color: black;
+}
+div.shortcuts {
+  margin: 1em 0em;
+  font-size: 0.9em;
+}
+div.shortcuts a {
+  text-decoration: none;
+  color: black;
+}
+div.shortcuts a:hover {
+  text-decoration: underline;
+}
+table.keywords {
+  border: 2px solid black;
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 0.3em 0em;
+  width: 100%;
+}
+table.keywords th, table.keywords td {
+  border: 2px solid black;
+  padding: 0.2em;
+  vertical-align: top;
+}
+table.keywords th {
+  background: #bbb;
+  color: black;
+}
+table.keywords td.kw {
+  width: 150px;
+  font-weight: bold;
+}
+table.keywords td.arg {
+  width: 300px;
+  font-style: italic;
+}
+table.doc {
+  border: 1px solid black;
+  background: transparent;
+  border-collapse: collapse;
+  empty-cells: show;
+  font-size: 0.85em;
+}
+table.doc td {
+  border: 1px solid black;
+  padding: 0.1em 0.3em;
+  height: 1.2em;
 
-  /* Generic Table Styles */
-  table {
-    background: white;
-    border: 1px solid black;
-    border-collapse: collapse;
-    empty-cells: show;
-    margin: 0.3em 0em;
-  }
-  th, td {
-    border: 1px solid black;
-    padding: 0.2em;
-  }
-  th {
-    background: #C6C6C6;
-  }
-  td {
-    vertical-align: top;
-  }    
-
-  /* Columns */
-  td.kw {
-    font-weight: bold;
-  }
-  td.arg {
-    width: 300px;
-    font-style: italic;
-  }
-  td.doc {
-  }
-
-  /* Tables in documentation */
-  table.doc {
-    border: 1px solid gray;
-    background: transparent;
-    border-collapse: collapse;
-    empty-cells: show;
-    font-size: 0.85em;
-    font-family: arial,helvetica,sans-serif;
-  }
-  table.doc td {
-    border: 1px solid gray;
-    padding: 0.1em 0.3em;
-    height: 1.2em;
-  }
-
-  /* Paragraphs */
-  .libdoc, .links {
-    width: 800px;
-  }
-
-  /* Misc */
-  a.name, span.name {  
-    font-style: italic;
-    background: #f4f4f4;
-    text-decoration: none;
-  }
-  a:link, a:visited {
-    color: blue;
-  }
-  a:hover, a:active {
-    text-decoration: underline;
-    color: purple;
-  }
-  .footer {
-    font-size: 0.9em;
-  }
+}
+#footer {
+  font-size: 0.9em;
+}
+</style>
+<style media="print" type="text/css">
+body {
+  margin: 0px 1px;
+  padding: 0px;
+  font-size: 10px;
+}
+a {
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
-<h1>RemoteApplications - Documentation</h1>
+<h1>RemoteApplications</h1>
+<b>Scope:</b> global<br>
+<b>Named arguments: </b>
+not supported
 
 <h2 id="introduction">Introduction</h2>
-<p class='libdoc'>RemoteApplications library is used for launching Java applications in a separate process and taking Robot Framework (RF) libraries into use to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT, when multiple applications running in separate JVMs need to be tested in parallel or when application is started using Java Web Start. RemoteApplications library is also suitable when application use embedded JVMs (meaning they use the JNI Invocation API to start the JVM), or when the startup is deeply nested in scripts.<br />
+<p>RemoteApplications library is used for launching Java applications in a separate process and taking Robot Framework (RF) libraries into use to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT, when multiple applications running in separate JVMs need to be tested in parallel or when application is started using Java Web Start. RemoteApplications library is also suitable when application use embedded JVMs (meaning they use the JNI Invocation API to start the JVM), or when the startup is deeply nested in scripts.<br />
 <br />
 Using RemoteApplications requires that jvm_connector jar file is in <i>CLASSPATH</i> environment variable before starting RF test execution. RemoteApplications works with Java 1.5 and newer. Following paragraphs contain generic information about RemoteApplications library. See also keywords' documentation for more detailed information.<br />
 <br />
@@ -129,7 +139,7 @@ Class-Path: ../relative/path/to/test_library.jar path/to/another_test_library.ja
 This example entry in the manifest.txt includes two test library jars to the jvmconnector.jar file's MANIFEST.MF. Paths to the test libraries have to be relative to the jvmconnector.jar and line needs to end with new line character. See more from <a href="http://java.sun.com/docs/books/tutorial/deployment/jar/downman.html">http://java.sun.com/docs/books/tutorial/deployment/jar/downman.html</a></p>
 
 <h2 id="importing">Importing</h2>
-<table class="keywords">
+<table border="1" class="keywords">
 <tr>
   <th class="arg">Arguments</th>
   <th class="doc">Documentation</th>
@@ -158,20 +168,28 @@ Setting <span class="name">connect_to_previously_launched_applications</span> fa
 </table>
 
 <h2>Shortcuts</h2>
-<div class='links'>
-<a href="#Application Should Be Connected" title="Checks is there connection to the active application.">Application&nbsp;Should&nbsp;Be&nbsp;Connected</a>&nbsp;
-<a href="#Application Should Not Be Connected" title="Checks that there is no connection to the active application.">Application&nbsp;Should&nbsp;Not&nbsp;Be&nbsp;Connected</a>&nbsp;
-<a href="#Application Started" title="Connects to started application and switches to it.">Application&nbsp;Started</a>&nbsp;
-<a href="#Close All Applications" title="Closes all the applications.">Close&nbsp;All&nbsp;Applications</a>&nbsp;
-<a href="#Close Application" title="Closes application.">Close&nbsp;Application</a>&nbsp;
-<a href="#Start Application" title="Starts the application, connects to it and makes it active application.">Start&nbsp;Application</a>&nbsp;
-<a href="#Switch To Application" title="Changes the application where the keywords are executed.">Switch&nbsp;To&nbsp;Application</a>&nbsp;
-<a href="#Take Libraries Into Use" title="Takes the libraries into use at the remote application.">Take&nbsp;Libraries&nbsp;Into&nbsp;Use</a>&nbsp;
-<a href="#Take Library Into Use" title="Takes given library into use.">Take&nbsp;Library&nbsp;Into&nbsp;Use</a>&nbsp;
+<div class='shortcuts'>
+<a href="#Application Should Be Connected" title="Checks is there connection to the active application.">Application&nbsp;Should&nbsp;Be&nbsp;Connected</a>
+&nbsp;&middot;&nbsp;
+<a href="#Application Should Not Be Connected" title="Checks that there is no connection to the active application.">Application&nbsp;Should&nbsp;Not&nbsp;Be&nbsp;Connected</a>
+&nbsp;&middot;&nbsp;
+<a href="#Application Started" title="Connects to started application and switches to it.">Application&nbsp;Started</a>
+&nbsp;&middot;&nbsp;
+<a href="#Close All Applications" title="Closes all the applications.">Close&nbsp;All&nbsp;Applications</a>
+&nbsp;&middot;&nbsp;
+<a href="#Close Application" title="Closes application.">Close&nbsp;Application</a>
+&nbsp;&middot;&nbsp;
+<a href="#Start Application" title="Starts the application, connects to it and makes it active application.">Start&nbsp;Application</a>
+&nbsp;&middot;&nbsp;
+<a href="#Switch To Application" title="Changes the application where the keywords are executed.">Switch&nbsp;To&nbsp;Application</a>
+&nbsp;&middot;&nbsp;
+<a href="#Take Libraries Into Use" title="Takes the libraries into use at the remote application.">Take&nbsp;Libraries&nbsp;Into&nbsp;Use</a>
+&nbsp;&middot;&nbsp;
+<a href="#Take Library Into Use" title="Takes given library into use.">Take&nbsp;Library&nbsp;Into&nbsp;Use</a>
 </div>
 
 <h2>Keywords</h2>
-<table class="keywords">
+<table border="1" class="keywords">
 <tr>
   <th class="kw">Keyword</th>
   <th class="arg">Arguments</th>
@@ -335,10 +353,10 @@ See <a href="#Take Libraries Into Use" class="name">Take Libraries Into Use</a> 
 </td>
 </tr>
 </table>
-<p class="footer">
+<p id="footer">
 Altogether 9 keywords.<br />
 Generated by <a href="http://code.google.com/p/robotframework/wiki/LibraryDocumentationTool">libdoc.py</a>
-on 2010-02-19 10:29:09.
+on 2010-09-06 10:22:58.
 </p>
 </body>
 </html>
