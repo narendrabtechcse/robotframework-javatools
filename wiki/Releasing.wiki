@@ -42,7 +42,7 @@ python dists.py
 
 = Update wiki =
 
-  * ReleaseNotes
+  * JvmconnectorReleaseNotes
 {{{
 tools/get_issues.py notes javatools x.y
 }}}
