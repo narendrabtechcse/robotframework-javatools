@@ -4,9 +4,9 @@
 This release supports RF 2.5 series. Fixed also two minor bugs listed below:
 
 || *ID* || *Type* || *Priority* || *Summary* ||
-|| Issue 51 || Defect || Critical || RemoteApplications does not work with RF 2.5(.x) ||
+|| Issue 51 || Defect || Critical || RemoteApplications does not work with RF 2.5 series ||
 || Issue 45 || Defect || Medium || RemoteApplications cannot work with invalid connection files ||
-|| Issue 52 || Defect || Medium || RemoteApplication cannot connect to application if working directory is changed ||
+|| Issue 52 || Defect || Medium || RemoteApplications cannot connect to application if working directory is changed ||
 
 Altogether 3 issues.
 
