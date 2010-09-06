@@ -18,7 +18,7 @@ cd jvmconnector-$version
 
 == Update version ==
 
-update version inside !<version> and !<scm>
+update version inside `<version>` and `<scm>`
 
 {{{
 emacs pom.xml
