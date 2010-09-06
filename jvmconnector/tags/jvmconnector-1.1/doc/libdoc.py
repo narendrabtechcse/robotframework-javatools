@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#  Copyright 2008-2009 Nokia Siemens Networks Oyj
+#  Copyright 2008-2010 Nokia Siemens Networks Oyj
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ Options:
  -a --argument value *    Possible arguments that a library needs.
  -f --format HTML|XML     Specifies whether to generate HTML or XML output.
                           The default value is got from the output file
-                          extension and if the output is not specified the 
+                          extension and if the output is not specified the
                           default is HTML.
  -o --output path         Where to write the generated documentation. Can be
                           either a directory or a file, or a URL pointing to
@@ -42,6 +42,10 @@ Options:
  -T --title title         Sets the title of the generated HTML documentation.
                           Underscores in the given title are automatically
                           converted to spaces.
+ -S --styles styles       Overrides the default styles. If the given 'styles'
+                          is a path to an existing files, styles will be read
+                          from it. If it is string a 'NONE', no styles will be
+                          used. Otherwise the given text is used as-is.
  -P --pythonpath path *   Additional path(s) to insert into PYTHONPATH.
  -E --escape what:with *  Escapes characters which are problematic in console.
                           'what' is the name of the character to escape and
@@ -54,6 +58,7 @@ http://code.google.com/p/robotframework/wiki/LibraryDocumentationTool
 or tools/libdoc/doc/libdoc.html file inside source distributions.
 """
 
+from __future__ import with_statement
 import sys
 import os
 import re
@@ -64,34 +69,46 @@ from HTMLParser import HTMLParser
 from robot.running import TestLibrary, UserLibrary
 from robot.serializing import Template, Namespace
 from robot.errors import DataError, Information
-from robot.parsing import rawdata
+from robot.parsing import populators
 from robot import utils
 
 
-rawdata.PROCESS_CURDIR = False
+populators.PROCESS_CURDIR = False
 
 
 def _uploading(output):
     return output.startswith('http://')
 
 
-def create_html_doc(lib, outpath, title=None):
+def create_html_doc(lib, outpath, title=None, styles=None):
     if title:
         title = title.replace('_', ' ')
     else:
-        title = '%s - Documentation' % lib.name
+        title = lib.name
     generated = utils.get_timestamp(daysep='-', millissep=None)
-    namespace = Namespace(LIB=lib, TITLE=title, GENERATED=generated)
-    doc = Template(template=DOCUMENT_TEMPLATE).generate(namespace) + '\n'
+    namespace = Namespace(LIB=lib, TITLE=title, STYLES=_get_styles(styles),
+                          GENERATED=generated)
+    doc = Template(template=HTML_TEMPLATE).generate(namespace) + '\n'
     outfile = open(outpath, 'w')
     outfile.write(doc.encode('UTF-8'))
     outfile.close()
+
+def _get_styles(styles):
+    if not styles:
+        return DEFAULT_STYLES
+    if styles.upper() == 'NONE':
+        return ''
+    if os.path.isfile(styles):
+        with open(styles) as f:
+            return f.read()
+    return styles
 
 
 def create_xml_doc(lib, outpath):
     writer = utils.XmlWriter(outpath)
     writer.start('keywordspec', {'name': lib.name, 'type': lib.type, 'generated': utils.get_timestamp(millissep=None)})
     writer.element('version', lib.version)
+    writer.element('scope', lib.scope)
     writer.element('doc', lib.doc)
     _write_keywords_to_xml(writer, 'init', lib.inits)
     _write_keywords_to_xml(writer, 'kw', lib.keywords)
@@ -123,7 +140,7 @@ def LibraryDoc(libname, arguments=None, newname=None):
         return XmlLibraryDoc(libname, newname)
     elif ext == '.java':
         if not utils.is_jython:
-            raise DataError('Documenting Java test libraries requires Jython.')
+            raise DataError('Documenting Java test libraries requires using Jython.')
         return JavaLibraryDoc(libname, newname)
     else:
         return PythonLibraryDoc(libname, arguments, newname)
@@ -149,7 +166,7 @@ class _DocHelper:
             ret.append(self._get_doc_line_separator(line, ret[-1]))
             ret.append(line)
         return ''.join(ret)
-            
+
     def _get_doc_line_separator(self, line, prev):
         if prev == '':
             return ''
@@ -188,28 +205,37 @@ class PythonLibraryDoc(_DocHelper):
 
     def __init__(self, name, arguments=None, newname=None):
         lib = self._import(name, arguments)
+        self.supports_named_arguments = lib.supports_named_arguments
         self.name = newname or lib.name
         self.version = utils.html_escape(getattr(lib, 'version', '<unknown>'))
+        self.scope = self._get_scope(lib)
         self.doc = self._process_doc(self._get_doc(lib))
         self.inits = self._get_initializers(lib)
-        self.keywords = [ KeywordDoc(handler, self) 
+        self.keywords = [ KeywordDoc(handler, self)
                           for handler in lib.handlers.values() ]
         self.keywords.sort()
 
     def _import(self, name, args):
         return TestLibrary(name, args)
 
+    def _get_scope(self, lib):
+        if hasattr(lib, 'scope'):
+            return {'TESTCASE': 'test case', 'TESTSUITE': 'test suite',
+                    'GLOBAL': 'global'}[lib.scope]
+        return ''
+
     def _get_doc(self, lib):
         return lib.doc or "Documentation for test library `%s`." % self.name
 
     def _get_initializers(self, lib):
-        if lib.init.maxargs == 0:
+        if lib.init.arguments.maxargs == 0:
             return []
         return [KeywordDoc(lib.init, self)]
 
 
 class ResourceDoc(PythonLibraryDoc):
     type = 'resource'
+    supports_named_arguments = True
 
     def _import(self, path, arguments):
         if arguments:
@@ -241,6 +267,7 @@ class XmlLibraryDoc(_DocHelper):
         self.name = dom.get_attr('name')
         self.type = dom.get_attr('type')
         self.version = dom.get_node('version').text
+        self.scope = dom.get_node('scope').text
         self.doc = dom.get_node('doc').text
         self.inits = [ XmlKeywordDoc(node, self) for node in dom.get_nodes('init') ]
         self.keywords = [ XmlKeywordDoc(node, self) for node in dom.get_nodes('kw') ]
@@ -253,7 +280,7 @@ class _BaseKeywordDoc(_DocHelper):
         self.type = library.type
 
     def __cmp__(self, other):
-        return cmp(self.name, other.name)
+        return cmp(self.name.lower(), other.name.lower())
 
     def __getattr__(self, name):
         if name == 'argstr':
@@ -269,7 +296,7 @@ class KeywordDoc(_BaseKeywordDoc):
     def __init__(self, handler, library):
         _BaseKeywordDoc.__init__(self, library)
         self.name = handler.name
-        self.args = self._get_args(handler) 
+        self.args = self._get_args(handler)
         self.doc = self._process_doc(handler.doc)
         self.shortdoc = handler.shortdoc
 
@@ -281,19 +308,19 @@ class KeywordDoc(_BaseKeywordDoc):
         return args
 
     def _parse_args(self, handler):
-        args = [ arg.rstrip('_') for arg in handler.args ]
+        args = [ arg.rstrip('_') for arg in handler.arguments.names ]
         # strip ${} from user keywords (args look more consistent e.g. in IDE)
         if handler.type == 'user':
             args = [ arg[2:-1] for arg in args ]
-        default_count = len(handler.defaults)
+        default_count = len(handler.arguments.defaults)
         if default_count == 0:
             required = args[:]
             defaults = []
         else:
             required = args[:-default_count]
-            defaults = zip(args[-default_count:], list(handler.defaults))
-        varargs = handler.varargs
-        varargs = varargs is not None and varargs.rstrip('_') or varargs         
+            defaults = zip(args[-default_count:], list(handler.arguments.defaults))
+        varargs = handler.arguments.varargs
+        varargs = varargs is not None and varargs.rstrip('_') or varargs
         if handler.type == 'user' and varargs is not None:
             varargs = varargs[2:-1]
         return required, defaults, varargs
@@ -313,13 +340,15 @@ if utils.is_jython:
 
     class JavaLibraryDoc(_DocHelper):
         type = 'library'
+        supports_named_arguments = False
 
         def __init__(self, path, newname=None):
             cls = self._get_class(path)
             self.name = newname or cls.qualifiedName()
-            self.version = utils.html_escape(self._get_version(cls))
+            self.version = self._get_version(cls)
+            self.scope = self._get_scope(cls)
             self.doc = self._process_doc(cls.getRawCommentText())
-            self.keywords = [ JavaKeywordDoc(method, self) 
+            self.keywords = [ JavaKeywordDoc(method, self)
                               for method in cls.methods() ]
             self.inits = [ JavaKeywordDoc(init, self)
                            for init in cls.constructors() ]
@@ -329,11 +358,11 @@ if utils.is_jython:
 
         def _get_class(self, path):
             """Processes the given Java source file and returns ClassDoc.
-            
-            Processing is done using com.sun.tools.javadoc APIs. The usage has 
-            been figured out from sources at 
+
+            Processing is done using com.sun.tools.javadoc APIs. The usage has
+            been figured out from sources at
             http://www.java2s.com/Open-Source/Java-Document/JDK-Modules-com.sun/tools/com.sun.tools.javadoc.htm
-            
+
             Returned object implements com.sun.javadoc.ClassDoc interface, see
             http://java.sun.com/j2se/1.4.2/docs/tooldocs/javadoc/doclet/
             """
@@ -342,7 +371,7 @@ if utils.is_jython:
                 from com.sun.tools.javac.util import List, Context
                 from com.sun.tools.javac.code.Flags import PUBLIC
             except ImportError:
-                raise DataError("Creating documentation from Java source files " 
+                raise DataError("Creating documentation from Java source files "
                                 "requires 'tools.jar' to be in CLASSPATH.")
             context = Context()
             Messager.preRegister(context, 'libdoc.py')
@@ -355,11 +384,19 @@ if utils.is_jython:
             return root.classes()[0]
 
         def _get_version(self, cls):
+            version = self._get_attr(cls, 'VERSION', '<unknown>')
+            return utils.html_escape(version)
+
+        def _get_scope(self, cls):
+            scope = self._get_attr(cls, 'SCOPE', 'TEST CASE')
+            return scope.replace('_', ' ').lower()
+
+        def _get_attr(self, cls, name, default):
             for field in cls.fields():
-                if field.name() == 'ROBOT_LIBRARY_VERSION' \
+                if field.name() == 'ROBOT_LIBRARY_' + name \
                         and field.isPublic() and field.constantValue():
                     return field.constantValue()
-            return '<unknown>'
+            return default
 
 
     class JavaKeywordDoc(_BaseKeywordDoc):
@@ -439,97 +476,118 @@ class _ErrorParser(HTMLParser):
             self.errors.append(data)
 
 
-DOCUMENT_TEMPLATE = '''<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+DEFAULT_STYLES = '''
+<style media="all" type="text/css">
+body {
+  background: white;
+  color: black;
+  font-size: small;
+  font-family: sans-serif;
+  padding: 0.1em 0.5em;
+}
+a.name, span.name {
+  font-style: italic;
+}
+a, a:link, a:visited {
+  color: #c30;
+}
+a:hover, a:active {
+  text-decoration: underline;
+  color: black;
+}
+div.shortcuts {
+  margin: 1em 0em;
+  font-size: 0.9em;
+}
+div.shortcuts a {
+  text-decoration: none;
+  color: black;
+}
+div.shortcuts a:hover {
+  text-decoration: underline;
+}
+table.keywords {
+  border: 2px solid black;
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 0.3em 0em;
+  width: 100%;
+}
+table.keywords th, table.keywords td {
+  border: 2px solid black;
+  padding: 0.2em;
+  vertical-align: top;
+}
+table.keywords th {
+  background: #bbb;
+  color: black;
+}
+table.keywords td.kw {
+  width: 150px;
+  font-weight: bold;
+}
+table.keywords td.arg {
+  width: 300px;
+  font-style: italic;
+}
+table.doc {
+  border: 1px solid black;
+  background: transparent;
+  border-collapse: collapse;
+  empty-cells: show;
+  font-size: 0.85em;
+}
+table.doc td {
+  border: 1px solid black;
+  padding: 0.1em 0.3em;
+  height: 1.2em;
+
+}
+#footer {
+  font-size: 0.9em;
+}
+</style>
+<style media="print" type="text/css">
+body {
+  margin: 0px 1px;
+  padding: 0px;
+  font-size: 10px;
+}
+a {
+  text-decoration: none;
+}
+</style>
+'''.strip()
+
+
+HTML_TEMPLATE = '''<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>${TITLE}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<style>
-  body {
-    background: white;
-    color: black;
-  }
-
-  /* Generic Table Styles */
-  table {
-    background: white;
-    border: 1px solid black;
-    border-collapse: collapse;
-    empty-cells: show;
-    margin: 0.3em 0em;
-  }
-  th, td {
-    border: 1px solid black;
-    padding: 0.2em;
-  }
-  th {
-    background: #C6C6C6;
-  }
-  td {
-    vertical-align: top;
-  }    
-
-  /* Columns */
-  td.kw {
-    font-weight: bold;
-  }
-  td.arg {
-    width: 300px;
-    font-style: italic;
-  }
-  td.doc {
-  }
-
-  /* Tables in documentation */
-  table.doc {
-    border: 1px solid gray;
-    background: transparent;
-    border-collapse: collapse;
-    empty-cells: show;
-    font-size: 0.85em;
-    font-family: arial,helvetica,sans-serif;
-  }
-  table.doc td {
-    border: 1px solid gray;
-    padding: 0.1em 0.3em;
-    height: 1.2em;
-  }
-
-  /* Paragraphs */
-  .libdoc, .links {
-    width: 800px;
-  }
-
-  /* Misc */
-  a.name, span.name {  
-    font-style: italic;
-    background: #f4f4f4;
-    text-decoration: none;
-  }
-  a:link, a:visited {
-    color: blue;
-  }
-  a:hover, a:active {
-    text-decoration: underline;
-    color: purple;
-  }
-  .footer {
-    font-size: 0.9em;
-  }
-</style>
+${STYLES}
 </head>
 <body>
 <h1>${TITLE}</h1>
 <!-- IF "${LIB.version}" != "&lt;unknown&gt;" -->
-<p><b>Version:</b> ${LIB.version}</p>
+<b>Version:</b> ${LIB.version}<br>
+<!-- END IF -->
+<!-- IF "${LIB.type}" == "library" -->
+<b>Scope:</b> ${LIB.scope}<br>
+<!-- END IF -->
+<b>Named arguments: </b>
+<!-- IF ${LIB.supports_named_arguments} -->
+supported
+<!-- ELSE -->
+not supported
 <!-- END IF -->
 
 <h2 id="introduction">Introduction</h2>
-<p class='libdoc'>${LIB.htmldoc}</p>
+<p>${LIB.htmldoc}</p>
 
 <!-- IF ${LIB.inits} -->
 <h2 id="importing">Importing</h2>
-<table class="keywords">
+<table border="1" class="keywords">
 <tr>
   <th class="arg">Arguments</th>
   <th class="doc">Documentation</th>
@@ -544,14 +602,17 @@ DOCUMENT_TEMPLATE = '''<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional
 <!-- END IF -->
 
 <h2>Shortcuts</h2>
-<div class='links'>
+<div class='shortcuts'>
 <!-- FOR ${kw} IN ${LIB.keywords} -->
-<a href="#${kw.htmlname}" title="${kw.htmlshortdoc}">${kw.htmlname.replace(' ','&nbsp;')}</a>&nbsp;
+<a href="#${kw.htmlname}" title="${kw.htmlshortdoc}">${kw.htmlname.replace(' ','&nbsp;')}</a>
+<!-- IF ${kw} != ${LIB.keywords[-1]} -->
+&nbsp;&middot;&nbsp;
+<!-- END IF -->
 <!-- END FOR -->
 </div>
 
 <h2>Keywords</h2>
-<table class="keywords">
+<table border="1" class="keywords">
 <tr>
   <th class="kw">Keyword</th>
   <th class="arg">Arguments</th>
@@ -565,7 +626,7 @@ DOCUMENT_TEMPLATE = '''<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional
 </tr>
 <!-- END FOR -->
 </table>
-<p class="footer">
+<p id="footer">
 Altogether ${LIB.keywords.__len__()} keywords.<br />
 Generated by <a href="http://code.google.com/p/robotframework/wiki/LibraryDocumentationTool">libdoc.py</a>
 on ${GENERATED}.
@@ -612,7 +673,7 @@ if __name__ == '__main__':
                 output = get_unique_path(os.path.join(output, library.name), format.lower())
             output = os.path.abspath(output)
             if format == 'HTML':
-                create_html_doc(library, output, opts['title'])
+                create_html_doc(library, output, opts['title'], opts['styles'])
             else:
                 create_xml_doc(library, output)
     except Information, msg:
