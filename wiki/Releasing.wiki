@@ -35,10 +35,10 @@ python dists.py
 
   * RemoteApplications-x.y.py 
     * Tags: Featured, Type-Source, OpSys-All
-    * Summary: RemoteApplications library version x.y to handle multiple remote applications
+    * Summary: !RemoteApplications library version x.y to handle multiple remote applications
   * jvmconnector-x.y-jar-with-dependencies.jar
     * Tags: Featured, OpSys-All 
-    * Summary: JvmConnector x.y with all it's dependencies bundled in one jar for jre 1.5 and higher.
+    * Summary: !JvmConnector x.y with all it's dependencies bundled in one jar for jre 1.5 and higher.
 
 = Update wiki =
 
