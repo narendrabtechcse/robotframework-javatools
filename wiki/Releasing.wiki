@@ -31,7 +31,7 @@ svn commit -m "version update"
 python dists.py
 }}}
 
-== Upload ==
+== Upload Downloads ==
 
   * !RemoteApplications-x.y.py 
     * Tags: Featured, Type-Source, !OpSys-All
@@ -42,7 +42,7 @@ python dists.py
 
 = Update wiki =
 
-  * releasenotes
+  * ReleaseNotes
 {{{
 tools/get_issues.py notes javatools x.y
 }}}
