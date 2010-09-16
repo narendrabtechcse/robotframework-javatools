@@ -1,33 +1,44 @@
 #labels Featured
-*Java Spy tool to find swing application component properties.*
+= Need to SPY on any swing application to retrive component properties =
 
 = Introduction =
-JSpy is a tool can show the swing application (SUT) component properties in a easy move move. Helpful for automating Swing applications by getting application details with out digging in to the application code.
+JSpy is a tool that displays the component properties of any java Swing application in the simplest way, that is, by a simple mouse hover. To automate Swing applications, a user generally has to venture into the application code to retrive the application properties. This sometimes can be very time consuming and also frustrating. Using JSpy the user can overcome this problem, because all a user needs to do to retrive the application properties is to perform a simple mouse hover.
 
 = Usage =
-  * Download the JSpy.jar
-  * Double click to run the spy application
-  * Go to menu File->Launch and in the resultant dialog enter the command to launch the application (System Under Test)
- example: c:\app\myAppLauncher.exe | javaws http://myapp/launch.jnlp etc
- * Wait till the SUT to come up
- * Now hover the mouse over the SUT components to view the properties
- * Select SUT and Press "ctrl+alt+r" to re-index the component list (useful when few components added later in the window)
+  * Download the JSpy.jar and save to to any location on your PC. 
+  * Double click the jar to run the JSpy application.
+  * In the _JSpy_ window, select *File -> Launch*.
+  * In the `Execute Command` dialog enter the command to launch the application. For example, `c:\app\myAppLauncher.exe` *or* `javaws http://myapp/launch.jnlp`.
+  * Wait till the application is launched.
+  * Move the mouse over the application components to view the properties in the JSpy window.
+
+*Tip:* If some components of the application are added later in the window and you need to retrive the properties, press `CTRL+ALT+r` to re-index the component list. 
+
+= Output =
+
+By using the JSpy tool the following properties of a Swing application are retrived:
+ 
+ # Component name 
+ # Component Index 
+ # Component Hierarchy 
+ # Component base class 
+ # Window title 
+ # Other generic properties (width, height, etc.) 
 
 
-*Properties displayed:*
+= Advantages =
 
- # Component name
- # Component Index
- # Component Hierarchy
- # Component base class
- # Window title
- # Other generic properties (width, height etc.)
+ Advantages of using the JSpy tool are:
+ * Zero configuration.
+ * The user does not have to specify any classpath settings of the application to launch and view the properties.
+ * Can be used to view the properites of any Java WebStart apllication.
 
+= Troubleshooting =
 
-*Advantages:*
+If JSpy does not launch the specified application, try the following:
 
- * Zero configuration required (just click to run)
- * Need not specify any classpath settings of SUT to recognize
+  * Start JSpy from the command propmt `java -jar <path>/JSpy.jar` to see the error message.
+  * If the error message states that the application contains invalid arguments, then type the command in a text file and save it as a executable file (`.bat` or `.sh`).
+  * Run the executable using JSpy to launch the application.
 
-
-
+Any feedback will be highly appriciated. Send your comments to [arulraj.s@nsn.com]
