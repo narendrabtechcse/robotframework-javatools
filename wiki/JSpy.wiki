@@ -41,4 +41,4 @@ If JSpy does not launch the specified application, try the following:
   * If the error message states that the application contains invalid arguments, then type the command in a text file and save it as a executable file (`.bat` or `.sh`).
   * Run the executable using JSpy to launch the application.
 
-Any feedback will be highly appriciated. Send your comments to [arulraj.s@nsn.com]
+Any feedback will be highly appriciated. Send your comments to mailto:arulraj.s@nsn.com
