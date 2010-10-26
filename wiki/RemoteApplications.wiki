@@ -98,4 +98,4 @@ Best way to start trouble shooting is to run the above examples. In case those w
 
 *Solution 2:* In case you are starting the application without using Remote Applications, check that you are giving correct path to the Robot Agent (see details from [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation]).
 
-*Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar. See 'NOTE' at the end of the [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for the details how to insert test libraries to jvmconnector.jar.
+*Solution 3:* When using Java 1.5, check that you have included test library jars to the jvm_connector jar. See NOTE at the end of the [http://robotframework-javatools.googlecode.com/svn/jvmconnector/trunk/doc/RemoteApplications.html library documentation] for the details how to insert test libraries to jvmconnector.jar.
