@@ -7,35 +7,4 @@
 
 Hudson Plugin provides a way to integrate Robot Framework test reports into the [http://hudson-ci.org/ Hudson Continuous Integration server].
 
-The plugin is still a prototype and under development, but feel free to check it out and use it if interested. All kind of comments, feature requests, patches, etc. are highly appreciated via the [http://code.google.com/p/robotframework-javatools/issues/list issue tracker] or [http://code.google.com/p/robotframework/wiki/MailingLists mailing lists].
-
-=Downloading=
-
-Please download the [http://robotframework-javatools.googlecode.com/files/robotframework.hpi Robot Framework Hudson Plugin] or check out the source code from [http://code.google.com/p/robotframework-javatools/source/browse/ version control] and build your own.
-
-=Building=
-
-The plugin is built using [http://maven.apache.org/ Maven] with the command:
-{{{
-mvn package
-}}}
-
-This will build a plugin installation package `robotframework.hpi` into the project's target directory.
-
-=Installation=
-
-The plugin is installed like any other Hudson plugin via Hudson's web interface. Go to management screen and click `Manage Plugins`. Then upload the `robotframework.hpi` package and enable the plugin.
-
-For more information, consult Hudson documentation at http://wiki.hudson-ci.org/display/HUDSON/Plugins.
-
-=Configuration=
-
-When Hudson is up and running, the installed plugin can be enabled in the job's configuration page by checking the Robot Framework checkbox and optionally specifying the relative path to the Robot Framework reports directory relative to the project/workspace directory.
-
-=Reports=
-
-The plugin adds links to the generated Robot Framework reports into Hudson's left side tool panel. On the top level the link points to the latest report and on build level they point to the build specific version.
-
-=Screenshot=
-
-http://robotframework-javatools.googlecode.com/svn/wiki/images/hudsonplugin.png
+Plugin has been moved here [http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin].
