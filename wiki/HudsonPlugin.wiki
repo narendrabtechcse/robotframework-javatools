@@ -7,4 +7,4 @@
 
 Hudson Plugin provides a way to integrate Robot Framework test reports into the [http://hudson-ci.org/ Hudson Continuous Integration server].
 
-Plugin has been moved here [http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin].
+Plugin has been moved [http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin here].
