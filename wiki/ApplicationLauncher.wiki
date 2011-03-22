@@ -1,6 +1,8 @@
-﻿*Note*! New RemoteApplications library should be used if you are using Java version 1.5 or newer. 
+﻿<wiki:toc/>
 
-<wiki:toc/>
+*Note*! New RemoteApplications library should be used if you are using Java version 1.5 or newer. 
+
+===Introduction===
 
 !ApplicationLauncher is used for launching java applications in a separate process and importing Robot Framework (RF) libraries to operate on them. This is useful when application does something that cannot be tested with RF when running inside the same JVM. Such cases are when System.exit is called in the SUT or when multiple applications running in separate JVMs need to be tested in parallel.
 
