@@ -16,7 +16,7 @@
 
 First example shows how to use !ApplicationLauncher with Java Webstart technology. The second example demonstrates !ApplicationLauncher usage with a standalone application.
 
-====Java Web Start====
+====Java Webstart Example====
 
 *Prerequisites:*
  * You'll need javaws and jybot in the path.
@@ -35,7 +35,7 @@ First example shows how to use !ApplicationLauncher with Java Webstart technolog
 
 The test applications sources can be found from [http://robotframework-javatools.googlecode.com/svn/examples/javaws-demo/ here].
 
-====Standalone Application====
+====Standalone Application Example====
 
 *Demo:*
  * Download the [http://robotframework-javatools.googlecode.com/files/multilibrary-demo-2009-07-07.zip multilibrary-demo.zip]
