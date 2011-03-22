@@ -82,7 +82,7 @@ In this example every application has a unique name. Every application has a lau
 ||  ||  || setLibrarySearchOrder || ${name}Launcher || ||
 ||  ||  || closeApplication || || ||
 
-====Java Web Start====
+====Java Webstart====
 
  # Sign testing jars. [http://code.google.com/p/robotframework-javatools/downloads/list Jvmconnector.jar] and all the other dependencies used in testing need to be signed with the same key as your application.
  # Wrap all the testing dependencies into jar files and copy them to a directory.
