@@ -1,6 +1,7 @@
-﻿<wiki:toc/>
+﻿<h1>ApplicationLauncher is debrecated and it does not work with Robot Framework 2.5 series. RemoteApplications library should be used instead.</h1>
 
-*Note*! New RemoteApplications library should be used if you are using Java version 1.5 or newer. 
+
+<wiki:toc/>
 
 ===Introduction===
 
