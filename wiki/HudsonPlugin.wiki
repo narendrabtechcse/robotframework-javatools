@@ -1,4 +1,4 @@
-#summary Robot Framework plugin for Hudson CI system
+#summary Robot Framework plugin for Jenkins CI system
 #labels Featured
 
 Plugin has been moved [http://wiki.jenkins-ci.org/display/JENKINS/Robot+Framework+Plugin here].
