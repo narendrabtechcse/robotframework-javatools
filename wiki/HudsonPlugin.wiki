@@ -1,4 +1,4 @@
 #summary Robot Framework plugin for Hudson CI system
 #labels Deprecated
 
-Plugin has been moved [http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin here].
+Hudson plugin is not anymore mainteined, use JenkinsPlugin instead.
