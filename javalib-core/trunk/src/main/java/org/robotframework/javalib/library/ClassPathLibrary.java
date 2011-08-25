@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Nokia Siemens Networks Oyj
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,6 +23,7 @@ import org.robotframework.javalib.context.KeywordApplicationContext;
 import org.robotframework.javalib.factory.ApplicationContextKeywordFactory;
 import org.robotframework.javalib.factory.KeywordFactory;
 import org.robotframework.javalib.keyword.Keyword;
+import org.robotframework.javalib.util.KeywordNameNormalizer;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 
@@ -76,7 +77,7 @@ public class ClassPathLibrary extends KeywordFactoryBasedLibrary<Keyword> {
     @Override
     protected KeywordFactory<Keyword> createKeywordFactory() {
         assumeKeywordPatternIsSet();
-        KeywordApplicationContext ctx = new KeywordApplicationContext();
+        KeywordApplicationContext ctx = new KeywordApplicationContext(new KeywordNameNormalizer());
         IKeywordBeanDefintionReader reader = new KeywordBeanDefinitionReader(ctx, getClassLoader());
         reader.loadBeanDefinitions(keywordPattern, new InterfaceBasedKeywordFilter());
         ctx.refresh();

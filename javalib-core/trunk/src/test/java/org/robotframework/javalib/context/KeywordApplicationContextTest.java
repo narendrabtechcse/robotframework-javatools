@@ -18,15 +18,14 @@ public class KeywordApplicationContextTest extends MockObjectTestCase {
     private Mock stringNormalizer;
 
     protected void setUp() throws Exception {
-        ctx = new KeywordApplicationContext();
+        stringNormalizer = mock(IKeywordNameNormalizer.class);
+        stringNormalizer.stubs().method("normalize")
+                .will(returnValue("normalized"));
+        ctx = new KeywordApplicationContext((IKeywordNameNormalizer) stringNormalizer.proxy());
         Mock mockBeanDefinition = mock(BeanDefinition.class);
         mockBeanDefinition.stubs().method(ANYTHING);
         beanDefinition = (BeanDefinition) mockBeanDefinition.proxy();
 
-        stringNormalizer = mock(IKeywordNameNormalizer.class);
-        stringNormalizer.stubs().method("normalize")
-            .will(returnValue("normalized"));
-        Inject.field("keywordNameNormalizer").of(ctx).with(stringNormalizer.proxy());
     }
 
     public void testRegistersAliasesForBeansWithNormalizedNames() throws Exception {

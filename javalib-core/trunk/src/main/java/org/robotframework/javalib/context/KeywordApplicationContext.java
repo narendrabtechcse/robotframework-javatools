@@ -17,7 +17,6 @@
 package org.robotframework.javalib.context;
 
 import org.robotframework.javalib.util.IKeywordNameNormalizer;
-import org.robotframework.javalib.util.KeywordNameNormalizer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -30,16 +29,17 @@ import org.springframework.context.support.GenericApplicationContext;
  * by normalizing bean names while registering and getting beans.
  */
 public class KeywordApplicationContext extends GenericApplicationContext {
-    private IKeywordNameNormalizer keywordNameNormalizer = new KeywordNameNormalizer();
-    
-    public KeywordApplicationContext() {
+    private IKeywordNameNormalizer keywordNameNormalizer;
+
+    public KeywordApplicationContext(IKeywordNameNormalizer keywordNameNormalizer) {
         super(new DefaultListableBeanFactory() {
             public void preInstantiateSingletons() throws BeansException {
                 // empty implementation in order to disable preinstantiation.
             }
         });
+        this.keywordNameNormalizer = keywordNameNormalizer;
     }
-    
+
     /**
      * Registers a bean definition with original id and creates a normalized alias.
      * @see BeanDefinitionRegistry#registerBeanDefinition(String, BeanDefinition)

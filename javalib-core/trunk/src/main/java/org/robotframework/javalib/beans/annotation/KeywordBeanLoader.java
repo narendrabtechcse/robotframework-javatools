@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Nokia Siemens Networks Oyj
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,10 +22,11 @@ import org.robotframework.javalib.beans.common.IClassFilter;
 import org.robotframework.javalib.beans.common.IKeywordBeanDefintionReader;
 import org.robotframework.javalib.beans.common.KeywordBeanDefinitionReader;
 import org.robotframework.javalib.context.KeywordApplicationContext;
+import org.robotframework.javalib.util.KeywordNameNormalizer;
 import org.springframework.context.support.GenericApplicationContext;
 
 public class KeywordBeanLoader implements IBeanLoader {
-    private GenericApplicationContext context = new KeywordApplicationContext();
+    private GenericApplicationContext context = new KeywordApplicationContext(new KeywordNameNormalizer());
     private IKeywordBeanDefintionReader beanDefinitionReader = new KeywordBeanDefinitionReader(context, Thread.currentThread().getContextClassLoader());
     private String keywordPattern = null;
 

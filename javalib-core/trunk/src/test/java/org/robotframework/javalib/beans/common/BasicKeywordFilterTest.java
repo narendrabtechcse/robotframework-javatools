@@ -1,11 +1,7 @@
 package org.robotframework.javalib.beans.common;
 
-import java.util.List;
-
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.laughingpanda.beaninject.Inject;
-import org.robotframework.javalib.beans.common.BasicKeywordFilter;
 import org.robotframework.javalib.beans.common.BasicKeywordFilter.Condition;
 import org.robotframework.javalib.keyword.ArgumentCheckingKeyword;
 import org.robotframework.javalib.keyword.CollisionKeyword;
@@ -30,18 +26,6 @@ public class BasicKeywordFilterTest extends MockObjectTestCase {
 
     public void testIgnoresKeywordsWithoutDefaultConstructor() throws Exception {
         assertFalse(keywordFilter.accept(CollisionKeyword.class));
-    }
-
-    public void testAddsConditions() throws Exception {
-        Condition someCondition = (Condition) mock(Condition.class).proxy();
-
-        Mock conditions = mock(List.class);
-        Inject.field("conditions").of(keywordFilter).with(conditions.proxy());
-        conditions.expects(once()).method("add")
-            .with(same(someCondition))
-            .will(returnValue(true));
-
-        keywordFilter.addCondition(someCondition);
     }
 
     public void testUsesAddedConditions() throws Exception {
