@@ -17,14 +17,12 @@
 
 package org.robotframework.javalib.reflection;
 
-import java.lang.reflect.Method;
-
-import org.jmock.Mock;
-import org.laughingpanda.beaninject.Inject;
-import org.robotframework.javalib.util.ArrayUtil;
-
 import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
 import com.thoughtworks.paranamer.Paranamer;
+import org.jmock.Mock;
+import org.robotframework.javalib.util.ArrayUtil;
+
+import java.lang.reflect.Method;
 
 public class KeywordInvokerHandlingParameterNamesTest extends KeywordInvokerTestCase {
     private Mock paranamer;
@@ -35,21 +33,20 @@ public class KeywordInvokerHandlingParameterNamesTest extends KeywordInvokerTest
 
     public void testReturnsParameterNamesFromArgumentAnnotation() throws Exception {
         KeywordInvoker invoker = new KeywordInvoker(this, getMethod("keywordWithArgumentAnnotation"));
-        Inject.field("parameterNames").of(invoker).with(paranamer.proxy());
-        
+        invoker.parameterNames = (Paranamer) paranamer.proxy();
+
         paranamer.expects(never()).method("lookupParameterNames");
-        
+
         ArrayUtil.assertArraysEquals(new String[] {"firstArg", "*args"}, invoker.getParameterNames());
     }
 
     public void testReturnsParameterNamesFromParameterInformationIfArgumentAnnotationIsNotPresent() throws Exception {
         Method keywordMethod = getMethod("someMethod");
-        
-        KeywordInvoker keywordInvoker = new KeywordInvoker(this, keywordMethod);
-        Inject.field("parameterNames").of(keywordInvoker).with(paranamer.proxy());
-        
-        String[] parameterNames = new String [] { "parameter1", "parameter2" };
 
+        KeywordInvoker keywordInvoker = new KeywordInvoker(this, keywordMethod);
+        keywordInvoker.parameterNames = (Paranamer) paranamer.proxy();
+
+        String[] parameterNames = new String [] { "parameter1", "parameter2" };
         paranamer.expects(once()).method("lookupParameterNames")
             .with(eq(keywordMethod))
             .will(returnValue(parameterNames));
@@ -60,8 +57,8 @@ public class KeywordInvokerHandlingParameterNamesTest extends KeywordInvokerTest
     public void testReturnsNullParameterNamesIfArgumentAnnotationAndParameterNameInformationIsNotPresent() throws Exception {
         Method keywordMethod = getMethod("someMethod");
         KeywordInvoker keywordInvoker = new KeywordInvoker(this, keywordMethod);
-        Inject.field("parameterNames").of(keywordInvoker).with(paranamer.proxy());
-        
+        keywordInvoker.parameterNames = (Paranamer) paranamer.proxy();
+
         paranamer.expects(once()).method("lookupParameterNames")
             .with(eq(keywordMethod))
             .will(throwException(new ParameterNamesNotFoundException("not found")));

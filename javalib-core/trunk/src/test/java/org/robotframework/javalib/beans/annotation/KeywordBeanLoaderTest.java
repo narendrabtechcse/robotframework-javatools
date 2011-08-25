@@ -1,13 +1,12 @@
 package org.robotframework.javalib.beans.annotation;
 
-import java.util.HashMap;
-
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
-import org.laughingpanda.beaninject.Inject;
 import org.robotframework.javalib.beans.common.IClassFilter;
 import org.robotframework.javalib.beans.common.IKeywordBeanDefintionReader;
 import org.springframework.context.support.GenericApplicationContext;
+
+import java.util.HashMap;
 
 public class KeywordBeanLoaderTest extends MockObjectTestCase {
     private IClassFilter classFilter = (IClassFilter) mock(IClassFilter.class).proxy();
@@ -24,16 +23,16 @@ public class KeywordBeanLoaderTest extends MockObjectTestCase {
 
         beanLoaderWithKeywordPattern.loadBeanDefinitions(classFilter);
     }
-    
+
     public void usesGivenClassLoader() {
         ClassLoader classLoader = (ClassLoader) mock(ClassLoader.class).proxy();
         new KeywordBeanLoader("");
     }
 
-    private IBeanLoader createBeanLoaderWithMockBeanDefinitionReader(String keywordPattern) {
-        IBeanLoader beanLoader = createBeanLoaderWithMockApplicationContext(keywordPattern);
+    private KeywordBeanLoader createBeanLoaderWithMockBeanDefinitionReader(String keywordPattern) {
+        KeywordBeanLoader beanLoader = createBeanLoaderWithMockApplicationContext(keywordPattern);
         Mock beanDefinitionReader = createMockBeanDefinitionReader(keywordPattern);
-        Inject.field("beanDefinitionReader").of(beanLoader).with(beanDefinitionReader.proxy());
+        beanLoader.beanDefinitionReader = (IKeywordBeanDefintionReader) beanDefinitionReader.proxy();
         return beanLoader;
     }
 
@@ -45,18 +44,18 @@ public class KeywordBeanLoaderTest extends MockObjectTestCase {
         return beanDefinitionReader;
     }
 
-    private IBeanLoader createBeanLoaderWithMockApplicationContext(String keywordPattern) {
-        IBeanLoader beanLoader = new KeywordBeanLoader(keywordPattern);
+    private KeywordBeanLoader createBeanLoaderWithMockApplicationContext(String keywordPattern) {
+        KeywordBeanLoader beanLoader = new KeywordBeanLoader(keywordPattern);
         injectMockAppContextTo(beanLoader);
         return beanLoader;
     }
 
-    private void injectMockAppContextTo(IBeanLoader beanLoader) {
+    private void injectMockAppContextTo(KeywordBeanLoader beanLoader) {
         appContext.stubs();
         appContext.expects(once()).method("refresh");
         appContext.expects(once()).method("getBeansOfType")
             .with(eq(Object.class))
             .will(returnValue(keywordBeans));
-        Inject.field("context").of(beanLoader).with(appContext.proxy());
+        beanLoader.context = (GenericApplicationContext) appContext.proxy();
     }
 }

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.laughingpanda.beaninject.Inject;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.robotframework.javalib.beans.annotation.IBeanLoader;
@@ -25,12 +24,12 @@ public class AnnotationLibraryLoadingBeansTest extends MockObjectTestCase {
 
     private void injectBeanDefinitionsToAnnotationLibrary() {
         Mock beanLoader = mock(IBeanLoader.class);
-        Object classFilter = mock(IClassFilter.class).proxy();
+        IClassFilter classFilter = (IClassFilter) mock(IClassFilter.class).proxy();
         IBeanLoader proxy = (IBeanLoader) beanLoader.proxy();
         List<IBeanLoader> beanLoaders = new ArrayList<IBeanLoader>();
         beanLoaders.add(proxy);
-		Inject.field("beanLoaders").of(annotationLibrary).with(beanLoaders);
-        Inject.field("classFilter").of(annotationLibrary).with(classFilter);
+        annotationLibrary.beanLoaders = beanLoaders;
+        annotationLibrary.classFilter = classFilter;
 
         beanLoader.expects(once()).method("loadBeanDefinitions")
             .with(eq(classFilter))

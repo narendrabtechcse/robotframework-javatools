@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Nokia Siemens Networks Oyj
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,8 +30,8 @@ import org.robotframework.javalib.factory.KeywordFactory;
 import org.robotframework.javalib.keyword.DocumentedKeyword;
 
 public class AnnotationLibrary extends KeywordFactoryBasedLibrary<DocumentedKeyword> implements KeywordDocumentationRepository {
-    private List<IBeanLoader> beanLoaders = new ArrayList<IBeanLoader>();
-    private IClassFilter classFilter = new AnnotationBasedKeywordFilter();
+    protected List<IBeanLoader> beanLoaders = new ArrayList<IBeanLoader>();
+    protected IClassFilter classFilter = new AnnotationBasedKeywordFilter();
     private KeywordFactory<DocumentedKeyword> keywordFactory;
 
     public AnnotationLibrary() {}

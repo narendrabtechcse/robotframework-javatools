@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Nokia Siemens Networks Oyj
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
 import com.thoughtworks.paranamer.Paranamer;
 
 public class KeywordInvoker implements IKeywordInvoker {
-    private Paranamer parameterNames = new CachingParanamer();
+    protected Paranamer parameterNames = new CachingParanamer();
 
     private final Method method;
     private final Object obj;

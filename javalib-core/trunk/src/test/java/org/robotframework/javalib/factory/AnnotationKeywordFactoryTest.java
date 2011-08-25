@@ -8,10 +8,8 @@ import java.util.Map;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.laughingpanda.beaninject.Inject;
 import org.robotframework.javalib.beans.annotation.IKeywordExtractor;
 import org.robotframework.javalib.keyword.DocumentedKeyword;
-import org.robotframework.javalib.util.IKeywordNameNormalizer;
 
 public class AnnotationKeywordFactoryTest extends MockObjectTestCase {
     private Object someKeywordBean = new Object();
@@ -61,17 +59,6 @@ public class AnnotationKeywordFactoryTest extends MockObjectTestCase {
     public void testExtractsKeywordsFromKeywordBeansWithNormalizedName() throws Exception {
         String keywordName1 = "Keyword Name 1";
         String keywordName2 = "KEYWORD_NAME_2";
-        Mock keywordNameNormalizer = mock(IKeywordNameNormalizer.class);
-        keywordNameNormalizer.expects(once()).method("normalize")
-            .with(eq(keywordName1))
-            .will(returnValue("keywordname1"));
-
-        keywordNameNormalizer.expects(once()).method("normalize")
-            .with(eq(keywordName2))
-            .will(returnValue("keywordname2"));
-
-        Inject.field("keywordNameNormalizer").of(keywordFactory).with(keywordNameNormalizer.proxy());
-
         assertEquals(keyword1, keywordFactory.createKeyword(keywordName1));
         assertEquals(keyword2, keywordFactory.createKeyword(keywordName2));
     }

@@ -1,10 +1,9 @@
 package org.robotframework.javalib.library;
 
-import java.util.List;
-
 import org.jmock.MockObjectTestCase;
-import org.laughingpanda.beaninject.impl.Accessor;
 import org.robotframework.javalib.beans.annotation.KeywordBeanLoader;
+
+import java.lang.reflect.Field;
 
 
 public class AnnotationLibraryTest extends MockObjectTestCase {
@@ -39,12 +38,22 @@ public class AnnotationLibraryTest extends MockObjectTestCase {
     }
 
     private String extractKeywordPatternFrom(KeywordBeanLoader beanLoader) throws IllegalAccessException {
-        return (String) Accessor.field("keywordPattern", beanLoader.getClass()).get(beanLoader);
+        for (Field f: fields(beanLoader)) {
+            if (f.getName().equals("keywordPattern")) {
+                f.setAccessible(true);
+                return (String) f.get(beanLoader);
+            }
+        }
+        return null;
     }
 
-    private KeywordBeanLoader extractBeanLoaderFromAnnotationLibrary() throws IllegalAccessException {
+    private Field[] fields(KeywordBeanLoader beanLoader) {
+        return beanLoader.getClass().getDeclaredFields();
+    }
+
+    private KeywordBeanLoader extractBeanLoaderFromAnnotationLibrary() {
     	try {
-    		return ((List<KeywordBeanLoader>) Accessor.field("beanLoaders", annotationLibrary.getClass()).get(annotationLibrary)).get(0);
+    		return (KeywordBeanLoader) annotationLibrary.beanLoaders.get(0);
     	} catch (IndexOutOfBoundsException e){
     		return null;
     	}

@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Nokia Siemens Networks Oyj
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  */
 public class DefaultClassFinder extends PathMatchingResourcePatternResolver implements ClassFinder {
     private ClassNameResolver classNameResolver;
-    private URLFileFactory urlFileFactory = new URLFileFactory(System.getProperty("java.io.tmpdir"));
+    private URLFileFactory urlFileFactory;
 
     /**
      * @param classLoader resolver to use for resolving the given pattern
@@ -39,10 +39,15 @@ public class DefaultClassFinder extends PathMatchingResourcePatternResolver impl
     public DefaultClassFinder(ClassLoader classLoader) {
         super(classLoader);
         this.classNameResolver = new DefaultClassNameResolver();
+        urlFileFactory = createURLFileFactory();
     }
 
     public DefaultClassFinder() {
         this(Thread.currentThread().getContextClassLoader());
+    }
+
+    protected URLFileFactory createURLFileFactory() {
+        return new URLFileFactory(System.getProperty("java.io.tmpdir"));
     }
 
     /**
@@ -99,7 +104,7 @@ public class DefaultClassFinder extends PathMatchingResourcePatternResolver impl
             File fileFromUrl = urlFileFactory.createFileFromUrl(jarFileUrl);
             return createJarFile(fileFromUrl);
         }
-            
+
         return super.getJarFile(jarFileUrl);
     }
 

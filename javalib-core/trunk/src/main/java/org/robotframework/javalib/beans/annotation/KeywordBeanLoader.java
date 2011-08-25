@@ -26,9 +26,9 @@ import org.robotframework.javalib.util.KeywordNameNormalizer;
 import org.springframework.context.support.GenericApplicationContext;
 
 public class KeywordBeanLoader implements IBeanLoader {
-    private GenericApplicationContext context = new KeywordApplicationContext(new KeywordNameNormalizer());
-    private IKeywordBeanDefintionReader beanDefinitionReader = new KeywordBeanDefinitionReader(context, Thread.currentThread().getContextClassLoader());
-    private String keywordPattern = null;
+    protected GenericApplicationContext context = new KeywordApplicationContext(new KeywordNameNormalizer());
+    protected IKeywordBeanDefintionReader beanDefinitionReader = new KeywordBeanDefinitionReader(context, Thread.currentThread().getContextClassLoader());
+    protected String keywordPattern = null;
 
     public KeywordBeanLoader(String keywordPattern) {
         this.keywordPattern = keywordPattern;
