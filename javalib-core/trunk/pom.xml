@@ -53,7 +53,7 @@
       <artifactId>commons-io</artifactId>
       <version>1.4</version>
       <scope>compile</scope>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
@@ -83,21 +83,9 @@
       <artifactId>jetty</artifactId>
       <version>6.1.11</version>
       <scope>test</scope>
-    </dependency> 
-    <dependency>
-      <groupId>org.jdave</groupId>
-      <artifactId>jdave-junit4</artifactId>
-      <version>1.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.robotframework</groupId>
-      <artifactId>javatools-test</artifactId>
-      <version>0.1</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -159,7 +147,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <reporting>
     <plugins>
       <plugin>
@@ -169,7 +157,7 @@
       </plugin>
     </plugins>
   </reporting>
-  
+
   <repositories>
     <repository>
       <id>laughingpanda</id>
@@ -186,10 +174,4 @@
     <developerConnection>scm:svn:https://robotframework-javatools.googlecode.com/svn/javalib-core/trunk</developerConnection>
   </scm>
 
-  <distributionManagement>
-    <repository>
-      <id>laughingpanda</id>
-      <url>scp://www.laughingpanda.org/var/www/localhost/htdocs/maven2/</url>
-    </repository>
-  </distributionManagement>
 </project>
