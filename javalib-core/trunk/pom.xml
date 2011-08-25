@@ -5,6 +5,25 @@
   <packaging>jar</packaging>
   <version>0.8.2-SNAPSHOT</version>
   <name>javalib-core</name>
+  <description>Base for implementing Java test libraries to Robot Framework</description>
+  <url>https://code.google.com/p/robotframework-javatools/</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://robotframework-javatools.googlecode.com/svn/</url>
+    <connection>https://robotframework-javatools.googlecode.com/svn/</connection>
+  </scm>
+  <developers>
+    <developer>
+      <name>Robot Framework Developers</name>
+      <email>robotframework@gmail.com</email>
+    </developer>
+  </developers>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
