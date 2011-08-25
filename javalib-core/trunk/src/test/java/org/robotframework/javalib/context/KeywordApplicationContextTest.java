@@ -1,16 +1,15 @@
 package org.robotframework.javalib.context;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.laughingpanda.beaninject.Inject;
 import org.robotframework.javalib.keyword.EmptyKeyword;
 import org.robotframework.javalib.keyword.Keyword;
 import org.robotframework.javalib.util.IKeywordNameNormalizer;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class KeywordApplicationContextTest extends MockObjectTestCase {
     private KeywordApplicationContext ctx;
