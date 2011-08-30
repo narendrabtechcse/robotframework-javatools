@@ -1,4 +1,4 @@
-#summary Instructions how to release projects
+#summary Instructions how to release jvmconnector
 
 = JVMConnector =
 
