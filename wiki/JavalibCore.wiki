@@ -1,5 +1,4 @@
-﻿#labels Featured
-Javalib-core is a common core for all Java Robot libraries.
+﻿Javalib-core is a common core for all Java Robot libraries.
 
 The main advantages are
   * easily extensible and dynamic - just add keywords to the class path
