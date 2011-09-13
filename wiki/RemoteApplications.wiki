@@ -1,5 +1,4 @@
 #summary Library for operating multiple Java applications started in separate JVM
-#labels Featured
 
 <wiki:toc/>
 
