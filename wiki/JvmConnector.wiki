@@ -1,5 +1,4 @@
-﻿#labels Featured
-!JvmConnector is a module that enables remote keyword invocation. This
+﻿!JvmConnector is a module that enables remote keyword invocation. This
 is useful in situations where your keywords reside in another JVM than
 robot.
 
