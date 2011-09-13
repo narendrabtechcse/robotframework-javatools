@@ -1,0 +1,7 @@
+= Note =
+
+* As of 08/2011 Javalib-core has been moved to its [http://code.google.com/p/robotframework-javalibcore/ own project].*
+
+* As of 08/2011 jvmconnector project has been renamed to remoteapplications and moved to its [https://github.com/robotframework/RemoteApplications own project].*
+
+* Hudson-plugin is now [https://wiki.jenkins-ci.org/display/JENKINS/Robot+Framework+Plugin Jenkins-plugin]*
