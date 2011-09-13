@@ -1,5 +1,4 @@
-﻿#labels Featured
-== Jvmconnector 1.1 ==
+﻿== Jvmconnector 1.1 ==
 
 This release makes RemoteApplications library compatible with RF 2.5 series. Also two minor bugs was fixed. 
 
