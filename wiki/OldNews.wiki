@@ -1,0 +1,20 @@
+#summary news archive
+
+  * _2010-12-03_ New and improved *[http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin Hudson plugin for Robot Framework]* released!  
+  * 2010-09-06: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_1.1 JvmConnector 1.1 released]
+  * 2010-02-19: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_1.0.1 JvmConnector 1.0.1 released]
+  * 2010-02-16: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_1.0 JvmConnector 1.0 released]
+  * 2010-01-05: First prototype of the *HudsonPlugin* available.
+  * 2009-09-09: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_0.9.1 JvmConnector 0.9.1 released]
+  * 2009-07-08: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_0.9 JvmConnector 0.9 released]
+  * 2009-05-05: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_0.8 JvmConnector 0.8 released]
+  * 2009-03-08: [http://code.google.com/p/robotframework-javatools/wiki/JavalibCoreReleaseNotes#Javalib-Core_0.8.1 Javalib-Core 0.8.1 released]
+  * 2009-03-08: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_0.7.3 JvmConnector 0.7.3 released]
+  * 2009-02-24: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_0.7.2 JvmConnector 0.7.2 released]
+  * 2009-02-23: [http://code.google.com/p/robotframework-javatools/wiki/JavalibCoreReleaseNotes#Javalib-Core_0.8 Javalib-Core 0.8 released]
+  * 2009-02-16: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes#Jvmconnector_0.7.1 Jvmconnector 0.7.1 is released]
+  * 2009-02-15: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes Jvmconnector 0.7 is released]
+  * 2008-12-19: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes Jvmconnector 0.6 is released]
+  * 2008-11-03: [http://code.google.com/p/robotframework-javatools/wiki/JvmconnectorReleaseNotes First open source version of Jvmconnector is released]
+  * 2008-11-03: [http://code.google.com/p/robotframework-javatools/wiki/JavalibCoreReleaseNotes Javalib-Core 0.7.2 released]
+  * 2008-10-21: [http://code.google.com/p/robotframework-javatools/wiki/JavalibCoreReleaseNotes Javalib-Core 0.7.1 released]
