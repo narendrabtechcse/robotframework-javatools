@@ -1,4 +1,4 @@
-﻿<h1>ApplicationLauncher is debrecated and it does not work with Robot Framework 2.5 series. RemoteApplications library should be used instead.</h1>
+﻿<h1>ApplicationLauncher is deprecated and it does not work with Robot Framework 2.5 series. RemoteApplications library should be used instead.</h1>
 
 
 <wiki:toc/>
